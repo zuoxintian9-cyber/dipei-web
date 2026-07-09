@@ -1,0 +1,7 @@
+.agents/
+00_项目工作台/
+.vercel/
+node_modules/
+.DS_Store
+Thumbs.db
+*.log

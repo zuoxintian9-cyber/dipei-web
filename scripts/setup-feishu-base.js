@@ -358,8 +358,7 @@ async function createTable(token, schema) {
     },
     body: JSON.stringify({
       table: {
-        name: schema.name,
-        default_view_name: schema.view
+        name: schema.name
       }
     })
   });

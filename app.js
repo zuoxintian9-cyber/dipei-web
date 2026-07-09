@@ -313,9 +313,10 @@ async function submitLead(form) {
       });
       if (response.ok) return "提交成功，客服会尽快联系你。";
       const result = await response.json().catch(() => ({}));
-      if (result.code !== "FEISHU_NOT_CONFIGURED") throw new Error("提交失败");
+      if (result.code !== "FEISHU_NOT_CONFIGURED") throw new Error(result.message || "提交失败");
     } catch (error) {
       if (FORM_ENDPOINT !== "/api/feishu-submit") throw error;
+      if (error.message && error.message !== "提交失败") throw error;
     }
   }
 
@@ -338,7 +339,7 @@ function bindLeadForms() {
         form.reset();
         showToast(result);
       } catch (error) {
-        showToast("提交失败，请通过联系客服页面补充发送。");
+        showToast(error.message || "提交失败，请通过联系客服页面补充发送。");
       } finally {
         submitButton.disabled = false;
         submitButton.textContent = submitButton.dataset.label || submitButton.textContent.replace("正在提交...", "提交");

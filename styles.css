@@ -1169,6 +1169,216 @@ img {
   margin-top: 22px;
 }
 
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.provider-page-hero {
+  padding-bottom: 48px;
+}
+
+.provider-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.provider-card {
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: rgba(16, 24, 39, 0.78);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+
+.provider-media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.provider-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.verify-badge {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: #ecfdf5;
+  background: rgba(34, 197, 94, 0.86);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.provider-body {
+  padding: 18px;
+}
+
+.provider-title-row {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.provider-title-row h3 {
+  margin: 0;
+  color: var(--gold-light);
+  font-size: 20px;
+}
+
+.provider-title-row strong {
+  flex: 0 0 auto;
+  color: var(--gold-light);
+  font-size: 18px;
+}
+
+.provider-body p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.provider-meta,
+.provider-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.provider-meta span,
+.provider-tags span {
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--muted-2);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 12px;
+}
+
+.provider-tags span {
+  color: var(--gold-light);
+  border-color: rgba(242, 211, 155, 0.22);
+}
+
+.provider-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.provider-actions .btn {
+  flex: 1;
+  min-height: 40px;
+}
+
+.provider-detail-page {
+  padding: 56px 0 72px;
+}
+
+.detail-hero {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  border: 1px solid rgba(242, 211, 155, 0.22);
+  border-radius: var(--radius);
+  padding: 24px;
+  background: rgba(16, 24, 39, 0.78);
+  box-shadow: var(--shadow);
+}
+
+.detail-hero img {
+  width: 100%;
+  min-height: 360px;
+  max-height: 480px;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+
+.detail-hero h1 {
+  margin: 0;
+  color: var(--gold-light);
+  font-size: clamp(34px, 4vw, 52px);
+  line-height: 1.18;
+}
+
+.detail-hero p {
+  color: var(--muted-2);
+  line-height: 1.85;
+}
+
+.detail-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.detail-stats span {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  padding: 13px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.detail-stats strong {
+  display: block;
+  color: var(--gold-light);
+  font-size: 22px;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.detail-grid-section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.detail-grid-section article {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  padding: 22px;
+  background: rgba(16, 24, 39, 0.74);
+}
+
+.detail-grid-section h2 {
+  margin: 0;
+  color: var(--gold-light);
+  font-size: 23px;
+}
+
+.detail-grid-section p,
+.detail-grid-section li {
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.detail-grid-section ul,
+.detail-grid-section ol {
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
 @media (max-width: 1180px) {
   .header-inner {
     gap: 18px;
@@ -1195,6 +1405,10 @@ img {
 
   .scenario-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .provider-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1275,6 +1489,11 @@ img {
     min-height: 250px;
     max-height: 320px;
   }
+
+  .detail-hero,
+  .detail-grid-section {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 700px) {
@@ -1340,6 +1559,17 @@ img {
 
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .detail-stats,
+  .provider-actions,
+  .detail-actions {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .detail-stats {
+    display: grid;
   }
 
   .booking-shell,

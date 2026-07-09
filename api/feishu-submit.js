@@ -3,6 +3,26 @@ const crypto = require("crypto");
 const BASE_APP_TOKEN = process.env.FEISHU_BASE_APP_TOKEN || "GgevbG7I6aQzsJsbWRtcPCnCn4c";
 const BASE_APP_URL = process.env.FEISHU_BASE_URL || `https://my.feishu.cn/base/${BASE_APP_TOKEN}`;
 
+const RISK_WORDS = [
+  "色情",
+  "特殊服务",
+  "夜陪",
+  "陪睡",
+  "裸聊",
+  "私下交易",
+  "绕开平台",
+  "违法交易",
+  "小姐",
+  "包夜"
+];
+
+const REQUIRED_FIELDS = {
+  "用户预约需求表": ["customerName", "phone", "wechat", "city", "service", "date", "timeSlot", "duration", "people", "budgetRange", "detail"],
+  "服务者入驻申请表": ["name", "phone", "wechat", "city", "serviceArea", "serviceType", "availableTime", "price", "billingType", "intro"],
+  "投诉举报表": ["complainantName", "contact", "target", "detail"],
+  "客户咨询线索表": ["name", "contact", "city", "detail"]
+};
+
 const TABLE_CONFIG = {
   "用户预约需求表": {
     env: "FEISHU_TABLE_BOOKING",
@@ -36,6 +56,38 @@ const TABLE_CONFIG = {
 
 function clean(value, fallback = "") {
   return String(value ?? fallback).trim();
+}
+
+function hasRiskContent(value) {
+  const text = clean(value).toLowerCase();
+  return RISK_WORDS.some((word) => text.includes(word.toLowerCase()));
+}
+
+function validatePayload(formType, payload) {
+  if (clean(payload.website || payload.companyWebsite)) {
+    return { ok: false, status: 400, code: "SPAM_REJECTED", message: "提交异常，请刷新页面后重试" };
+  }
+
+  const required = REQUIRED_FIELDS[formType] || [];
+  const missing = required.filter((key) => !clean(payload[key]));
+  if (missing.length) {
+    return { ok: false, status: 400, code: "MISSING_REQUIRED_FIELDS", message: "请完整填写必填项", missing };
+  }
+
+  const phone = clean(payload.phone || payload.contact);
+  if (payload.phone && !/^1[3-9]\d{9}$/.test(phone)) {
+    return { ok: false, status: 400, code: "INVALID_PHONE", message: "手机号格式不正确" };
+  }
+
+  const riskFields =
+    formType === "投诉举报表"
+      ? []
+      : [payload.detail, payload.intro, payload.serviceType, payload.serviceArea, payload.availableTime, payload.strengths];
+  if (riskFields.some(hasRiskContent)) {
+    return { ok: false, status: 422, code: "RISK_CONTENT_REJECTED", message: "提交内容包含平台禁止服务或高风险表述，请修改后再提交" };
+  }
+
+  return { ok: true };
 }
 
 function splitTags(value) {
@@ -332,6 +384,11 @@ module.exports = async function handler(req, res) {
     const config = TABLE_CONFIG[formType];
     if (!config) {
       res.status(400).json({ ok: false, code: "UNKNOWN_FORM_TYPE", message: "未知表单类型" });
+      return;
+    }
+    const validation = validatePayload(formType, payload);
+    if (!validation.ok) {
+      res.status(validation.status).json(validation);
       return;
     }
 

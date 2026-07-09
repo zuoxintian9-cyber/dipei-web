@@ -97,6 +97,7 @@ const configs = [
   ["隐私政策链接", "https://www.dipeikehu.com/privacy.html", "公开隐私政策"],
   ["服务协议链接", "https://www.dipeikehu.com/terms.html", "公开服务协议"],
   ["预约规则链接", "https://www.dipeikehu.com/booking-rule.html", "公开预约与订单规则"],
+  ["账号中心入口", "https://www.dipeikehu.com/account.html", "用户注册、登录帮助和订单列表协助入口"],
   ["订单进度入口", "https://www.dipeikehu.com/order.html", "用户补充预约信息和查询进度入口"],
   ["服务者中心链接", "https://www.dipeikehu.com/provider-center.html", "服务者资料补充和状态咨询入口"],
   ["服务反馈入口", "https://www.dipeikehu.com/feedback.html", "用户提交服务评价和改进建议入口"]

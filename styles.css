@@ -1198,6 +1198,12 @@ img {
   gap: 18px;
 }
 
+.account-panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .page-card h2 + p,
 .page-card h3 + p {
   margin-top: 8px;
@@ -1221,6 +1227,10 @@ img {
 
 .contact-card {
   margin-top: 22px;
+}
+
+.account-panels .contact-card {
+  margin-top: 0;
 }
 
 .hp-field {
@@ -1617,6 +1627,7 @@ img {
   .two-column.reverse,
   .split-feature,
   .help-grid,
+  .account-panels,
   .dialog-provider {
     grid-template-columns: 1fr;
   }

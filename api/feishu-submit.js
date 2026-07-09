@@ -212,7 +212,11 @@ function normalizeConsultTopic(topic) {
     订单进度: "预约咨询",
     服务者资料补充: "入驻合作",
     服务者中心: "入驻合作",
-    服务反馈: "其他"
+    服务反馈: "其他",
+    用户注册: "其他",
+    登录帮助: "其他",
+    账号中心: "其他",
+    订单列表协助: "预约咨询"
   };
   return topicMap[rawTopic] || rawTopic || "其他";
 }
@@ -228,6 +232,8 @@ function buildConsultFields(payload) {
     clean(payload.serviceDate) ? `服务日期：${clean(payload.serviceDate)}` : "",
     clean(payload.rating) ? `体验评分：${clean(payload.rating)}` : "",
     clean(payload.wouldRecommend) ? `是否愿意推荐：${clean(payload.wouldRecommend)}` : "",
+    clean(payload.accountRole) ? `账号类型：${clean(payload.accountRole)}` : "",
+    clean(payload.accountAction) ? `账号事项：${clean(payload.accountAction)}` : "",
     clean(payload.preferredTime) ? `期望联系时间：${clean(payload.preferredTime)}` : ""
   ].filter(Boolean);
   const detail = clean(payload.detail || rawTopic);

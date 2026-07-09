@@ -188,7 +188,8 @@ function normalizeConsultTopic(topic) {
   const topicMap = {
     订单进度: "预约咨询",
     服务者资料补充: "入驻合作",
-    服务者中心: "入驻合作"
+    服务者中心: "入驻合作",
+    服务反馈: "其他"
   };
   return topicMap[rawTopic] || rawTopic || "其他";
 }
@@ -200,6 +201,10 @@ function buildConsultFields(payload) {
     rawTopic && rawTopic !== normalizedTopic ? `入口类型：${rawTopic}` : "",
     clean(payload.orderRef) ? `关联订单：${clean(payload.orderRef)}` : "",
     clean(payload.providerRef) ? `服务者/申请编号：${clean(payload.providerRef)}` : "",
+    clean(payload.serviceType) ? `服务类型：${clean(payload.serviceType)}` : "",
+    clean(payload.serviceDate) ? `服务日期：${clean(payload.serviceDate)}` : "",
+    clean(payload.rating) ? `体验评分：${clean(payload.rating)}` : "",
+    clean(payload.wouldRecommend) ? `是否愿意推荐：${clean(payload.wouldRecommend)}` : "",
     clean(payload.preferredTime) ? `期望联系时间：${clean(payload.preferredTime)}` : ""
   ].filter(Boolean);
   const detail = clean(payload.detail || rawTopic);

@@ -859,6 +859,52 @@ img {
   line-height: 1.8;
 }
 
+.reviews-section {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(214, 168, 90, 0.09), transparent 26%),
+    #08111f;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.review-card {
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  padding: 24px;
+  background: rgba(16, 24, 39, 0.76);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.18);
+}
+
+.review-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 58px;
+  height: 38px;
+  border-radius: 999px;
+  color: #130d05;
+  background: linear-gradient(135deg, #f2d39b, #d6a85a);
+  font-weight: 800;
+}
+
+.review-card p {
+  margin: 16px 0 0;
+  color: var(--muted-2);
+  line-height: 1.85;
+}
+
+.review-card span {
+  display: block;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .booking-section {
   background: linear-gradient(180deg, #060f1c 0%, #08111f 100%);
 }
@@ -1495,6 +1541,10 @@ img {
     grid-template-columns: 1fr;
   }
 
+  .review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .service-grid,
   .city-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1558,6 +1608,7 @@ img {
 
   .category-strip,
   .trust-grid,
+  .review-grid,
   .booking-form {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1619,6 +1670,7 @@ img {
   .scenario-list,
   .category-strip,
   .trust-grid,
+  .review-grid,
   .booking-form,
   .console-form,
   .contact-form {

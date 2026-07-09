@@ -190,6 +190,7 @@ function renderProviderDetail() {
         <div class="detail-actions">
           <a class="btn gold" href="./index.html#booking">提交预约需求</a>
           <a class="btn ghost" href="./contact.html">先咨询客服</a>
+          <a class="btn ghost" href="./feedback.html">服务后评价</a>
         </div>
       </div>
     </section>
@@ -211,6 +212,7 @@ function renderProviderDetail() {
       <article>
         <h2>用户反馈</h2>
         <ul>${profile.reviews.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>
+        <p><a class="link-arrow" href="./feedback.html">提交服务反馈<span>→</span></a></p>
       </article>
       <article>
         <h2>注意事项</h2>

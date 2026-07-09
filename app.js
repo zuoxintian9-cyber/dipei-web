@@ -418,6 +418,7 @@ $("#resetFilters")?.addEventListener("click", () => {
 
 const today = localDateInputValue();
 $$('input[type="date"]').forEach((input) => {
+  if (input.dataset.allowPast === "true") return;
   input.min = today;
 });
 

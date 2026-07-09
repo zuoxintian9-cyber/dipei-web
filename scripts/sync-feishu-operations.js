@@ -98,7 +98,8 @@ const configs = [
   ["服务协议链接", "https://www.dipeikehu.com/terms.html", "公开服务协议"],
   ["预约规则链接", "https://www.dipeikehu.com/booking-rule.html", "公开预约与订单规则"],
   ["订单进度入口", "https://www.dipeikehu.com/order.html", "用户补充预约信息和查询进度入口"],
-  ["服务者中心链接", "https://www.dipeikehu.com/provider-center.html", "服务者资料补充和状态咨询入口"]
+  ["服务者中心链接", "https://www.dipeikehu.com/provider-center.html", "服务者资料补充和状态咨询入口"],
+  ["服务反馈入口", "https://www.dipeikehu.com/feedback.html", "用户提交服务评价和改进建议入口"]
 ].map(([配置项, 配置值, 备注]) => ({ 配置项, 配置值, 是否启用: true, 备注 }));
 
 async function api(path, options = {}) {

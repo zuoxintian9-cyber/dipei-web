@@ -3,15 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>地陪客户｜专业陪同服务平台</title>
+    <title>地陪客户｜专业本地陪同与商务接待服务</title>
     <meta
       name="description"
-      content="地陪客户是面向城市陪同、商务接待、旅游向导、办事协助、机场接送与展会陪同的一期官网原型。"
+      content="地陪客户提供正规的本地陪同、商务接待、城市向导、旅游陪同、办事协助、机场高铁接送等服务预约入口，首批覆盖北京、上海、广州、深圳、成都、西安、杭州、重庆等热门城市。"
     />
+    <link rel="canonical" href="https://www.dipeikehu.com/" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' mailto:; frame-ancestors 'none'"
     />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -81,18 +83,17 @@
         </a>
         <nav class="main-nav" id="mainNav" aria-label="主导航">
           <a class="active" href="#home">首页</a>
-          <a href="#categories">服务分类</a>
-          <a href="#providers">城市地陪</a>
-          <a href="#business">商务陪同</a>
-          <a href="#guide">旅游向导</a>
-          <a href="#booking">办事协助</a>
+          <a href="#categories">服务类型</a>
+          <a href="#cities">开放城市</a>
+          <a href="#process">服务流程</a>
+          <a href="#safety">安全保障</a>
+          <a href="#booking">预约需求</a>
           <a href="#join">入驻合作</a>
           <a href="#help">帮助中心</a>
         </nav>
         <div class="header-actions">
-          <button class="btn ghost small" data-action="login">登录</button>
-          <button class="btn ghost small" data-action="register">注册</button>
-          <a class="btn gold small" href="#join">成为服务者</a>
+          <a class="btn ghost small" href="./contact.html">联系客服</a>
+          <a class="btn gold small" href="#booking">提交预约</a>
         </div>
         <button class="menu-toggle" id="menuToggle" aria-label="展开导航" aria-expanded="false">
           <svg><use href="#i-menu"></use></svg>
@@ -106,10 +107,10 @@
         <div class="hero-light hero-light-right"></div>
         <div class="container hero-inner">
           <div class="hero-copy">
-            <p class="eyebrow">严格审核 · 实名认证 · 服务保障</p>
-            <h1>专业陪同服务<br /><span>让接待更从容</span></h1>
+            <p class="eyebrow">严格审核 · 正规服务 · 隐私保护</p>
+            <h1>专业本地陪同与商务接待服务</h1>
             <p class="hero-subtitle">
-              覆盖商务接待、城市陪同、旅游向导、办事协助、机场接送等多场景服务。
+              覆盖商务接待、城市向导、旅游陪同、办事协助、机场高铁接送等正规场景。你提交需求后，平台客服将根据城市、时间和服务类型协助确认合适方案。
             </p>
             <div class="hero-traits" aria-label="平台特点">
               <span>高效</span>
@@ -122,7 +123,14 @@
             </div>
           </div>
 
-          <form class="search-panel" id="searchForm">
+          <div class="notice-card" role="note">
+            <strong>服务边界说明</strong>
+            <p>
+              平台仅提供正规本地陪同、城市向导、商务接待和办事协助服务，严禁任何违法违规、低俗色情、私下交易、侵害隐私及诱导绕开平台的行为。
+            </p>
+          </div>
+
+          <form class="search-panel" id="searchForm" novalidate>
             <label class="search-field">
               <svg><use href="#i-pin"></use></svg>
               <span>选择城市</span>
@@ -140,7 +148,7 @@
             </label>
             <label class="search-field">
               <svg><use href="#i-pin"></use></svg>
-              <span>选择区域</span>
+              <span>服务区域</span>
               <select name="area" aria-label="选择区域">
                 <option value="">请选择区域</option>
                 <option>核心商圈</option>
@@ -152,7 +160,7 @@
             </label>
             <label class="search-field">
               <svg><use href="#i-briefcase"></use></svg>
-              <span>选择服务类型</span>
+              <span>服务类型</span>
               <select name="service" aria-label="选择服务类型">
                 <option value="">请选择服务类型</option>
                 <option>商务接待</option>
@@ -165,109 +173,79 @@
             </label>
             <label class="search-field">
               <svg><use href="#i-calendar"></use></svg>
-              <span>选择日期</span>
+              <span>服务日期</span>
               <input type="date" name="date" aria-label="选择日期" />
             </label>
             <button class="btn gold search-btn" type="submit">
               <svg><use href="#i-search"></use></svg>
-              搜索
+              查看服务
             </button>
           </form>
+        </div>
+      </section>
 
-          <div class="category-strip" id="categories" aria-label="服务分类入口">
+      <section class="section-band" id="categories">
+        <div class="container">
+          <div class="section-heading heading-row">
+            <div>
+              <p class="eyebrow">服务类型</p>
+              <h2>首批开放的正规陪同服务</h2>
+              <p>首页只展示面向用户的服务内容、预约入口和合规说明，不公开用户记录、服务者工作区或管理数据。</p>
+            </div>
+            <a class="link-arrow" href="#booking">提交需求<span>→</span></a>
+          </div>
+          <div class="category-strip" aria-label="服务分类入口">
             <button class="category-card" data-service="商务接待">
-              <svg><use href="#i-logo"></use></svg>
+              <svg><use href="#i-briefcase"></use></svg>
               <span>商务接待</span>
-              <small>商业会面 · 考察接待</small>
+              <small>客户到访 · 会面陪同</small>
             </button>
             <button class="category-card" data-service="城市陪同">
               <svg><use href="#i-building"></use></svg>
               <span>城市陪同</span>
-              <small>商务随行 · 城市陪伴</small>
+              <small>本地路线 · 商圈熟悉</small>
             </button>
             <button class="category-card" data-service="旅游向导">
               <svg><use href="#i-route"></use></svg>
               <span>旅游向导</span>
-              <small>深度讲解 · 行程规划</small>
+              <small>路线规划 · 景点讲解</small>
             </button>
             <button class="category-card" data-service="办事协助">
               <svg><use href="#i-file"></use></svg>
               <span>办事协助</span>
-              <small>政务代办 · 生活协助</small>
+              <small>资料提醒 · 现场指引</small>
             </button>
             <button class="category-card" data-service="展会陪同">
               <svg><use href="#i-screen"></use></svg>
               <span>展会陪同</span>
-              <small>展会翻译 · 商务支持</small>
+              <small>会展支持 · 客户引导</small>
             </button>
             <button class="category-card" data-service="机场接送">
               <svg><use href="#i-plane"></use></svg>
               <span>机场接送</span>
-              <small>接机送机 · 高效准时</small>
+              <small>接机送机 · 准时衔接</small>
             </button>
           </div>
         </div>
       </section>
 
-      <section class="featured section-band" id="providers">
-        <div class="container">
-          <div class="section-heading heading-row">
-            <div>
-              <p class="eyebrow">Selected Providers</p>
-              <h2>精选服务者</h2>
-              <p>严审资质、实名认证、服务保障，优先展示高评分与高响应服务者。</p>
-            </div>
-            <a class="link-arrow" href="#serviceList">查看全部服务者 <span>→</span></a>
-          </div>
-          <div class="provider-grid" id="featuredGrid"></div>
-          <div class="trust-bar" aria-label="平台保障">
-            <article>
-              <svg><use href="#i-shield"></use></svg>
-              <div>
-                <h3>实名认证</h3>
-                <p>服务者实名资料认证</p>
-              </div>
-            </article>
-            <article>
-              <svg><use href="#i-shield"></use></svg>
-              <div>
-                <h3>平台保障</h3>
-                <p>服务保障，交易无忧</p>
-              </div>
-            </article>
-            <article>
-              <svg><use href="#i-zap"></use></svg>
-              <div>
-                <h3>快速响应</h3>
-                <p>平均响应时间 &lt; 30 分钟</p>
-              </div>
-            </article>
-            <article>
-              <svg><use href="#i-globe"></use></svg>
-              <div>
-                <h3>城市覆盖</h3>
-                <p>200+ 城市服务网络</p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <section class="service-list section" id="serviceList">
+      <section class="section" id="cities">
         <div class="container two-column">
-          <aside class="filter-panel" aria-label="服务者筛选">
-            <p class="eyebrow">Smart Match</p>
-            <h2>快速匹配</h2>
+          <aside class="filter-panel" aria-label="服务筛选">
+            <p class="eyebrow">城市选择</p>
+            <h2>快速筛选</h2>
             <label>
               城市
               <select id="filterCity">
-                <option value="">全部城市</option>
+                <option value="">全部开放城市</option>
                 <option>北京</option>
                 <option>上海</option>
                 <option>广州</option>
                 <option>深圳</option>
                 <option>成都</option>
                 <option>西安</option>
+                <option>杭州</option>
+                <option>重庆</option>
               </select>
             </label>
             <label>
@@ -283,20 +261,13 @@
               </select>
             </label>
             <label>
-              价格区间
-              <select id="filterPrice">
-                <option value="">不限价格</option>
-                <option value="399">¥399 以下</option>
-                <option value="499">¥400 - ¥499</option>
-                <option value="599">¥500 - ¥599</option>
-                <option value="600">¥600 以上</option>
-              </select>
-            </label>
-            <label>
-              认证状态
-              <select id="filterVerified">
-                <option value="">全部</option>
-                <option value="verified">仅看已认证</option>
+              预算区间
+              <select id="filterBudget">
+                <option value="">不限预算</option>
+                <option value="300">300 元起</option>
+                <option value="400">400 元起</option>
+                <option value="500">500 元起</option>
+                <option value="600">600 元起</option>
               </select>
             </label>
             <button class="btn gold wide" id="resetFilters" type="button">重置筛选</button>
@@ -304,66 +275,70 @@
 
           <div class="list-content">
             <div class="section-heading compact">
-              <p class="eyebrow">Providers</p>
-              <h2>城市服务者列表</h2>
-              <p id="resultSummary">正在匹配合适的本地服务者。</p>
+              <p class="eyebrow">开放城市</p>
+              <h2>首批覆盖热门城市，更多城市陆续开放</h2>
+              <p id="resultSummary">可按城市、服务类型和预算筛选合适的服务场景。</p>
             </div>
-            <div class="provider-grid list-grid" id="providerGrid"></div>
+            <div class="scenario-list" id="scenarioGrid"></div>
           </div>
         </div>
       </section>
 
-      <section class="section business-section" id="business">
+      <section class="section business-section" id="process">
         <div class="container split-feature">
           <div>
-            <p class="eyebrow">Business Reception</p>
-            <h2>商务陪同，从抵达到会面都有章法</h2>
+            <p class="eyebrow">服务流程</p>
+            <h2>从提交需求到客服确认，全流程留痕</h2>
             <p>
-              面向商务会见、展会支持、城市考察、酒店会议和机场高铁接送，服务者需要通过资料审核，
-              熟悉核心商圈、交通路线和常见接待礼仪。
+              用户提交预约后，由平台客服人工确认城市、时间、服务边界和费用说明。预约记录、服务者资料和审核信息均不在公开页面展示。
             </p>
             <div class="feature-points">
-              <span>客户接待路线规划</span>
-              <span>酒店与会场协助</span>
-              <span>展会翻译与现场支持</span>
-              <span>接送机时间管理</span>
+              <span>需求提交</span>
+              <span>客服确认</span>
+              <span>服务匹配</span>
+              <span>风险提醒</span>
+              <span>投诉入口</span>
             </div>
           </div>
           <div class="process-card">
-            <h3>用户预约流程</h3>
+            <h3>预约处理流程</h3>
             <ol>
-              <li>选择城市 / 服务类型</li>
-              <li>浏览服务者并查看详情</li>
-              <li>点击咨询或提交预约</li>
-              <li>平台或服务者确认需求</li>
-              <li>完成服务后评价</li>
+              <li>选择城市、服务类型和服务时间</li>
+              <li>填写人数、预算、联系方式和具体需求</li>
+              <li>平台客服核对服务边界和可服务情况</li>
+              <li>确认服务方案、价格和注意事项</li>
+              <li>服务完成后可提交反馈或投诉举报</li>
             </ol>
           </div>
         </div>
       </section>
 
-      <section class="section guide-section" id="guide">
+      <section class="section guide-section" id="safety">
         <div class="container section-heading centered">
-          <p class="eyebrow">Scenarios</p>
-          <h2>覆盖多种本地陪同场景</h2>
-          <p>从商务接待到旅游向导，从办事协助到机场接送，首页、列表和详情页都围绕转化路径设计。</p>
+          <p class="eyebrow">安全保障</p>
+          <h2>把合规说明放在用户提交前</h2>
+          <p>平台仅处理完成预约和入驻所需的最少信息，并通过协议、隐私政策、服务边界和投诉入口约束服务过程。</p>
         </div>
-        <div class="container scenario-grid">
+        <div class="container trust-grid">
           <article>
-            <h3>城市陪同</h3>
-            <p>熟悉商圈、交通、餐饮与城市动线，适合外地客户短期到访。</p>
+            <svg><use href="#i-shield"></use></svg>
+            <h3>资料审核</h3>
+            <p>入驻服务者需提交身份、城市、服务类型、价格和服务介绍等资料，审核通过后再展示。</p>
           </article>
           <article>
-            <h3>旅游向导</h3>
-            <p>可按偏好定制路线，提供景点讲解、行程安排与本地建议。</p>
+            <svg><use href="#i-file"></use></svg>
+            <h3>最少收集</h3>
+            <p>预约表单只收集服务确认所必需的信息，不要求上传无关证件或敏感材料。</p>
           </article>
           <article>
-            <h3>办事协助</h3>
-            <p>支持政务大厅、医院、银行、生活事务等非敏感场景协助。</p>
+            <svg><use href="#i-zap"></use></svg>
+            <h3>人工客服</h3>
+            <p>复杂需求、异常内容、投诉举报和风险反馈由人工客服介入处理。</p>
           </article>
           <article>
-            <h3>机场接送</h3>
-            <p>对接抵达时间、行李数量和目的地，强调准时与路线效率。</p>
+            <svg><use href="#i-globe"></use></svg>
+            <h3>城市陆续开放</h3>
+            <p>当前首批开放热门城市，更多城市将在服务能力确认后逐步增加。</p>
           </article>
         </div>
       </section>
@@ -371,11 +346,11 @@
       <section class="section booking-section" id="booking">
         <div class="container booking-shell">
           <div class="section-heading">
-            <p class="eyebrow">Reservation</p>
+            <p class="eyebrow">预约需求</p>
             <h2>提交预约需求</h2>
-            <p>填写城市、服务类型、时间、预算和具体需求，平台可据此确认合适服务者。</p>
+            <p>请填写真实需求和可联系信息。提交前需阅读并同意隐私政策和服务协议。</p>
           </div>
-          <form class="booking-form" id="bookingForm">
+          <form class="booking-form" id="bookingForm" data-lead-form data-lead-type="预约需求" data-source="/#booking" novalidate>
             <label>
               服务城市
               <select name="city" required>
@@ -386,6 +361,8 @@
                 <option>深圳</option>
                 <option>成都</option>
                 <option>西安</option>
+                <option>杭州</option>
+                <option>重庆</option>
               </select>
             </label>
             <label>
@@ -428,89 +405,57 @@
             </label>
             <label>
               预算
-              <input name="budget" maxlength="30" placeholder="如：¥500 - ¥800" />
+              <input name="budget" inputmode="numeric" maxlength="30" placeholder="如：500-800" required />
             </label>
             <label class="full">
               具体需求描述
-              <textarea name="detail" rows="4" maxlength="300" placeholder="请说明接待对象、路线、语言、注意事项等信息。"></textarea>
+              <textarea name="detail" rows="4" minlength="12" maxlength="500" placeholder="请说明接待对象、路线、语言、注意事项等信息，至少 12 个字。" required></textarea>
             </label>
             <label>
               联系方式
               <input name="contact" maxlength="40" placeholder="手机号 / 微信 / 邮箱" required />
             </label>
+            <label class="consent-line">
+              <input type="checkbox" name="consent" value="已同意" required />
+              <span>我已阅读并同意 <a href="./privacy.html">隐私政策</a> 和 <a href="./terms.html">服务协议</a></span>
+            </label>
             <button class="btn gold" type="submit">提交预约需求</button>
+            <p class="form-note full">请确保联系方式真实有效。提交后请按页面提示完成发送，客服收到后会继续跟进。</p>
           </form>
-        </div>
-      </section>
-
-      <section class="section client-section" id="clientDesk">
-        <div class="container section-heading heading-row">
-          <div>
-            <p class="eyebrow">Client Center</p>
-            <h2>用户订单中心</h2>
-            <p>预约提交后可在这里查看状态流转，覆盖待确认、已接单、服务中、已完成和已评价。</p>
-          </div>
-          <button class="btn ghost" type="button" data-action="login">登录查看完整订单</button>
-        </div>
-        <div class="container order-layout">
-          <div class="order-summary">
-            <article>
-              <strong id="totalOrders">3</strong>
-              <span>全部订单</span>
-            </article>
-            <article>
-              <strong id="pendingOrders">1</strong>
-              <span>待确认</span>
-            </article>
-            <article>
-              <strong id="activeOrders">1</strong>
-              <span>服务中</span>
-            </article>
-            <article>
-              <strong id="doneOrders">1</strong>
-              <span>已完成</span>
-            </article>
-          </div>
-          <div class="work-panel">
-            <div class="panel-head">
-              <h3>近期预约</h3>
-              <div class="segmented" aria-label="订单筛选">
-                <button class="active" type="button" data-order-filter="all">全部</button>
-                <button type="button" data-order-filter="待确认">待确认</button>
-                <button type="button" data-order-filter="服务中">服务中</button>
-                <button type="button" data-order-filter="已完成">已完成</button>
-              </div>
-            </div>
-            <div class="order-list" id="orderList"></div>
-          </div>
         </div>
       </section>
 
       <section class="section join-section" id="join">
         <div class="container two-column reverse">
           <div class="join-card">
-            <p class="eyebrow">Provider Center</p>
+            <p class="eyebrow">入驻合作</p>
             <h2>服务者入驻流程</h2>
             <ol class="steps">
-              <li><span>01</span>注册账号并填写基本资料</li>
-              <li><span>02</span>上传实名认证与职业照片</li>
-              <li><span>03</span>配置服务城市、类型与价格</li>
-              <li><span>04</span>提交平台审核，审核通过后展示</li>
+              <li><span>01</span>填写姓名、手机、微信、服务城市和服务类型</li>
+              <li><span>02</span>说明起步价格、服务范围和可预约时间</li>
+              <li><span>03</span>平台人工审核资料真实性和服务边界</li>
+              <li><span>04</span>审核通过后再安排展示和接单流程</li>
             </ol>
-            <button class="btn gold" type="button" data-action="provider-register">立即提交入驻</button>
+            <a class="btn ghost" href="./provider-rule.html">查看入驻规则</a>
           </div>
-          <div class="provider-console work-panel">
-            <div class="panel-head">
-              <div>
-                <p class="eyebrow">Workbench</p>
-                <h2>服务者工作台</h2>
-              </div>
-              <span class="status-pill pending" id="providerAuditState">资料待提交</span>
+          <div class="work-panel">
+            <div class="section-heading compact">
+              <p class="eyebrow">入驻申请</p>
+              <h2>提交服务者资料</h2>
+              <p>请勿提交虚假资料或违规服务内容。平台会根据服务城市和服务类型进行人工审核。</p>
             </div>
-            <form class="console-form" id="providerForm">
+            <form class="console-form" id="providerForm" data-lead-form data-lead-type="服务者入驻" data-source="/#join" novalidate>
               <label>
-              服务者姓名
+                姓名
                 <input name="name" maxlength="30" placeholder="如：陈先生 / 林女士" required />
+              </label>
+              <label>
+                手机号
+                <input name="phone" inputmode="tel" maxlength="20" placeholder="请输入手机号" required />
+              </label>
+              <label>
+                微信号
+                <input name="wechat" maxlength="40" placeholder="请输入微信号" required />
               </label>
               <label>
                 服务城市
@@ -522,6 +467,8 @@
                   <option>深圳</option>
                   <option>成都</option>
                   <option>西安</option>
+                  <option>杭州</option>
+                  <option>重庆</option>
                 </select>
               </label>
               <label>
@@ -537,108 +484,19 @@
                 </select>
               </label>
               <label>
-              起步价格
+                起步价格
                 <input name="price" inputmode="numeric" maxlength="8" placeholder="如：500" required />
               </label>
               <label class="full">
-              服务介绍
-                <textarea name="intro" rows="3" maxlength="300" placeholder="说明服务范围、经验、可预约时间和注意事项。" required></textarea>
+                服务介绍
+                <textarea name="intro" rows="4" minlength="20" maxlength="500" placeholder="说明服务范围、经验、可预约时间和注意事项，至少 20 个字。" required></textarea>
               </label>
-              <button class="btn gold" type="submit">提交审核资料</button>
-              <button class="btn ghost" type="button" id="publishService">发布服务项目</button>
+              <label class="consent-line full">
+                <input type="checkbox" name="consent" value="已同意" required />
+                <span>我已阅读并同意 <a href="./provider-rule.html">服务者入驻规则</a>、<a href="./privacy.html">隐私政策</a></span>
+              </label>
+              <button class="btn gold" type="submit">提交入驻申请</button>
             </form>
-            <div class="provider-orders">
-              <h3>待处理订单</h3>
-              <div class="table-wrap">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th>订单</th>
-                      <th>城市</th>
-                      <th>时间</th>
-                      <th>状态</th>
-                      <th>操作</th>
-                    </tr>
-                  </thead>
-                  <tbody id="providerOrderRows"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section admin-section" id="adminDesk">
-        <div class="container section-heading heading-row">
-          <div>
-            <p class="eyebrow">Management</p>
-            <h2>管理后台总览</h2>
-            <p>覆盖用户、服务者审核、订单、分类城市、投诉举报、首页内容和数据看板。</p>
-          </div>
-          <button class="btn ghost" type="button" data-action="admin-login">管理员登录</button>
-        </div>
-        <div class="container admin-shell">
-          <div class="admin-metrics">
-            <article><span>今日访问</span><strong>2,486</strong></article>
-            <article><span>今日预约</span><strong>38</strong></article>
-            <article><span>新增服务者</span><strong>12</strong></article>
-            <article><span>待审核</span><strong id="reviewCount">5</strong></article>
-            <article><span>成交订单</span><strong>126</strong></article>
-          </div>
-          <div class="admin-board">
-            <div class="work-panel">
-              <div class="panel-head">
-                <h3>服务者审核</h3>
-                <span class="status-pill pending">待处理</span>
-              </div>
-              <div class="table-wrap">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th>服务者</th>
-                      <th>城市</th>
-                      <th>服务</th>
-                      <th>认证</th>
-                      <th>操作</th>
-                    </tr>
-                  </thead>
-                  <tbody id="auditRows">
-                    <tr>
-                      <td>周先生</td>
-                      <td>杭州</td>
-                      <td>商务接待</td>
-                      <td><span class="status-pill pending">待审核</span></td>
-                      <td><button class="mini-btn primary" type="button" data-admin-pass>通过</button></td>
-                    </tr>
-                    <tr>
-                      <td>许女士</td>
-                      <td>重庆</td>
-                      <td>旅游向导</td>
-                      <td><span class="status-pill pending">待审核</span></td>
-                      <td><button class="mini-btn primary" type="button" data-admin-pass>通过</button></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="work-panel">
-              <div class="panel-head">
-                <h3>城市与分类</h3>
-                <button class="mini-btn" type="button" id="addCity">新增城市</button>
-              </div>
-              <div class="admin-grid" id="cityTags">
-                <span>北京 · 12 区</span>
-                <span>上海 · 10 区</span>
-                <span>广州 · 8 区</span>
-                <span>深圳 · 9 区</span>
-                <span>成都 · 7 区</span>
-                <span>西安 · 6 区</span>
-              </div>
-              <div class="risk-list">
-                <h3>风控规则</h3>
-                <p>实名认证、服务内容审核、投诉入口、风险词过滤、异常账号封禁、人工客服介入。</p>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -646,25 +504,29 @@
       <section class="section help-section" id="help">
         <div class="container help-grid">
           <div>
-            <p class="eyebrow">Compliance</p>
-            <h2>正规平台风控说明</h2>
-            <p>
-              平台强调本地陪同、城市向导、商务接待和办事协助等正规服务，需明确禁止违法交易、
-              虚假资料、私下诱导交易、泄露隐私与违规陪同内容。
-            </p>
+            <p class="eyebrow">帮助中心</p>
+            <h2>常见问题与合规入口</h2>
+            <p>投诉举报、联系客服、隐私政策和服务协议均提供独立页面，便于用户在提交信息前查看完整规则。</p>
+            <div class="quick-links">
+              <a href="./contact.html">联系客服</a>
+              <a href="./report.html">投诉举报</a>
+              <a href="./privacy.html">隐私政策</a>
+              <a href="./terms.html">服务协议</a>
+              <a href="./safety.html">安全保障</a>
+            </div>
           </div>
           <div class="faq-list">
             <details open>
-              <summary>预约后有哪些订单状态？</summary>
-              <p>待确认、已接单、已取消、服务中、已完成、已评价。</p>
+              <summary>预约后多久会联系我？</summary>
+              <p>提交信息后，客服会根据城市、日期、服务类型和需求复杂度联系确认。若需求紧急，请同时通过客服联系页面补充说明。</p>
             </details>
             <details>
-              <summary>平台如何增强信任？</summary>
-              <p>通过实名认证、服务内容审核、投诉举报入口、订单流程留痕和人工客服介入。</p>
+              <summary>平台禁止哪些服务？</summary>
+              <p>禁止违法违规、色情低俗、私下交易、侵犯隐私、虚假资料、诱导绕开平台等内容。发现异常可通过投诉举报入口反馈。</p>
             </details>
             <details>
-              <summary>一期上线建议是什么？</summary>
-              <p>先做 PC 官网、手机 H5 和管理后台，让用户能看、能搜、能咨询、能预约。</p>
+              <summary>为什么不公开用户中心和管理页面？</summary>
+              <p>为保护用户隐私和服务者资料，预约记录、审核资料和处理进度不在公开页面展示。</p>
             </details>
           </div>
         </div>
@@ -681,69 +543,27 @@
               <small>专业陪同服务平台</small>
             </span>
           </a>
-          <p>高端、专业、私密、可信的本地陪同服务预约平台原型。</p>
+          <p>面向城市陪同、商务接待、旅游向导、办事协助和机场接送的正规服务预约平台。</p>
+          <p class="record-text">© 2026 地陪客户。保留所有权利。</p>
         </div>
         <div class="footer-links">
-          <a href="#business">关于我们</a>
+          <a href="./about.html">关于我们</a>
           <a href="#join">入驻合作</a>
-          <a href="#clientDesk">用户订单</a>
-          <a href="#adminDesk">管理后台</a>
-          <a href="#help">服务协议</a>
-          <a href="#help">隐私政策</a>
-          <a href="#help">联系客服</a>
-          <a href="#help">投诉举报</a>
-          <a href="#help">常见问题</a>
+          <a href="./terms.html">服务协议</a>
+          <a href="./privacy.html">隐私政策</a>
+          <a href="./provider-rule.html">入驻规则</a>
+          <a href="./safety.html">安全保障</a>
+          <a href="./contact.html">联系客服</a>
+          <a href="./report.html">投诉举报</a>
         </div>
       </div>
     </footer>
 
-    <dialog class="provider-dialog" id="providerDialog">
+    <dialog class="provider-dialog" id="scenarioDialog">
       <button class="dialog-close" id="dialogClose" aria-label="关闭详情">
         <svg><use href="#i-x"></use></svg>
       </button>
       <div class="dialog-body" id="dialogBody"></div>
-    </dialog>
-
-    <dialog class="auth-dialog" id="authDialog">
-      <button class="dialog-close" id="authClose" aria-label="关闭登录注册">
-        <svg><use href="#i-x"></use></svg>
-      </button>
-      <div class="auth-shell">
-        <div class="auth-side">
-          <p class="eyebrow">Account</p>
-          <h2 id="authTitle">登录地陪客户</h2>
-          <p>进入后可查看预约订单、服务者审核状态与后台管理入口。静态原型会模拟登录反馈。</p>
-          <div class="auth-highlights">
-            <span>用户预约</span>
-            <span>服务者入驻</span>
-            <span>管理员审核</span>
-          </div>
-        </div>
-        <form class="auth-form" id="authForm">
-          <div class="segmented auth-tabs">
-            <button class="active" type="button" data-auth-mode="login">登录</button>
-            <button type="button" data-auth-mode="register">注册</button>
-          </div>
-          <label>
-            手机号
-            <input type="tel" name="phone" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="请输入手机号" required />
-          </label>
-          <label>
-            验证码
-            <input name="code" inputmode="numeric" maxlength="6" pattern="[0-9]{4,6}" placeholder="输入 6 位验证码" required />
-          </label>
-          <label class="is-hidden" id="roleField">
-            账号类型
-            <select name="role">
-              <option>用户</option>
-              <option>服务者</option>
-              <option>管理员</option>
-            </select>
-          </label>
-          <button class="btn gold wide" type="submit" id="authSubmit">登录</button>
-          <p class="form-note">验证码、权限和账号体系可在后续接入真实接口。</p>
-        </form>
-      </div>
     </dialog>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>

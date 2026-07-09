@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>投诉举报｜地陪客户</title>
+    <meta name="description" content="地陪客户投诉举报入口，用于反馈违规服务、虚假资料、隐私泄露和私下交易等问题。" />
+    <link rel="canonical" href="https://www.dipeikehu.com/report.html" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./"><span><strong>地陪客户</strong><small>专业陪同服务平台</small></span></a>
+        <nav class="main-nav" id="mainNav" aria-label="主导航">
+          <a href="./">首页</a>
+          <a href="./contact.html">联系客服</a>
+          <a class="active" href="./report.html">投诉举报</a>
+          <a href="./terms.html">服务协议</a>
+        </nav>
+        <button class="menu-toggle" id="menuToggle" aria-label="展开导航" aria-expanded="false">菜单</button>
+      </div>
+    </header>
+    <main>
+      <section class="page-hero">
+        <div class="container">
+          <p class="eyebrow">投诉举报</p>
+          <h1>提交投诉或违规线索</h1>
+          <p>如发现违规服务、虚假资料、诱导私下交易、骚扰或隐私泄露，请尽量提供时间、对象、证据和联系方式。</p>
+        </div>
+      </section>
+      <section class="page-main">
+        <div class="container">
+          <div class="contact-card">
+            <form class="contact-form" data-lead-form data-lead-type="投诉举报" data-source="/report.html" novalidate>
+              <label>
+                投诉类型
+                <select name="topic" required>
+                  <option value="">请选择</option>
+                  <option>违规服务内容</option>
+                  <option>虚假资料</option>
+                  <option>诱导私下交易</option>
+                  <option>骚扰或隐私泄露</option>
+                  <option>其他问题</option>
+                </select>
+              </label>
+              <label>
+                联系方式
+                <input name="contact" maxlength="40" placeholder="手机号 / 微信 / 邮箱" required />
+              </label>
+              <label>
+                相关城市
+                <input name="city" maxlength="30" placeholder="如：上海" required />
+              </label>
+              <label class="full">
+                问题描述
+                <textarea name="detail" rows="6" minlength="12" maxlength="800" placeholder="请描述发生时间、对象、经过和证据线索，至少 12 个字。" required></textarea>
+              </label>
+              <label class="consent-line full">
+                <input type="checkbox" name="consent" value="已同意" required />
+                <span>我确认提交内容真实，并同意平台按 <a href="./privacy.html">隐私政策</a> 处理本次投诉信息</span>
+              </label>
+              <button class="btn gold" type="submit">提交投诉举报</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

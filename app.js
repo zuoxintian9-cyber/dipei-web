@@ -1,4 +1,4 @@
-const providers = [
+const scenarios = [
   {
     id: "beijing-business",
     title: "商务接待 · 北京",
@@ -6,30 +6,24 @@ const providers = [
     area: "朝阳 CBD",
     service: "商务接待",
     img: "./assets/provider-beijing.jpg",
-    desc: "10年从业经验，熟悉核心商圈、酒店会场与商务接待礼仪。",
-    rating: 4.9,
-    count: 128,
-    price: 500,
-    response: "20 分钟内",
-    strengths: ["商务会面", "展会陪同", "机场接送"],
+    budget: 500,
+    desc: "适合客户到访、商务会面、酒店会议、城市考察和机场高铁衔接。",
+    points: ["会面路线规划", "酒店与会场协助", "商务礼仪提醒"],
     intro:
-      "提供北京地区商务接待、城市陪同、展会协助、机场接送等服务，熟悉核心商圈、酒店、交通路线及常见商务接待场景。"
+      "北京商务接待服务面向客户到访、企业考察、酒店会议和会展活动等正规场景。客服会根据人数、时间、语言和行程安排确认服务边界。"
   },
   {
     id: "shanghai-city",
     title: "城市陪同 · 上海",
     city: "上海",
-    area: "陆家嘴",
+    area: "陆家嘴 / 外滩",
     service: "城市陪同",
     img: "./assets/provider-shanghai.jpg",
-    desc: "资深本地陪同，适合商务随行、城市动线安排和生活协助。",
-    rating: 4.9,
-    count: 96,
-    price: 400,
-    response: "25 分钟内",
-    strengths: ["商务随行", "城市陪伴", "路线规划"],
+    budget: 400,
+    desc: "适合短期到访、商圈熟悉、城市动线安排和本地生活协助。",
+    points: ["商圈熟悉", "交通动线", "本地建议"],
     intro:
-      "熟悉上海核心商圈、交通节点与酒店会面场景，可为短期到访客户提供城市陪同、路线安排和本地生活建议。"
+      "上海城市陪同服务覆盖核心商圈、交通枢纽、酒店会面和短期城市熟悉等场景，不包含任何违规或私下交易内容。"
   },
   {
     id: "xian-guide",
@@ -38,14 +32,11 @@ const providers = [
     area: "钟楼 / 大雁塔",
     service: "旅游向导",
     img: "./assets/provider-xian.jpg",
-    desc: "金牌导游，擅长深度讲解、文化路线与亲友接待行程。",
-    rating: 4.9,
-    count: 210,
-    price: 450,
-    response: "15 分钟内",
-    strengths: ["深度讲解", "行程规划", "景区陪同"],
+    budget: 450,
+    desc: "适合文化路线、景点讲解、行程规划和亲友接待陪同。",
+    points: ["路线规划", "景点讲解", "餐饮建议"],
     intro:
-      "可按客户兴趣规划半日、全天或多日路线，覆盖历史文化讲解、热门景区陪同、餐饮建议和交通衔接。"
+      "西安旅游向导服务可按半天、全天或多日行程沟通路线，重点服务历史文化讲解、景区陪同和本地行程建议。"
   },
   {
     id: "guangzhou-assist",
@@ -54,14 +45,11 @@ const providers = [
     area: "天河 / 越秀",
     service: "办事协助",
     img: "./assets/provider-guangzhou.jpg",
-    desc: "政务代办、资料整理、路线指引，高效可靠。",
-    rating: 4.9,
-    count: 88,
-    price: 350,
-    response: "30 分钟内",
-    strengths: ["政务协助", "资料整理", "生活协助"],
+    budget: 350,
+    desc: "适合政务大厅、银行、医院、学校等非敏感事务的现场指引。",
+    points: ["资料提醒", "路线指引", "流程协助"],
     intro:
-      "适合政务大厅、银行、医院、学校等非敏感事务协助，可提前梳理资料、规划时间并现场陪同。"
+      "广州办事协助服务主要提供资料清单提醒、时间规划、路线指引和现场陪同，不代替用户作出法律、医疗、金融等专业判断。"
   },
   {
     id: "shenzhen-expo",
@@ -70,89 +58,33 @@ const providers = [
     area: "福田会展中心",
     service: "展会陪同",
     img: "./assets/provider-shenzhen.jpg",
-    desc: "展会翻译、商务支持、客户引导，适合高频商务场景。",
-    rating: 5.0,
-    count: 76,
-    price: 600,
-    response: "18 分钟内",
-    strengths: ["展会翻译", "商务支持", "客户引导"],
+    budget: 600,
+    desc: "适合参展接待、客户引导、资料协助和基础沟通支持。",
+    points: ["展会引导", "客户接待", "现场协助"],
     intro:
-      "服务覆盖展会现场引导、参展客户接待、基础翻译、资料协助与会后路线安排，适合企业临时增援。"
+      "深圳展会陪同服务面向展会现场引导、参展客户接待、资料协助和会后路线安排，适合企业临时增加现场支持。"
   },
   {
     id: "chengdu-airport",
-    title: "机场陪同 · 成都",
+    title: "机场接送 · 成都",
     city: "成都",
     area: "双流 / 天府机场",
     service: "机场接送",
     img: "./assets/provider-chengdu.jpg",
-    desc: "准时守候、安全舒适，适合接机送机与中转协助。",
-    rating: 4.9,
-    count: 154,
-    price: 300,
-    response: "20 分钟内",
-    strengths: ["接机送机", "中转协助", "路线安排"],
+    budget: 300,
+    desc: "适合接机送机、中转协助、行李动线和酒店衔接。",
+    points: ["航班衔接", "行李协助", "酒店路线"],
     intro:
-      "根据航班时间、行李数量和目的地安排接送服务，可协助客户完成到达、中转、酒店衔接和城市路线建议。"
+      "成都机场接送服务根据航班时间、行李数量和目的地安排接送方案，强调准时、路线效率和必要的现场协助。"
   }
 ];
 
-const orders = [
-  {
-    id: "D2026070801",
-    title: "商务接待 · 北京",
-    city: "北京",
-    area: "朝阳 CBD",
-    service: "商务接待",
-    date: "2026-07-12",
-    time: "09:30",
-    status: "待确认",
-    budget: "¥500 起",
-    contact: "138****6688"
-  },
-  {
-    id: "D2026070802",
-    title: "展会陪同 · 深圳",
-    city: "深圳",
-    area: "福田会展中心",
-    service: "展会陪同",
-    date: "2026-07-13",
-    time: "14:00",
-    status: "服务中",
-    budget: "¥600 起",
-    contact: "企业客户"
-  },
-  {
-    id: "D2026070703",
-    title: "机场陪同 · 成都",
-    city: "成都",
-    area: "天府机场",
-    service: "机场接送",
-    date: "2026-07-07",
-    time: "18:20",
-    status: "已完成",
-    budget: "¥300 起",
-    contact: "186****9021"
-  }
-];
+const SUPPORT_EMAIL = "zuoxintian9@gmail.com";
+const FORM_ENDPOINT = window.DIPEI_FORM_ENDPOINT || "";
+const DUPLICATE_WINDOW_MS = 60 * 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-
-const featuredGrid = $("#featuredGrid");
-const providerGrid = $("#providerGrid");
-const resultSummary = $("#resultSummary");
-const dialog = $("#providerDialog");
-const dialogBody = $("#dialogBody");
-const authDialog = $("#authDialog");
-const authTitle = $("#authTitle");
-const authSubmit = $("#authSubmit");
-const orderList = $("#orderList");
-const providerOrderRows = $("#providerOrderRows");
-const toast = $("#toast");
-let toastTimer;
-let currentOrderFilter = "all";
-let authMode = "login";
 
 function escapeHtml(value) {
   return String(value ?? "").replace(/[&<>"']/g, (char) => {
@@ -167,8 +99,8 @@ function escapeHtml(value) {
   });
 }
 
-function cleanInput(value, maxLength = 80) {
-  return String(value ?? "").trim().slice(0, maxLength);
+function cleanInput(value, maxLength = 120) {
+  return String(value ?? "").trim().replace(/\s+/g, " ").slice(0, maxLength);
 }
 
 function localDateInputValue(date = new Date()) {
@@ -178,162 +110,79 @@ function localDateInputValue(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
-function renderCard(provider) {
+function showToast(message) {
+  const toast = $("#toast");
+  if (!toast) return;
+  clearTimeout(showToast.timer);
+  toast.textContent = message;
+  toast.classList.add("show");
+  showToast.timer = setTimeout(() => toast.classList.remove("show"), 3200);
+}
+
+function renderScenarioCard(item) {
   const card = document.createElement("article");
-  card.className = "provider-card";
+  card.className = "scenario-card";
   card.innerHTML = `
-    <div class="provider-media">
-      <img src="${escapeHtml(provider.img)}" alt="${escapeHtml(provider.title)}服务者照片" loading="lazy">
+    <div class="scenario-media">
+      <img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.title)}服务场景示意图" loading="lazy" />
+      <span class="badge">场景示意</span>
     </div>
-    <div class="provider-body">
-      <h3>${escapeHtml(provider.title)}</h3>
-      <p class="provider-desc">${escapeHtml(provider.desc)}</p>
-      <div class="provider-meta">
-        <span><b class="star">★</b> ${provider.rating.toFixed(1)}</span>
-        <span>服务${provider.count}次</span>
+    <div class="scenario-body">
+      <h3>${escapeHtml(item.title)}</h3>
+      <p>${escapeHtml(item.desc)}</p>
+      <div class="scenario-tags">
+        ${item.points.map((point) => `<span>${escapeHtml(point)}</span>`).join("")}
       </div>
-      <div class="provider-foot">
-        <strong class="price">¥${provider.price}<small>起</small></strong>
-        <div class="card-actions">
-          <button class="mini-btn" type="button" data-detail="${escapeHtml(provider.id)}">详情</button>
-          <button class="mini-btn primary" type="button" data-book="${escapeHtml(provider.id)}">咨询</button>
-        </div>
+      <div class="scenario-foot">
+        <strong>参考 ${escapeHtml(item.budget)} 元起</strong>
+        <button class="mini-btn primary" type="button" data-detail="${escapeHtml(item.id)}">查看详情</button>
       </div>
     </div>
   `;
   return card;
 }
 
-function renderProviders(list = providers) {
-  featuredGrid.replaceChildren(...providers.map(renderCard));
-  providerGrid.replaceChildren(...list.map(renderCard));
-  resultSummary.textContent = `已为你匹配 ${list.length} 位服务者，可继续按城市、类型、价格与认证状态筛选。`;
-}
-
-function statusClass(status) {
-  if (status === "待确认") return "pending";
-  if (status === "服务中" || status === "已接单") return "active";
-  if (status === "已取消") return "canceled";
-  return "done";
-}
-
-function renderOrderActions(order) {
-  if (order.status === "待确认") {
-    return `
-      <button class="mini-btn primary" type="button" data-order-accept="${escapeHtml(order.id)}">接单</button>
-      <button class="mini-btn" type="button" data-order-reject="${escapeHtml(order.id)}">拒单</button>
-    `;
-  }
-  if (order.status === "服务中") {
-    return `<button class="mini-btn primary" type="button" data-order-complete="${escapeHtml(order.id)}">完成</button>`;
-  }
-  return `<span class="status-pill ${statusClass(order.status)}">${escapeHtml(order.status)}</span>`;
-}
-
-function renderOrders(filter = currentOrderFilter) {
-  currentOrderFilter = filter;
-  const visibleOrders = filter === "all" ? orders : orders.filter((order) => order.status === filter);
-  orderList.replaceChildren(
-    ...visibleOrders.map((order) => {
-      const card = document.createElement("article");
-      card.className = "order-card";
-      card.innerHTML = `
-        <div>
-          <h3>${escapeHtml(order.title)}</h3>
-          <p>${escapeHtml(order.area)} · ${escapeHtml(order.service)} · ${escapeHtml(order.budget)}</p>
-          <div class="order-meta">
-            <span>订单号 ${escapeHtml(order.id)}</span>
-            <span>${escapeHtml(order.date)} ${escapeHtml(order.time)}</span>
-            <span>${escapeHtml(order.contact)}</span>
-          </div>
-        </div>
-        <span class="status-pill ${statusClass(order.status)}">${escapeHtml(order.status)}</span>
-      `;
-      return card;
-    })
-  );
-
-  $("#totalOrders").textContent = orders.length;
-  $("#pendingOrders").textContent = orders.filter((order) => order.status === "待确认").length;
-  $("#activeOrders").textContent = orders.filter((order) => order.status === "服务中").length;
-  $("#doneOrders").textContent = orders.filter((order) => order.status === "已完成").length;
-}
-
-function renderProviderOrders() {
-  const providerOrders = orders.filter((order) => order.status === "待确认" || order.status === "服务中");
-  providerOrderRows.replaceChildren(
-    ...providerOrders.map((order) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${escapeHtml(order.id)}</td>
-        <td>${escapeHtml(order.city)}</td>
-        <td>${escapeHtml(order.date)} ${escapeHtml(order.time)}</td>
-        <td><span class="status-pill ${statusClass(order.status)}">${escapeHtml(order.status)}</span></td>
-        <td>${renderOrderActions(order)}</td>
-      `;
-      return row;
-    })
-  );
-}
-
-function filterByPrice(provider, value) {
-  if (!value) return true;
-  if (value === "399") return provider.price <= 399;
-  if (value === "499") return provider.price >= 400 && provider.price <= 499;
-  if (value === "599") return provider.price >= 500 && provider.price <= 599;
-  return provider.price >= 600;
-}
-
-function applyFilters() {
-  const city = $("#filterCity").value;
-  const service = $("#filterService").value;
-  const price = $("#filterPrice").value;
-  const verified = $("#filterVerified").value;
-  const filtered = providers.filter((provider) => {
-    return (
-      (!city || provider.city === city) &&
-      (!service || provider.service === service) &&
-      filterByPrice(provider, price) &&
-      (!verified || verified === "verified")
-    );
+function filterScenarios() {
+  const city = $("#filterCity")?.value || "";
+  const service = $("#filterService")?.value || "";
+  const budget = Number($("#filterBudget")?.value || 0);
+  const filtered = scenarios.filter((item) => {
+    return (!city || item.city === city) && (!service || item.service === service) && (!budget || item.budget >= budget);
   });
-
-  providerGrid.replaceChildren(...filtered.map(renderCard));
-  resultSummary.textContent = filtered.length
-    ? `已为你匹配 ${filtered.length} 位服务者，可点击详情查看服务范围与流程。`
-    : "暂未找到完全匹配的服务者，建议放宽城市、价格或服务类型。";
+  const grid = $("#scenarioGrid");
+  if (grid) grid.replaceChildren(...filtered.map(renderScenarioCard));
+  const summary = $("#resultSummary");
+  if (summary) {
+    summary.textContent = filtered.length
+      ? `当前匹配 ${filtered.length} 个开放服务场景，可继续筛选或直接提交预约需求。`
+      : "暂未找到完全匹配的服务场景，建议放宽城市、类型或预算条件。";
+  }
 }
 
-function showToast(message) {
-  clearTimeout(toastTimer);
-  toast.textContent = message;
-  toast.classList.add("show");
-  toastTimer = setTimeout(() => toast.classList.remove("show"), 2600);
-}
+function openScenarioDetail(id) {
+  const item = scenarios.find((scenario) => scenario.id === id);
+  const dialog = $("#scenarioDialog");
+  const body = $("#dialogBody");
+  if (!item || !dialog || !body) return;
 
-function openDetail(id) {
-  const provider = providers.find((item) => item.id === id);
-  if (!provider) return;
-  dialogBody.innerHTML = `
+  body.innerHTML = `
     <article class="dialog-provider">
-      <img src="${escapeHtml(provider.img)}" alt="${escapeHtml(provider.title)}服务者照片">
+      <img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.title)}服务场景示意图" />
       <div class="dialog-info">
-        <span class="badge">✓ 已认证</span>
-        <h2>${escapeHtml(provider.title)}</h2>
-        <p>${escapeHtml(provider.intro)}</p>
+        <span class="badge">正规服务场景</span>
+        <h2>${escapeHtml(item.title)}</h2>
+        <p>${escapeHtml(item.intro)}</p>
         <div class="detail-grid">
-          <span><strong>服务城市</strong>${escapeHtml(provider.city)} · ${escapeHtml(provider.area)}</span>
-          <span><strong>服务类型</strong>${escapeHtml(provider.service)}</span>
-          <span><strong>起步价格</strong>¥${provider.price} 起</span>
-          <span><strong>响应速度</strong>${escapeHtml(provider.response)}</span>
-          <span><strong>服务评分</strong>${provider.rating.toFixed(1)} / 5.0</span>
-          <span><strong>服务次数</strong>${provider.count} 次</span>
+          <span><strong>开放城市</strong>${escapeHtml(item.city)} · ${escapeHtml(item.area)}</span>
+          <span><strong>服务类型</strong>${escapeHtml(item.service)}</span>
+          <span><strong>参考预算</strong>${escapeHtml(item.budget)} 元起</span>
+          <span><strong>服务边界</strong>仅限正规陪同与协助</span>
         </div>
-        <p><strong>擅长：</strong>${escapeHtml(provider.strengths.join(" / "))}</p>
-        <p><strong>服务流程：</strong>提交需求 → 平台确认 → 服务者沟通 → 确认时间地点 → 开始服务 → 完成评价。</p>
+        <p><strong>可沟通事项：</strong>${escapeHtml(item.points.join(" / "))}</p>
+        <p><strong>禁止内容：</strong>违法违规、低俗色情、私下交易、侵犯隐私、虚假资料和诱导绕开平台的行为。</p>
         <div class="dialog-actions">
-          <button class="btn gold" type="button" data-book="${escapeHtml(provider.id)}">立即咨询</button>
-          <button class="btn ghost" type="button" data-close-dialog>稍后再看</button>
+          <button class="btn gold" type="button" data-prefill="${escapeHtml(item.id)}">带入预约表单</button>
+          <button class="btn ghost" type="button" data-close-dialog>关闭</button>
         </div>
       </div>
     </article>
@@ -342,247 +191,228 @@ function openDetail(id) {
   document.body.classList.add("dialog-open");
 }
 
-function closeDialog() {
-  if (dialog.open) dialog.close();
+function closeScenarioDialog() {
+  const dialog = $("#scenarioDialog");
+  if (dialog?.open) dialog.close();
   document.body.classList.remove("dialog-open");
 }
 
 function prefillBooking(id) {
-  const provider = providers.find((item) => item.id === id);
-  if (!provider) return;
+  const item = scenarios.find((scenario) => scenario.id === id);
   const form = $("#bookingForm");
-  form.city.value = provider.city;
-  form.service.value = provider.service;
-  form.area.value = provider.area;
-  form.budget.value = `¥${provider.price} 起`;
-  closeDialog();
-  $("#booking").scrollIntoView({ behavior: "smooth", block: "start" });
-  showToast(`已带入 ${provider.title} 的预约信息，请补充时间和联系方式。`);
+  if (!item || !form) return;
+  form.city.value = item.city;
+  form.area.value = item.area;
+  form.service.value = item.service;
+  form.budget.value = String(item.budget);
+  closeScenarioDialog();
+  $("#booking")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  showToast(`已带入 ${item.title} 的预约信息，请补充时间、人数和联系方式。`);
 }
 
-function syncSearchToFilters(formData) {
-  $("#filterCity").value = formData.get("city") || "";
-  $("#filterService").value = formData.get("service") || "";
-  $("#filterPrice").value = "";
-  $("#filterVerified").value = "verified";
-  applyFilters();
+function isContactValid(value) {
+  const contact = cleanInput(value, 80);
+  const phone = /^1[3-9]\d{9}$/;
+  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const wechat = /^[a-zA-Z][-_a-zA-Z0-9]{4,19}$/;
+  return phone.test(contact) || email.test(contact) || wechat.test(contact);
 }
 
-function openAuth(mode = "login") {
-  setAuthMode(mode);
-  authDialog.showModal();
-  document.body.classList.add("dialog-open");
+function isBudgetValid(value) {
+  return /^\d{2,6}(\s*[-~至]\s*\d{2,6})?$/.test(cleanInput(value, 30));
 }
 
-function closeAuth() {
-  if (authDialog.open) authDialog.close();
-  document.body.classList.remove("dialog-open");
-}
+function validateLeadForm(form) {
+  const errors = [];
+  const today = localDateInputValue();
+  const formType = form.dataset.leadType || "表单";
+  const requiredFields = [...form.querySelectorAll("[required]")];
 
-function setAuthMode(mode) {
-  authMode = mode;
-  $("[data-auth-mode='login']").classList.toggle("active", mode === "login");
-  $("[data-auth-mode='register']").classList.toggle("active", mode === "register");
-  authTitle.textContent = mode === "login" ? "登录地陪客户" : "注册地陪客户";
-  authSubmit.textContent = mode === "login" ? "登录" : "注册";
-  $("#roleField").classList.toggle("is-hidden", mode !== "register");
-}
-
-function addOrderFromBooking(form) {
-  const formData = new FormData(form);
-  const service = cleanInput(formData.get("service"), 24);
-  const city = cleanInput(formData.get("city"), 24);
-  const area = cleanInput(formData.get("area"), 60);
-  const date = cleanInput(formData.get("date"), 10);
-  const time = cleanInput(formData.get("time"), 5);
-  const budget = cleanInput(formData.get("budget"), 30) || "待确认";
-  const id = `D${Date.now().toString().slice(-10)}`;
-  orders.unshift({
-    id,
-    title: `${service} · ${city}`,
-    city,
-    area,
-    service,
-    date,
-    time,
-    status: "待确认",
-    budget,
-    contact: cleanInput(formData.get("contact"), 40)
+  requiredFields.forEach((field) => {
+    const type = field.type;
+    const empty = type === "checkbox" ? !field.checked : !cleanInput(field.value, 500);
+    if (empty) errors.push("请完整填写必填项，并勾选协议同意。");
   });
-  renderOrders("all");
-  renderProviderOrders();
+
+  const date = form.elements.date?.value;
+  if (date && date < today) errors.push("预约日期不能早于今天。");
+
+  const people = form.elements.people?.value;
+  if (people && (Number(people) < 1 || Number(people) > 99)) errors.push("人数需在 1 到 99 之间。");
+
+  const budget = form.elements.budget?.value;
+  if (budget && !isBudgetValid(budget)) errors.push("预算请填写数字或区间，例如 500 或 500-800。");
+
+  const price = form.elements.price?.value;
+  if (price && !/^\d{2,6}$/.test(cleanInput(price, 8))) errors.push("起步价格请填写纯数字。");
+
+  const contact = form.elements.contact?.value || form.elements.phone?.value;
+  if (contact && !isContactValid(contact)) errors.push("联系方式请填写 11 位手机号、邮箱或有效微信号。");
+
+  const wechat = form.elements.wechat?.value;
+  if (wechat && !isContactValid(wechat)) errors.push("微信号格式不正确，请检查后再提交。");
+
+  const detail = form.elements.detail?.value;
+  if (detail && cleanInput(detail, 500).length < 12) errors.push("具体需求描述至少需要 12 个字。");
+
+  const intro = form.elements.intro?.value;
+  if (intro && cleanInput(intro, 500).length < 20) errors.push("服务介绍至少需要 20 个字。");
+
+  const unique = [...new Set(errors)];
+  if (unique.length) {
+    showToast(unique[0]);
+    return false;
+  }
+
+  const duplicateKey = `dipei:last-submit:${formType}:${contact || cleanInput(form.elements.name?.value || "", 40)}`;
+  const lastSubmit = Number(localStorage.getItem(duplicateKey) || 0);
+  if (Date.now() - lastSubmit < DUPLICATE_WINDOW_MS) {
+    showToast("提交过于频繁，请稍后再试。");
+    return false;
+  }
+  localStorage.setItem(duplicateKey, String(Date.now()));
+  return true;
 }
 
-renderProviders();
-renderOrders();
-renderProviderOrders();
+function collectFormPayload(form) {
+  const data = new FormData(form);
+  const payload = {
+    表单类型: form.dataset.leadType || "表单",
+    来源页面: form.dataset.source || window.location.pathname,
+    提交时间: new Date().toLocaleString("zh-CN", { hour12: false }),
+    处理状态: "待处理"
+  };
+  data.forEach((value, key) => {
+    if (key === "consent") return;
+    payload[key] = cleanInput(value, 500);
+  });
+  payload.协议同意 = "已阅读并同意";
+  return payload;
+}
 
-$("#searchForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  syncSearchToFilters(new FormData(event.currentTarget));
-  $("#serviceList").scrollIntoView({ behavior: "smooth", block: "start" });
-});
+function payloadToText(payload) {
+  return Object.entries(payload)
+    .map(([key, value]) => `${key}: ${value || "未填写"}`)
+    .join("\n");
+}
 
-["#filterCity", "#filterService", "#filterPrice", "#filterVerified"].forEach((selector) => {
-  $(selector).addEventListener("change", applyFilters);
-});
+async function submitLead(form) {
+  const payload = collectFormPayload(form);
+  if (FORM_ENDPOINT) {
+    const response = await fetch(FORM_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error("提交失败");
+    return "提交成功";
+  }
 
-$("#resetFilters").addEventListener("click", () => {
-  $("#filterCity").value = "";
-  $("#filterService").value = "";
-  $("#filterPrice").value = "";
-  $("#filterVerified").value = "";
-  applyFilters();
-});
+  const subject = encodeURIComponent(`地陪客户${payload.表单类型}`);
+  const body = encodeURIComponent(payloadToText(payload));
+  window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+  return "请在打开的邮件窗口中确认发送";
+}
+
+function bindLeadForms() {
+  $$("[data-lead-form]").forEach((form) => {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!validateLeadForm(form)) return;
+      const submitButton = form.querySelector('[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = "正在提交...";
+      try {
+        const result = await submitLead(form);
+        form.reset();
+        showToast(`${result}，请确认发送后客服才能收到。`);
+      } catch (error) {
+        showToast("提交失败，请通过联系客服页面补充发送。");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = submitButton.dataset.label || submitButton.textContent.replace("正在提交...", "提交");
+      }
+    });
+  });
+}
+
+function bindNavigation() {
+  const menuToggle = $("#menuToggle");
+  const mainNav = $("#mainNav");
+  if (!menuToggle || !mainNav) return;
+  menuToggle.addEventListener("click", () => {
+    const isOpen = mainNav.classList.toggle("open");
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+    document.body.classList.toggle("menu-open", isOpen);
+  });
+
+  mainNav.addEventListener("click", (event) => {
+    if (event.target.matches("a")) {
+      $$(".main-nav a").forEach((link) => link.classList.remove("active"));
+      event.target.classList.add("active");
+      mainNav.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      document.body.classList.remove("menu-open");
+    }
+  });
+}
 
 document.addEventListener("click", (event) => {
-  const detailButton = event.target.closest("[data-detail]");
-  const bookButton = event.target.closest("[data-book]");
-  const closeButton = event.target.closest("[data-close-dialog]");
   const categoryButton = event.target.closest("[data-service]");
-  const headerAction = event.target.closest("[data-action]");
-  const orderFilter = event.target.closest("[data-order-filter]");
-  const authModeButton = event.target.closest("[data-auth-mode]");
-  const acceptButton = event.target.closest("[data-order-accept]");
-  const rejectButton = event.target.closest("[data-order-reject]");
-  const completeButton = event.target.closest("[data-order-complete]");
-  const adminPassButton = event.target.closest("[data-admin-pass]");
+  const detailButton = event.target.closest("[data-detail]");
+  const prefillButton = event.target.closest("[data-prefill]");
+  const closeButton = event.target.closest("[data-close-dialog]");
 
-  if (detailButton) openDetail(detailButton.dataset.detail);
-  if (bookButton) prefillBooking(bookButton.dataset.book);
-  if (closeButton) closeDialog();
   if (categoryButton) {
     $$(".category-card").forEach((button) => button.classList.remove("active"));
     categoryButton.classList.add("active");
-    $("#filterService").value = categoryButton.dataset.service;
-    applyFilters();
-    $("#serviceList").scrollIntoView({ behavior: "smooth", block: "start" });
+    const filterService = $("#filterService");
+    if (filterService) filterService.value = categoryButton.dataset.service;
+    filterScenarios();
+    $("#cities")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  if (headerAction) {
-    if (headerAction.dataset.action === "login") openAuth("login");
-    if (headerAction.dataset.action === "register") openAuth("register");
-    if (headerAction.dataset.action === "provider-register") {
-      $("#join").scrollIntoView({ behavior: "smooth", block: "start" });
-      openAuth("register");
-      $("select[name='role']", $("#authForm")).value = "服务者";
-    }
-    if (headerAction.dataset.action === "admin-login") {
-      openAuth("login");
-      showToast("管理员登录入口已打开，静态原型会模拟权限校验。");
-    }
-  }
-  if (orderFilter) {
-    $$(".segmented [data-order-filter]").forEach((button) => button.classList.remove("active"));
-    orderFilter.classList.add("active");
-    renderOrders(orderFilter.dataset.orderFilter);
-  }
-  if (authModeButton) {
-    setAuthMode(authModeButton.dataset.authMode);
-  }
-  if (acceptButton) {
-    const order = orders.find((item) => item.id === acceptButton.dataset.orderAccept);
-    if (order) {
-      order.status = "服务中";
-      renderOrders(currentOrderFilter);
-      renderProviderOrders();
-      showToast(`${order.id} 已接单，状态更新为服务中。`);
-    }
-  }
-  if (rejectButton) {
-    const order = orders.find((item) => item.id === rejectButton.dataset.orderReject);
-    if (order) {
-      order.status = "已取消";
-      renderOrders(currentOrderFilter);
-      renderProviderOrders();
-      showToast(`${order.id} 已拒单，订单状态已取消。`);
-    }
-  }
-  if (completeButton) {
-    const order = orders.find((item) => item.id === completeButton.dataset.orderComplete);
-    if (order) {
-      order.status = "已完成";
-      renderOrders(currentOrderFilter);
-      renderProviderOrders();
-      showToast(`${order.id} 已完成，等待用户评价。`);
-    }
-  }
-  if (adminPassButton) {
-    const row = adminPassButton.closest("tr");
-    row.querySelector(".status-pill").className = "status-pill done";
-    row.querySelector(".status-pill").textContent = "已通过";
-    adminPassButton.disabled = true;
-    adminPassButton.textContent = "已通过";
-    $("#reviewCount").textContent = Math.max(0, Number($("#reviewCount").textContent) - 1);
-    showToast("服务者审核已通过，可在前台推荐位展示。");
-  }
+  if (detailButton) openScenarioDetail(detailButton.dataset.detail);
+  if (prefillButton) prefillBooking(prefillButton.dataset.prefill);
+  if (closeButton) closeScenarioDialog();
 });
 
-$("#dialogClose").addEventListener("click", closeDialog);
-$("#authClose").addEventListener("click", closeAuth);
-
-dialog.addEventListener("click", (event) => {
-  if (event.target === dialog) closeDialog();
+$("#dialogClose")?.addEventListener("click", closeScenarioDialog);
+$("#scenarioDialog")?.addEventListener("click", (event) => {
+  if (event.target === $("#scenarioDialog")) closeScenarioDialog();
 });
 
-authDialog.addEventListener("click", (event) => {
-  if (event.target === authDialog) closeAuth();
-});
-
-$("#bookingForm").addEventListener("submit", (event) => {
+$("#searchForm")?.addEventListener("submit", (event) => {
   event.preventDefault();
-  addOrderFromBooking(event.currentTarget);
-  event.currentTarget.reset();
-  $("#clientDesk").scrollIntoView({ behavior: "smooth", block: "start" });
-  showToast("预约需求已提交，并已生成一条待确认订单。");
+  const formData = new FormData(event.currentTarget);
+  const city = $("#filterCity");
+  const service = $("#filterService");
+  if (city) city.value = formData.get("city") || "";
+  if (service) service.value = formData.get("service") || "";
+  filterScenarios();
+  $("#cities")?.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-$("#authForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const role = new FormData(event.currentTarget).get("role");
-  closeAuth();
-  showToast(authMode === "login" ? `${role || "用户"}登录成功，已进入原型工作流。` : `${role}注册信息已提交。`);
+["#filterCity", "#filterService", "#filterBudget"].forEach((selector) => {
+  $(selector)?.addEventListener("change", filterScenarios);
 });
 
-$("#providerForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  $("#providerAuditState").className = "status-pill pending";
-  $("#providerAuditState").textContent = "审核中";
-  showToast("入驻资料已提交，后台审核通过后可展示到前台。");
-});
-
-$("#publishService").addEventListener("click", () => {
-  $("#providerAuditState").className = "status-pill active";
-  $("#providerAuditState").textContent = "服务待上架";
-  showToast("服务项目已保存，等待管理员上架。");
-});
-
-$("#addCity").addEventListener("click", () => {
-  const tag = document.createElement("span");
-  tag.textContent = "杭州 · 5 区";
-  $("#cityTags").append(tag);
-  showToast("已添加示例城市：杭州。");
-});
-
-const menuToggle = $("#menuToggle");
-const mainNav = $("#mainNav");
-
-menuToggle.addEventListener("click", () => {
-  const isOpen = mainNav.classList.toggle("open");
-  menuToggle.setAttribute("aria-expanded", String(isOpen));
-  document.body.classList.toggle("menu-open", isOpen);
-});
-
-mainNav.addEventListener("click", (event) => {
-  if (event.target.matches("a")) {
-    $$(".main-nav a").forEach((link) => link.classList.remove("active"));
-    event.target.classList.add("active");
-    mainNav.classList.remove("open");
-    menuToggle.setAttribute("aria-expanded", "false");
-    document.body.classList.remove("menu-open");
-  }
+$("#resetFilters")?.addEventListener("click", () => {
+  ["#filterCity", "#filterService", "#filterBudget"].forEach((selector) => {
+    const input = $(selector);
+    if (input) input.value = "";
+  });
+  filterScenarios();
 });
 
 const today = localDateInputValue();
 $$('input[type="date"]').forEach((input) => {
   input.min = today;
 });
+
+$$('[type="submit"]').forEach((button) => {
+  button.dataset.label = button.textContent;
+});
+
+bindNavigation();
+bindLeadForms();
+filterScenarios();

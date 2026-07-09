@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>联系客服｜地陪客户</title>
+    <meta name="description" content="联系地陪客户客服，咨询预约、城市服务、入驻合作和投诉处理。" />
+    <link rel="canonical" href="https://www.dipeikehu.com/contact.html" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./"><span><strong>地陪客户</strong><small>专业陪同服务平台</small></span></a>
+        <nav class="main-nav" id="mainNav" aria-label="主导航">
+          <a href="./">首页</a>
+          <a class="active" href="./contact.html">联系客服</a>
+          <a href="./report.html">投诉举报</a>
+          <a href="./privacy.html">隐私政策</a>
+        </nav>
+        <button class="menu-toggle" id="menuToggle" aria-label="展开导航" aria-expanded="false">菜单</button>
+      </div>
+    </header>
+    <main>
+      <section class="page-hero">
+        <div class="container">
+          <p class="eyebrow">联系客服</p>
+          <h1>咨询预约与合作问题</h1>
+          <p>客服邮箱：<a href="mailto:zuoxintian9@gmail.com">zuoxintian9@gmail.com</a>。你也可以通过下方表单生成邮件内容。</p>
+        </div>
+      </section>
+      <section class="page-main">
+        <div class="container">
+          <div class="contact-card">
+            <form class="contact-form" data-lead-form data-lead-type="客服咨询" data-source="/contact.html" novalidate>
+              <label>
+                姓名
+                <input name="name" maxlength="30" placeholder="请输入称呼" required />
+              </label>
+              <label>
+                联系方式
+                <input name="contact" maxlength="40" placeholder="手机号 / 微信 / 邮箱" required />
+              </label>
+              <label>
+                咨询类型
+                <select name="topic" required>
+                  <option value="">请选择</option>
+                  <option>预约咨询</option>
+                  <option>入驻合作</option>
+                  <option>费用说明</option>
+                  <option>隐私与协议</option>
+                </select>
+              </label>
+              <label class="full">
+                问题描述
+                <textarea name="detail" rows="5" minlength="12" maxlength="500" placeholder="请描述你的问题，至少 12 个字。" required></textarea>
+              </label>
+              <label class="consent-line full">
+                <input type="checkbox" name="consent" value="已同意" required />
+                <span>我已阅读并同意 <a href="./privacy.html">隐私政策</a></span>
+              </label>
+              <button class="btn gold" type="submit">提交咨询</button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

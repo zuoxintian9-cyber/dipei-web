@@ -1,24 +1,35 @@
+const crypto = require("crypto");
+
 const BASE_APP_TOKEN = process.env.FEISHU_BASE_APP_TOKEN || "GgevbG7I6aQzsJsbWRtcPCnCn4c";
+const BASE_APP_URL = process.env.FEISHU_BASE_URL || `https://my.feishu.cn/base/${BASE_APP_TOKEN}`;
 
 const TABLE_CONFIG = {
   "用户预约需求表": {
     env: "FEISHU_TABLE_BOOKING",
     name: "用户预约需求表",
+    notifyEnv: "FEISHU_NOTIFY_BOOKING_WEBHOOK",
+    notifySecretEnv: "FEISHU_NOTIFY_BOOKING_SECRET",
     buildFields: buildBookingFields
   },
   "服务者入驻申请表": {
     env: "FEISHU_TABLE_PROVIDER_APPLY",
     name: "服务者入驻申请表",
+    notifyEnv: "FEISHU_NOTIFY_PROVIDER_WEBHOOK",
+    notifySecretEnv: "FEISHU_NOTIFY_PROVIDER_SECRET",
     buildFields: buildProviderFields
   },
   "投诉举报表": {
     env: "FEISHU_TABLE_REPORT",
     name: "投诉举报表",
+    notifyEnv: "FEISHU_NOTIFY_REPORT_WEBHOOK",
+    notifySecretEnv: "FEISHU_NOTIFY_REPORT_SECRET",
     buildFields: buildReportFields
   },
   "客户咨询线索表": {
     env: "FEISHU_TABLE_CONSULT",
     name: "客户咨询线索表",
+    notifyEnv: "FEISHU_NOTIFY_CONSULT_WEBHOOK",
+    notifySecretEnv: "FEISHU_NOTIFY_CONSULT_SECRET",
     buildFields: buildConsultFields
   }
 };
@@ -57,8 +68,8 @@ function compactFields(fields) {
 function withSource(payload, fields) {
   return compactFields({
     ...fields,
-    来源页面: clean(payload.来源页面 || payload.sourcePage || payload.source || payload.来源页),
-    备注: clean(payload.area) ? `服务区域：${clean(payload.area)}` : undefined
+    提交时间: clean(payload.提交时间),
+    来源页面: clean(payload.来源页面 || payload.sourcePage || payload.source || payload.来源页)
   });
 }
 
@@ -68,6 +79,7 @@ function buildBookingFields(payload) {
     手机号: clean(payload.phone),
     微信号: clean(payload.wechat),
     所在城市: clean(payload.city),
+    服务区域: clean(payload.area),
     服务类型: clean(payload.service),
     预约日期: toFeishuDate(payload.date),
     预约时间段: clean(payload.timeSlot),
@@ -83,6 +95,7 @@ function buildBookingFields(payload) {
 
 function buildProviderFields(payload) {
   return compactFields({
+    提交时间: clean(payload.提交时间),
     "姓名/昵称": clean(payload.name),
     手机号: clean(payload.phone),
     微信号: clean(payload.wechat),
@@ -105,26 +118,136 @@ function buildProviderFields(payload) {
 
 function buildReportFields(payload) {
   return compactFields({
+    提交时间: clean(payload.提交时间),
     "投诉人姓名/称呼": clean(payload.complainantName),
-    联系方式: clean(payload.contact),
+    联系方式: clean(payload.contact || payload.phone),
+    关联订单: clean(payload.orderRef),
     被投诉对象: clean(payload.target),
-    投诉类型: clean(payload.topic),
+    投诉类型: clean(payload.topic || payload.reportType),
+    相关城市: clean(payload.city),
     投诉内容: clean(payload.detail),
     处理状态: "待处理",
-    风险等级: clean(payload.riskLevel, "中"),
-    处理结果: clean(payload.orderRef) ? `关联订单：${clean(payload.orderRef)}` : undefined
+    风险等级: clean(payload.riskLevel, "中")
   });
 }
 
 function buildConsultFields(payload) {
   return compactFields({
+    提交时间: clean(payload.提交时间),
     客户称呼: clean(payload.name),
     联系方式: clean(payload.contact),
     咨询城市: clean(payload.city),
+    咨询类型: clean(payload.topic),
     咨询内容: clean(payload.detail || payload.topic),
     来源页面: clean(payload.来源页面 || payload.sourcePage || payload.source),
     跟进状态: "待联系"
   });
+}
+
+function field(fields, name, fallback = "未填写") {
+  return clean(fields[name], fallback);
+}
+
+function formatDate(value) {
+  if (!value) return "未填写";
+  const date = new Date(Number(value));
+  if (Number.isNaN(date.getTime())) return clean(value, "未填写");
+  return date.toLocaleDateString("zh-CN", { timeZone: "Asia/Shanghai" });
+}
+
+function truncate(value, maxLength = 160) {
+  const text = clean(value);
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}
+
+function buildNotificationText(config, fields, recordId) {
+  const header = `【地陪客户网】${config.name}新增记录`;
+  const common = [`记录ID：${recordId || "未返回"}`, `后台：${BASE_APP_URL}`];
+
+  if (config.name === "用户预约需求表") {
+    return [
+      header,
+      `城市：${field(fields, "所在城市")}`,
+      `服务类型：${field(fields, "服务类型")}`,
+      `预约日期：${formatDate(fields.预约日期)}`,
+      `客户：${field(fields, "客户姓名/称呼")}`,
+      `手机：${field(fields, "手机号")}`,
+      `微信：${field(fields, "微信号")}`,
+      `需求：${truncate(fields.具体需求)}`,
+      ...common
+    ].join("\n");
+  }
+
+  if (config.name === "服务者入驻申请表") {
+    return [
+      header,
+      `城市：${field(fields, "所在城市")}`,
+      `服务类型：${Array.isArray(fields.服务类型) ? fields.服务类型.join("、") : field(fields, "服务类型")}`,
+      `姓名：${field(fields, "姓名/昵称")}`,
+      `手机：${field(fields, "手机号")}`,
+      `微信：${field(fields, "微信号")}`,
+      `介绍：${truncate(fields.个人介绍)}`,
+      ...common
+    ].join("\n");
+  }
+
+  if (config.name === "投诉举报表") {
+    return [
+      header,
+      `风险等级：${field(fields, "风险等级")}`,
+      `投诉类型：${field(fields, "投诉类型")}`,
+      `投诉人：${field(fields, "投诉人姓名/称呼")}`,
+      `联系方式：${field(fields, "联系方式")}`,
+      `被投诉对象：${field(fields, "被投诉对象")}`,
+      `内容：${truncate(fields.投诉内容)}`,
+      ...common
+    ].join("\n");
+  }
+
+  return [
+    header,
+    `城市：${field(fields, "咨询城市")}`,
+    `咨询类型：${field(fields, "咨询类型")}`,
+    `客户：${field(fields, "客户称呼")}`,
+    `联系方式：${field(fields, "联系方式")}`,
+    `内容：${truncate(fields.咨询内容)}`,
+    ...common
+  ].join("\n");
+}
+
+function signFeishuBot(timestamp, secret) {
+  const stringToSign = `${timestamp}\n${secret}`;
+  return crypto.createHmac("sha256", stringToSign).update("").digest("base64");
+}
+
+async function sendNotification(config, fields, recordId) {
+  const webhook = clean(process.env[config.notifyEnv] || process.env.FEISHU_NOTIFY_WEBHOOK || process.env.FEISHU_BOT_WEBHOOK);
+  if (!webhook) return false;
+
+  const secret = clean(process.env[config.notifySecretEnv] || process.env.FEISHU_NOTIFY_SECRET || process.env.FEISHU_BOT_SECRET);
+  const timestamp = String(Math.floor(Date.now() / 1000));
+  const body = {
+    msg_type: "text",
+    content: {
+      text: buildNotificationText(config, fields, recordId)
+    }
+  };
+  if (secret) {
+    body.timestamp = timestamp;
+    body.sign = signFeishuBot(timestamp, secret);
+  }
+
+  const response = await fetch(webhook, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  const result = await response.json().catch(() => ({}));
+  const okCode = result.code === 0 || result.StatusCode === 0 || result.status_code === 0;
+  if (!response.ok || !okCode) {
+    throw new Error(result.msg || result.StatusMessage || response.statusText || "飞书机器人通知失败");
+  }
+  return true;
 }
 
 async function feishuFetch(url, options = {}) {
@@ -160,6 +283,19 @@ async function listTables(token) {
     headers: { Authorization: `Bearer ${token}` }
   });
   return body.data?.items || [];
+}
+
+async function listFields(token, tableId) {
+  const body = await feishuFetch(`https://open.feishu.cn/open-apis/bitable/v1/apps/${BASE_APP_TOKEN}/tables/${tableId}/fields?page_size=100`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return body.data?.items || [];
+}
+
+async function filterKnownFields(token, tableId, fields) {
+  const existingFields = await listFields(token, tableId);
+  const existingNames = new Set(existingFields.map((item) => item.field_name || item.name));
+  return Object.fromEntries(Object.entries(fields).filter(([name]) => existingNames.has(name)));
 }
 
 async function resolveTableId(token, config) {
@@ -222,8 +358,16 @@ module.exports = async function handler(req, res) {
     }
 
     const fields = config.buildFields(payload);
-    const record = await createRecord(token, tableId, fields);
-    res.status(200).json({ ok: true, table: config.name, recordId: record?.record_id || "" });
+    const writableFields = await filterKnownFields(token, tableId, fields);
+    const record = await createRecord(token, tableId, writableFields);
+    const recordId = record?.record_id || "";
+    let notified = false;
+    try {
+      notified = await sendNotification(config, fields, recordId);
+    } catch (notifyError) {
+      console.error("Feishu notification failed:", notifyError.message);
+    }
+    res.status(200).json({ ok: true, table: config.name, recordId, notified });
   } catch (error) {
     res.status(500).json({ ok: false, code: "FEISHU_SUBMIT_FAILED", message: error.message });
   }

@@ -311,7 +311,7 @@ async function submitLead(form) {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(payload)
       });
-      if (response.ok) return "提交成功";
+      if (response.ok) return "提交成功，客服会尽快联系你。";
       const result = await response.json().catch(() => ({}));
       if (result.code !== "FEISHU_NOT_CONFIGURED") throw new Error("提交失败");
     } catch (error) {
@@ -322,7 +322,7 @@ async function submitLead(form) {
   const subject = encodeURIComponent(`地陪客户${payload.表单类型}`);
   const body = encodeURIComponent(payloadToText(payload));
   window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
-  return "请在打开的邮件窗口中确认发送";
+  return "请在打开的邮件窗口中确认发送，客服才能收到。";
 }
 
 function bindLeadForms() {
@@ -336,7 +336,7 @@ function bindLeadForms() {
       try {
         const result = await submitLead(form);
         form.reset();
-        showToast(`${result}，请确认发送后客服才能收到。`);
+        showToast(result);
       } catch (error) {
         showToast("提交失败，请通过联系客服页面补充发送。");
       } finally {

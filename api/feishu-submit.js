@@ -58,6 +58,29 @@ function clean(value, fallback = "") {
   return String(value ?? fallback).trim();
 }
 
+function localSubmitTime() {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("zh-CN", {
+      timeZone: "Asia/Shanghai",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false
+    })
+      .formatToParts(new Date())
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
+  );
+  return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute}:${parts.second}`;
+}
+
+function submitTime(payload) {
+  return clean(payload.提交时间) || localSubmitTime();
+}
+
 function hasRiskContent(value) {
   const text = clean(value).toLowerCase();
   return RISK_WORDS.some((word) => text.includes(word.toLowerCase()));
@@ -120,7 +143,7 @@ function compactFields(fields) {
 function withSource(payload, fields) {
   return compactFields({
     ...fields,
-    提交时间: clean(payload.提交时间),
+    提交时间: submitTime(payload),
     来源页面: clean(payload.来源页面 || payload.sourcePage || payload.source || payload.来源页)
   });
 }
@@ -147,7 +170,7 @@ function buildBookingFields(payload) {
 
 function buildProviderFields(payload) {
   return compactFields({
-    提交时间: clean(payload.提交时间),
+    提交时间: submitTime(payload),
     "姓名/昵称": clean(payload.name),
     手机号: clean(payload.phone),
     微信号: clean(payload.wechat),
@@ -170,7 +193,7 @@ function buildProviderFields(payload) {
 
 function buildReportFields(payload) {
   return compactFields({
-    提交时间: clean(payload.提交时间),
+    提交时间: submitTime(payload),
     "投诉人姓名/称呼": clean(payload.complainantName),
     联系方式: clean(payload.contact || payload.phone),
     关联订单: clean(payload.orderRef),
@@ -209,7 +232,7 @@ function buildConsultFields(payload) {
   ].filter(Boolean);
   const detail = clean(payload.detail || rawTopic);
   return compactFields({
-    提交时间: clean(payload.提交时间),
+    提交时间: submitTime(payload),
     客户称呼: clean(payload.name),
     联系方式: clean(payload.contact),
     咨询城市: clean(payload.city),

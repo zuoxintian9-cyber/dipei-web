@@ -183,16 +183,36 @@ function buildReportFields(payload) {
   });
 }
 
+function normalizeConsultTopic(topic) {
+  const rawTopic = clean(topic);
+  const topicMap = {
+    订单进度: "预约咨询",
+    服务者资料补充: "入驻合作",
+    服务者中心: "入驻合作"
+  };
+  return topicMap[rawTopic] || rawTopic || "其他";
+}
+
 function buildConsultFields(payload) {
+  const rawTopic = clean(payload.topic);
+  const normalizedTopic = normalizeConsultTopic(rawTopic);
+  const refs = [
+    rawTopic && rawTopic !== normalizedTopic ? `入口类型：${rawTopic}` : "",
+    clean(payload.orderRef) ? `关联订单：${clean(payload.orderRef)}` : "",
+    clean(payload.providerRef) ? `服务者/申请编号：${clean(payload.providerRef)}` : "",
+    clean(payload.preferredTime) ? `期望联系时间：${clean(payload.preferredTime)}` : ""
+  ].filter(Boolean);
+  const detail = clean(payload.detail || rawTopic);
   return compactFields({
     提交时间: clean(payload.提交时间),
     客户称呼: clean(payload.name),
     联系方式: clean(payload.contact),
     咨询城市: clean(payload.city),
-    咨询类型: clean(payload.topic),
-    咨询内容: clean(payload.detail || payload.topic),
+    咨询类型: normalizedTopic,
+    咨询内容: rawTopic && rawTopic !== normalizedTopic ? `【${rawTopic}】${detail}` : detail,
     来源页面: clean(payload.来源页面 || payload.sourcePage || payload.source),
-    跟进状态: "待联系"
+    跟进状态: "待联系",
+    备注: refs.join("\n")
   });
 }
 
@@ -256,6 +276,7 @@ function buildNotificationText(config, fields, recordId) {
     ].join("\n");
   }
 
+  const notes = clean(fields.备注);
   return [
     header,
     `城市：${field(fields, "咨询城市")}`,
@@ -263,8 +284,9 @@ function buildNotificationText(config, fields, recordId) {
     `客户：${field(fields, "客户称呼")}`,
     `联系方式：${field(fields, "联系方式")}`,
     `内容：${truncate(fields.咨询内容)}`,
+    notes ? `备注：${notes}` : "",
     ...common
-  ].join("\n");
+  ].filter(Boolean).join("\n");
 }
 
 function signFeishuBot(timestamp, secret) {

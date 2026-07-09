@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>服务者中心｜地陪客户</title>
+    <meta name="description" content="地陪客户服务者中心，提供入驻审核状态咨询、资料补充、服务状态调整和接单规则说明入口。" />
+    <link rel="canonical" href="https://www.dipeikehu.com/provider-center.html" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="./index.html" aria-label="地陪客户首页">
+          <img class="brand-mark" src="./favicon.svg" alt="" />
+          <span><strong>地陪客户</strong><small>专业陪同服务平台</small></span>
+        </a>
+        <nav class="main-nav" id="mainNav" aria-label="主导航">
+          <a href="./index.html">首页</a>
+          <a href="./providers.html">精选服务者</a>
+          <a href="./services.html">服务分类</a>
+          <a href="./cities.html">开放城市</a>
+          <a href="./provider-rule.html">入驻规则</a>
+          <a class="active" href="./provider-center.html">服务者中心</a>
+          <a href="./index.html#join">申请入驻</a>
+        </nav>
+        <div class="header-actions">
+          <a class="btn ghost small" href="./contact.html">联系客服</a>
+          <a class="btn gold small" href="#providerSupport">补充资料</a>
+        </div>
+        <button class="menu-toggle" id="menuToggle" aria-label="展开导航" aria-expanded="false">菜单</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-hero">
+        <div class="container">
+          <p class="eyebrow">服务者中心</p>
+          <h1>入驻后补充资料与状态咨询</h1>
+          <p>服务者资料、审核状态、接单状态和违规处理均由后台管理。公开页面只提供资料补充和客服联络入口。</p>
+        </div>
+      </section>
+
+      <section class="page-main">
+        <div class="container page-grid">
+          <article class="page-card">
+            <h2>常见状态说明</h2>
+            <div class="status-timeline">
+              <span>待审核</span>
+              <span>资料不完整</span>
+              <span>初审通过</span>
+              <span>复审通过</span>
+              <span>可接单</span>
+              <span>暂停接单</span>
+              <span>已拒绝</span>
+            </div>
+            <p>如果你已经提交入驻申请，可以通过下方入口补充服务区域、可预约时间、语言能力、价格说明或审核备注。</p>
+          </article>
+
+          <article class="page-card">
+            <h2>服务者运营规则</h2>
+            <ol>
+              <li>资料必须真实，服务内容必须围绕正规陪同、向导、接待和协助场景。</li>
+              <li>不得诱导用户绕开平台、私下交易、发布违规暗示或泄露客户隐私。</li>
+              <li>服务状态变更、接单暂停、价格调整和展示资料变更，都需要客服在后台留痕。</li>
+              <li>投诉、违规或联系异常会触发人工复核，必要时暂停展示或加入风险名单。</li>
+            </ol>
+          </article>
+
+          <div class="contact-card" id="providerSupport">
+            <form class="contact-form" data-lead-form data-lead-type="客户咨询线索表" data-source="/provider-center.html" novalidate>
+              <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <input type="hidden" name="topic" value="服务者资料补充" />
+              <label>
+                姓名/昵称
+                <input name="name" maxlength="30" placeholder="请输入入驻时填写的称呼" required />
+              </label>
+              <label>
+                联系方式
+                <input name="contact" maxlength="40" placeholder="手机号 / 微信 / 邮箱" required />
+              </label>
+              <label>
+                服务城市
+                <select name="city" required>
+                  <option value="">请选择城市</option>
+                  <option>北京</option>
+                  <option>上海</option>
+                  <option>广州</option>
+                  <option>深圳</option>
+                  <option>成都</option>
+                  <option>杭州</option>
+                  <option>西安</option>
+                  <option>重庆</option>
+                </select>
+              </label>
+              <label>
+                申请编号/服务者编号
+                <input name="providerRef" maxlength="40" placeholder="如：RZ20260710001 / FW20260710001，可不填" />
+              </label>
+              <label>
+                期望联系时间
+                <input name="preferredTime" maxlength="40" placeholder="如：今天晚上 / 明天上午" />
+              </label>
+              <label class="full">
+                需要补充或咨询的内容
+                <textarea name="detail" rows="5" minlength="12" maxlength="700" placeholder="请说明要补充的资料、审核问题或服务状态调整，至少 12 个字。" required></textarea>
+              </label>
+              <label class="consent-line full">
+                <input type="checkbox" name="consent" value="已同意" required />
+                <span>我已阅读并同意 <a href="./provider-rule.html">服务者入驻规则</a> 和 <a href="./privacy.html">隐私政策</a></span>
+              </label>
+              <button class="btn gold" type="submit">提交资料补充</button>
+              <p class="form-note full">提交后会进入客服咨询线索表，并同步通知运营群处理。</p>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <a class="brand footer-brand" href="./index.html"><span><strong>地陪客户</strong><small>专业陪同服务平台</small></span></a>
+          <p>服务者资料由后台审核和维护，公开页面只展示经确认后的必要服务信息。</p>
+        </div>
+        <div class="footer-links">
+          <a href="./index.html#join">申请入驻</a>
+          <a href="./provider-rule.html">入驻规则</a>
+          <a href="./order.html">订单进度</a>
+          <a href="./contact.html">联系客服</a>
+          <a href="./report.html">投诉举报</a>
+        </div>
+      </div>
+    </footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js"></script>
+  </body>
+</html>

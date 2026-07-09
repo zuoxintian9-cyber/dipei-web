@@ -33,7 +33,11 @@
       <section class="page-main">
         <div class="container">
           <div class="contact-card">
-            <form class="contact-form" data-lead-form data-lead-type="投诉举报" data-source="/report.html" novalidate>
+            <form class="contact-form" data-lead-form data-lead-type="投诉举报表" data-source="/report.html" novalidate>
+              <label>
+                投诉人姓名/称呼
+                <input name="complainantName" maxlength="30" placeholder="请输入称呼" required />
+              </label>
               <label>
                 投诉类型
                 <select name="topic" required>
@@ -50,8 +54,25 @@
                 <input name="contact" maxlength="40" placeholder="手机号 / 微信 / 邮箱" required />
               </label>
               <label>
+                关联订单
+                <input name="orderRef" maxlength="40" placeholder="如有订单编号请填写" />
+              </label>
+              <label>
+                被投诉对象
+                <input name="target" maxlength="80" placeholder="服务者或相关人员" required />
+              </label>
+              <label>
                 相关城市
                 <input name="city" maxlength="30" placeholder="如：上海" required />
+              </label>
+              <label>
+                风险等级
+                <select name="riskLevel" required>
+                  <option>中</option>
+                  <option>低</option>
+                  <option>高</option>
+                  <option>严重</option>
+                </select>
               </label>
               <label class="full">
                 问题描述

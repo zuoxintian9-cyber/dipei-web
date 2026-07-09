@@ -350,7 +350,19 @@
             <h2>提交预约需求</h2>
             <p>请填写真实需求和可联系信息。提交前需阅读并同意隐私政策和服务协议。</p>
           </div>
-          <form class="booking-form" id="bookingForm" data-lead-form data-lead-type="预约需求" data-source="/#booking" novalidate>
+          <form class="booking-form" id="bookingForm" data-lead-form data-lead-type="用户预约需求表" data-source="/#booking" novalidate>
+            <label>
+              客户姓名/称呼
+              <input name="customerName" maxlength="30" placeholder="如：张先生 / 李女士" required />
+            </label>
+            <label>
+              手机号
+              <input name="phone" inputmode="tel" maxlength="20" placeholder="请输入 11 位手机号" required />
+            </label>
+            <label>
+              微信号
+              <input name="wechat" maxlength="40" placeholder="请输入微信号" required />
+            </label>
             <label>
               服务城市
               <select name="city" required>
@@ -386,8 +398,14 @@
               <input type="date" name="date" required />
             </label>
             <label>
-              预约时间
-              <input type="time" name="time" required />
+              预约时间段
+              <select name="timeSlot" required>
+                <option value="">请选择时间段</option>
+                <option>上午</option>
+                <option>下午</option>
+                <option>晚上</option>
+                <option>全天</option>
+              </select>
             </label>
             <label>
               服务时长
@@ -405,15 +423,38 @@
             </label>
             <label>
               预算
-              <input name="budget" inputmode="numeric" maxlength="30" placeholder="如：500-800" required />
+              <select name="budgetRange" required>
+                <option value="">请选择预算范围</option>
+                <option>300以内</option>
+                <option>300-500</option>
+                <option>500-1000</option>
+                <option>1000以上</option>
+                <option>待沟通</option>
+              </select>
+            </label>
+            <label>
+              是否需要外语
+              <select name="languageNeed">
+                <option>不需要</option>
+                <option>英语</option>
+                <option>日语</option>
+                <option>韩语</option>
+                <option>其他</option>
+              </select>
+            </label>
+            <label>
+              是否需要接送
+              <select name="pickupNeed">
+                <option>不需要</option>
+                <option>机场</option>
+                <option>高铁</option>
+                <option>酒店</option>
+                <option>待沟通</option>
+              </select>
             </label>
             <label class="full">
               具体需求描述
               <textarea name="detail" rows="4" minlength="12" maxlength="500" placeholder="请说明接待对象、路线、语言、注意事项等信息，至少 12 个字。" required></textarea>
-            </label>
-            <label>
-              联系方式
-              <input name="contact" maxlength="40" placeholder="手机号 / 微信 / 邮箱" required />
             </label>
             <label class="consent-line">
               <input type="checkbox" name="consent" value="已同意" required />
@@ -444,9 +485,9 @@
               <h2>提交服务者资料</h2>
               <p>请勿提交虚假资料或违规服务内容。平台会根据服务城市和服务类型进行人工审核。</p>
             </div>
-            <form class="console-form" id="providerForm" data-lead-form data-lead-type="服务者入驻" data-source="/#join" novalidate>
+            <form class="console-form" id="providerForm" data-lead-form data-lead-type="服务者入驻申请表" data-source="/#join" novalidate>
               <label>
-                姓名
+                姓名/昵称
                 <input name="name" maxlength="30" placeholder="如：陈先生 / 林女士" required />
               </label>
               <label>
@@ -456,6 +497,25 @@
               <label>
                 微信号
                 <input name="wechat" maxlength="40" placeholder="请输入微信号" required />
+              </label>
+              <label>
+                性别
+                <select name="gender">
+                  <option value="">可选</option>
+                  <option>男</option>
+                  <option>女</option>
+                  <option>不便透露</option>
+                </select>
+              </label>
+              <label>
+                年龄段
+                <select name="ageRange">
+                  <option value="">可选</option>
+                  <option>18-24</option>
+                  <option>25-30</option>
+                  <option>31-40</option>
+                  <option>41以上</option>
+                </select>
               </label>
               <label>
                 服务城市
@@ -472,8 +532,12 @@
                 </select>
               </label>
               <label>
+                可服务区域
+                <input name="serviceArea" maxlength="80" placeholder="如：核心商圈、景区、机场、高铁站" required />
+              </label>
+              <label>
                 服务类型
-                <select name="service" required>
+                <select name="serviceType" required>
                   <option value="">请选择类型</option>
                   <option>商务接待</option>
                   <option>城市陪同</option>
@@ -484,12 +548,34 @@
                 </select>
               </label>
               <label>
+                可服务时间
+                <input name="availableTime" maxlength="80" placeholder="如：工作日晚上、周末、节假日" required />
+              </label>
+              <label>
                 起步价格
                 <input name="price" inputmode="numeric" maxlength="8" placeholder="如：500" required />
               </label>
+              <label>
+                计费方式
+                <select name="billingType" required>
+                  <option value="">请选择</option>
+                  <option>小时</option>
+                  <option>半天</option>
+                  <option>全天</option>
+                  <option>按次沟通</option>
+                </select>
+              </label>
               <label class="full">
-                服务介绍
+                个人介绍
                 <textarea name="intro" rows="4" minlength="20" maxlength="500" placeholder="说明服务范围、经验、可预约时间和注意事项，至少 20 个字。" required></textarea>
+              </label>
+              <label class="full">
+                擅长内容
+                <input name="strengths" maxlength="120" placeholder="如：美食、拍照、路线规划、翻译、商务接待" />
+              </label>
+              <label class="full">
+                语言能力
+                <input name="languages" maxlength="120" placeholder="如：普通话、英语、日语、韩语" />
               </label>
               <label class="consent-line full">
                 <input type="checkbox" name="consent" value="已同意" required />

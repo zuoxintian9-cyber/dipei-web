@@ -80,7 +80,7 @@ const scenarios = [
 ];
 
 const SUPPORT_EMAIL = "zuoxintian9@gmail.com";
-const FORM_ENDPOINT = window.DIPEI_FORM_ENDPOINT || "";
+const FORM_ENDPOINT = window.DIPEI_FORM_ENDPOINT || "/api/feishu-submit";
 const DUPLICATE_WINDOW_MS = 60 * 1000;
 
 const $ = (selector, root = document) => root.querySelector(selector);
@@ -204,7 +204,8 @@ function prefillBooking(id) {
   form.city.value = item.city;
   form.area.value = item.area;
   form.service.value = item.service;
-  form.budget.value = String(item.budget);
+  form.budgetRange.value =
+    item.budget >= 1000 ? "1000以上" : item.budget >= 500 ? "500-1000" : item.budget >= 300 ? "300-500" : "300以内";
   closeScenarioDialog();
   $("#booking")?.scrollIntoView({ behavior: "smooth", block: "start" });
   showToast(`已带入 ${item.title} 的预约信息，请补充时间、人数和联系方式。`);
@@ -214,8 +215,12 @@ function isContactValid(value) {
   const contact = cleanInput(value, 80);
   const phone = /^1[3-9]\d{9}$/;
   const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const wechat = /^[a-zA-Z][-_a-zA-Z0-9]{4,19}$/;
+  const wechat = /^[a-zA-Z0-9][-_a-zA-Z0-9]{4,29}$/;
   return phone.test(contact) || email.test(contact) || wechat.test(contact);
+}
+
+function isPhoneValid(value) {
+  return /^1[3-9]\d{9}$/.test(cleanInput(value, 20));
 }
 
 function isBudgetValid(value) {
@@ -247,7 +252,8 @@ function validateLeadForm(form) {
   if (price && !/^\d{2,6}$/.test(cleanInput(price, 8))) errors.push("起步价格请填写纯数字。");
 
   const contact = form.elements.contact?.value || form.elements.phone?.value;
-  if (contact && !isContactValid(contact)) errors.push("联系方式请填写 11 位手机号、邮箱或有效微信号。");
+  if (form.elements.phone?.value && !isPhoneValid(form.elements.phone.value)) errors.push("手机号请填写 11 位大陆手机号。");
+  if (form.elements.contact?.value && !isContactValid(contact)) errors.push("联系方式请填写 11 位手机号、邮箱或有效微信号。");
 
   const wechat = form.elements.wechat?.value;
   if (wechat && !isContactValid(wechat)) errors.push("微信号格式不正确，请检查后再提交。");
@@ -299,13 +305,18 @@ function payloadToText(payload) {
 async function submitLead(form) {
   const payload = collectFormPayload(form);
   if (FORM_ENDPOINT) {
-    const response = await fetch(FORM_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(payload)
-    });
-    if (!response.ok) throw new Error("提交失败");
-    return "提交成功";
+    try {
+      const response = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (response.ok) return "提交成功";
+      const result = await response.json().catch(() => ({}));
+      if (result.code !== "FEISHU_NOT_CONFIGURED") throw new Error("提交失败");
+    } catch (error) {
+      if (FORM_ENDPOINT !== "/api/feishu-submit") throw error;
+    }
   }
 
   const subject = encodeURIComponent(`地陪客户${payload.表单类型}`);

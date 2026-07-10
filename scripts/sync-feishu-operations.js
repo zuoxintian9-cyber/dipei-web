@@ -102,7 +102,8 @@ const configs = [
   ["帮助中心链接", "https://www.dipeikehu.com/help.html", "公开帮助中心与常见问题"],
   ["平台公告链接", "https://www.dipeikehu.com/announcements.html", "公开平台公告与规则更新"],
   ["账号中心入口", "https://www.dipeikehu.com/account.html", "用户注册、登录帮助和订单列表协助入口"],
-  ["订单进度入口", "https://www.dipeikehu.com/order.html", "用户补充预约信息和查询进度入口"],
+  ["订单进度入口", "https://www.dipeikehu.com/order.html", "预约编号和手机号脱敏查询及人工协助入口"],
+  ["预约进度查询方式", "DP预约编号 + 预约手机号", "只返回城市、服务类型、日期和脱敏状态"],
   ["服务者中心链接", "https://www.dipeikehu.com/provider-center.html", "服务者资料补充和状态咨询入口"],
   ["服务反馈入口", "https://www.dipeikehu.com/feedback.html", "用户提交服务评价和改进建议入口"]
 ].map(([配置项, 配置值, 备注]) => ({ 配置项, 配置值, 是否启用: true, 备注 }));

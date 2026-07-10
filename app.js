@@ -91,7 +91,6 @@ const scenarios = [
   }
 ];
 
-const SUPPORT_EMAIL = "service@dipeikehu.com";
 const FORM_ENDPOINT = window.DIPEI_FORM_ENDPOINT || "/api/feishu-submit";
 const DUPLICATE_WINDOW_MS = 60 * 1000;
 const RISK_WORDS = [
@@ -363,12 +362,6 @@ function collectFormPayload(form) {
   return payload;
 }
 
-function payloadToText(payload) {
-  return Object.entries(payload)
-    .map(([key, value]) => `${key}: ${value || "未填写"}`)
-    .join("\n");
-}
-
 function successMessage(formType, result = {}) {
   const label = SUCCESS_LABELS[formType] || "提交成功";
   const publicId = result.publicId || result.trackingNo || result.recordId;
@@ -407,10 +400,7 @@ async function submitLead(form) {
     }
   }
 
-  const subject = encodeURIComponent(`地陪客户${payload.表单类型}`);
-  const body = encodeURIComponent(payloadToText(payload));
-  window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
-  return "请在打开的邮件窗口中确认发送，客服才能收到。";
+  throw new Error("提交通道暂不可用，请稍后重试。请勿重复提交同一需求。");
 }
 
 function bindLeadForms() {

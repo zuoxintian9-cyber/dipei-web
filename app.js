@@ -152,8 +152,15 @@ function localDateInputValue(date = new Date()) {
 }
 
 function showToast(message, duration = 3200) {
-  const toast = $("#toast");
-  if (!toast) return;
+  let toast = $("#toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "toast";
+    toast.className = "toast";
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    document.body.append(toast);
+  }
   clearTimeout(showToast.timer);
   toast.textContent = message;
   toast.classList.add("show");

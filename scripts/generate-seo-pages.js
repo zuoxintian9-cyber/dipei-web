@@ -335,6 +335,7 @@ function pageHtml(page) {
         </div>
       </div>
     </footer>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="./seo-schema.js"></script>
     <script src="./app.js"></script>
   </body>

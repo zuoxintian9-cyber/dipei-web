@@ -79,6 +79,78 @@ const pages = [
     related: [["广州服务", "guangzhou.html"], ["商务接待", "business.html"], ["机场高铁接送", "airport.html"]]
   },
   {
+    slug: "chengdu.html",
+    kind: "city",
+    city: "成都",
+    eyebrow: "成都本地陪同服务",
+    title: "成都本地陪同与旅游向导｜商务接待和机场接送｜地陪客户",
+    description: "地陪客户提供成都城市陪同、旅游向导、商务接待、办事协助及双流天府机场衔接等正规服务，提交需求后由客服确认。",
+    h1: "成都城市陪同、旅游向导与机场接送",
+    intro: "面向短期到蓉、亲友接待、商务来访和机场交通衔接等正规场景。平台会根据日期、区域和服务边界确认实际承接能力。",
+    coverage: "春熙路、天府广场、金融城、双流机场、天府机场等",
+    price: "300 元起",
+    scenes: [
+      ["城市路线陪同", "协助规划商圈、文化街区、餐饮与城市交通路线。"],
+      ["商务来访接待", "梳理酒店、会场、园区和交通枢纽之间的时间与动线。"],
+      ["机场抵达衔接", "根据航班、行李和目的地确认集合点及接驳安排。"]
+    ],
+    related: [["旅游向导", "travel-guide.html"], ["机场高铁接送", "airport.html"], ["商务接待", "business.html"]]
+  },
+  {
+    slug: "hangzhou.html",
+    kind: "city",
+    city: "杭州",
+    eyebrow: "杭州本地陪同服务",
+    title: "杭州城市陪同与商务接待｜旅游向导和高铁接送｜地陪客户",
+    description: "地陪客户提供杭州城市陪同、商务接待、旅游向导、办事协助及萧山机场杭州东站衔接等正规服务。",
+    h1: "杭州城市陪同、商务接待与旅游向导",
+    intro: "适合商务来访、园区考察、城市文化路线和交通枢纽衔接。客服先核对时间、区域和服务边界，再确认人员与方案。",
+    coverage: "西湖、钱江新城、滨江、萧山机场、杭州东站等",
+    price: "350 元起",
+    scenes: [
+      ["商务与园区接待", "协助会面时间、园区路线、酒店会场和本地交通安排。"],
+      ["城市文化路线", "围绕西湖、街区和公开文化场所安排正规陪同路线。"],
+      ["机场高铁衔接", "确认航班或车次、出站动线、行李及目的地接驳。"]
+    ],
+    related: [["商务接待", "business.html"], ["旅游向导", "travel-guide.html"], ["机场高铁接送", "airport.html"]]
+  },
+  {
+    slug: "xian.html",
+    kind: "city",
+    city: "西安",
+    eyebrow: "西安本地陪同服务",
+    title: "西安旅游向导与城市陪同｜文化路线和机场接送｜地陪客户",
+    description: "地陪客户提供西安旅游向导、城市陪同、文化路线、商务接待及咸阳机场西安北站衔接等正规服务。",
+    h1: "西安旅游向导、文化路线与城市陪同",
+    intro: "适合历史文化路线、亲友接待、短期到访和交通枢纽衔接。实际讲解能力、日期和路线由客服审核确认。",
+    coverage: "钟楼、大雁塔、曲江、西安北站、咸阳机场等",
+    price: "450 元起",
+    scenes: [
+      ["历史文化路线", "按时间和兴趣规划公开景点、街区及交通顺序。"],
+      ["亲友到访陪同", "协助餐饮、交通、休息和拍照时间安排。"],
+      ["机场高铁衔接", "根据航班或车次协助确认集合点和目的地路线。"]
+    ],
+    related: [["旅游向导", "travel-guide.html"], ["机场高铁接送", "airport.html"], ["开放城市", "cities.html"]]
+  },
+  {
+    slug: "chongqing.html",
+    kind: "city",
+    city: "重庆",
+    eyebrow: "重庆内测服务",
+    title: "重庆城市陪同与旅游向导内测预约｜地陪客户",
+    description: "地陪客户接受重庆城市陪同、旅游向导、商务接待和交通衔接的内测预约，提交需求后由客服确认当地人员与档期。",
+    h1: "重庆城市陪同与旅游向导内测预约",
+    intro: "重庆目前处于内测阶段，可以先提交正规服务需求。客服会根据日期、区域和当地服务者储备确认是否可承接，未确认前不产生订单。",
+    coverage: "解放碑、观音桥、重庆北站、江北机场等，按需求确认",
+    price: "提交后确认",
+    scenes: [
+      ["城市路线陪同", "结合山城交通、步行强度和开放场所规划路线。"],
+      ["旅游向导需求", "接受公开景点、文化街区和正规餐饮路线需求。"],
+      ["交通枢纽衔接", "根据航班、车次和目的地确认是否具备承接能力。"]
+    ],
+    related: [["旅游向导", "travel-guide.html"], ["城市陪同", "city-companion.html"], ["开放城市", "cities.html"]]
+  },
+  {
     slug: "business.html",
     kind: "service",
     service: "商务接待",
@@ -105,7 +177,7 @@ const pages = [
     description: "地陪客户提供正规城市旅游向导、文化路线、景点讲解、亲友接待和半天全天行程规划服务。",
     h1: "城市旅游向导与文化路线陪同",
     intro: "适合第一次到访、亲友接待、城市文化体验和半天或全天路线规划。服务内容以公开景点、正规餐饮与城市交通为主。",
-    coverage: "西安、成都、杭州、重庆及其他开放城市",
+    coverage: "西安、成都、杭州等开放城市；重庆内测",
     price: "300 元起",
     scenes: [
       ["文化路线规划", "按兴趣、时间和体力安排景点顺序与城市交通。"],
@@ -131,6 +203,60 @@ const pages = [
       ["中转与临时安排", "根据停留时间规划正规休息、用餐或城市短程安排。"]
     ],
     related: [["北京接送", "beijing.html"], ["上海接送", "shanghai.html"], ["商务接待", "business.html"]]
+  },
+  {
+    slug: "city-companion.html",
+    kind: "service",
+    service: "城市陪同",
+    eyebrow: "城市陪同服务",
+    title: "城市陪同服务｜商圈熟悉与本地路线协助｜地陪客户",
+    description: "地陪客户提供正规城市陪同、商圈熟悉、本地路线、短期到访和亲友接待服务，需求由客服审核确认。",
+    h1: "城市陪同与本地路线协助",
+    intro: "适合第一次到访、商圈熟悉、亲友接待、酒店周边和城市交通路线安排。服务限于公开、正规场景。",
+    coverage: "北京、上海、广州、深圳、成都、杭州、西安；重庆内测",
+    price: "350 元起",
+    scenes: [
+      ["商圈与街区熟悉", "协助了解公开商圈、餐饮、交通和步行动线。"],
+      ["短期到访安排", "根据时间、兴趣和体力规划半天或全天城市路线。"],
+      ["亲友接待陪同", "协助交通、用餐、休息和公开场所行程安排。"]
+    ],
+    related: [["开放城市", "cities.html"], ["旅游向导", "travel-guide.html"], ["提交预约", "index.html#booking"]]
+  },
+  {
+    slug: "errands.html",
+    kind: "service",
+    service: "办事协助",
+    eyebrow: "办事协助服务",
+    title: "办事协助陪同服务｜资料提醒与现场路线指引｜地陪客户",
+    description: "地陪客户提供正规办事协助、资料清单提醒、排队流程、路线指引和非专业判断类现场陪同服务。",
+    h1: "正规办事协助与现场流程陪同",
+    intro: "适合需要资料提醒、路线指引、排队和现场流程协助的场景，不代办违法事项，不替代法律、医疗、金融等专业判断。",
+    coverage: "开放城市内的公开办事场所，具体区域由客服确认",
+    price: "350 元起",
+    scenes: [
+      ["资料清单提醒", "按用户提供的公开要求梳理资料和时间节点。"],
+      ["路线与排队协助", "确认地点、交通、窗口和现场流程，不承诺办理结果。"],
+      ["现场沟通支持", "协助理解公开流程，不冒用身份或代替专业决策。"]
+    ],
+    related: [["广州服务", "guangzhou.html"], ["城市陪同", "city-companion.html"], ["服务规则", "booking-rule.html"]]
+  },
+  {
+    slug: "expo.html",
+    kind: "service",
+    service: "展会陪同",
+    eyebrow: "展会陪同服务",
+    title: "展会陪同与现场接待服务｜客户引导和资料协助｜地陪客户",
+    description: "地陪客户提供正规展会陪同、客户引导、展馆动线、资料协助、会议衔接和会后交通安排服务。",
+    h1: "展会陪同、客户引导与现场协助",
+    intro: "面向参展企业、商务访客和临时现场支持需求。客服会先核对展馆、日期、人数、语言和具体职责。",
+    coverage: "主要开放城市会展中心与公开商务活动场所",
+    price: "500 元起",
+    scenes: [
+      ["展馆动线引导", "协助确认入口、展位、会议区和休息区的时间与路线。"],
+      ["客户接待支持", "协助到场引导、资料准备和基础现场沟通。"],
+      ["会后交通衔接", "根据结束时间安排酒店、车站或机场路线建议。"]
+    ],
+    related: [["深圳服务", "shenzhen.html"], ["商务接待", "business.html"], ["机场高铁接送", "airport.html"]]
   }
 ];
 
@@ -186,7 +312,13 @@ function pageHtml(page) {
     <meta property="og:description" content="${page.description}" />
     <meta property="og:url" content="https://www.dipeikehu.com/${page.slug}" />
     <meta property="og:image" content="https://www.dipeikehu.com/assets/hero-city.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${page.title}" />
+    <meta name="twitter:description" content="${page.description}" />
+    <meta name="twitter:image" content="https://www.dipeikehu.com/assets/hero-city.jpg" />
+    <meta name="theme-color" content="#08111f" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./site.webmanifest" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>

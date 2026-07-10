@@ -1,0 +1,19 @@
+{
+  "name": "地陪客户｜专业陪同服务平台",
+  "short_name": "地陪客户",
+  "description": "正规本地陪同、商务接待、旅游向导、办事协助和机场高铁接送服务预约平台。",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#08111f",
+  "theme_color": "#08111f",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

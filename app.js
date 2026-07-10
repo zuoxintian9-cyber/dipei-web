@@ -8,7 +8,7 @@ const scenarios = [
     img: "./assets/provider-beijing.jpg",
     budget: 500,
     desc: "适合客户到访、商务会面、酒店会议、城市考察和机场高铁衔接。",
-    meta: "已审核｜3 年本地接待经验｜普通话/英语",
+    meta: "能力示例｜商务接待｜普通话/英语需求可备注",
     skillSummary: "客户接待、展会陪同、机场高铁衔接",
     points: ["会面路线规划", "酒店与会场协助", "商务礼仪提醒"],
     intro:
@@ -23,7 +23,7 @@ const scenarios = [
     img: "./assets/provider-shanghai.jpg",
     budget: 400,
     desc: "适合短期到访、商圈熟悉、城市动线安排和本地生活协助。",
-    meta: "已审核｜4 年城市陪同经验｜普通话/英语",
+    meta: "能力示例｜城市陪同｜普通话/英语需求可备注",
     skillSummary: "商圈动线、酒店会面、本地生活建议",
     points: ["商圈熟悉", "交通动线", "本地建议"],
     intro:
@@ -38,7 +38,7 @@ const scenarios = [
     img: "./assets/provider-xian.jpg",
     budget: 450,
     desc: "适合文化路线、景点讲解、行程规划和亲友接待陪同。",
-    meta: "已审核｜5 年文化路线经验｜普通话",
+    meta: "能力示例｜文化路线｜普通话服务场景",
     skillSummary: "景点讲解、文化路线、亲友接待",
     points: ["路线规划", "景点讲解", "餐饮建议"],
     intro:
@@ -53,7 +53,7 @@ const scenarios = [
     img: "./assets/provider-guangzhou.jpg",
     budget: 350,
     desc: "适合政务大厅、银行、医院、学校等非敏感事务的现场指引。",
-    meta: "已审核｜3 年现场协助经验｜普通话/粤语",
+    meta: "能力示例｜现场协助｜普通话/粤语需求可备注",
     skillSummary: "资料提醒、路线指引、现场流程协助",
     points: ["资料提醒", "路线指引", "流程协助"],
     intro:
@@ -68,7 +68,7 @@ const scenarios = [
     img: "./assets/provider-shenzhen.jpg",
     budget: 600,
     desc: "适合参展接待、客户引导、资料协助和基础沟通支持。",
-    meta: "已审核｜4 年展会服务经验｜普通话/英语",
+    meta: "能力示例｜展会支持｜普通话/英语需求可备注",
     skillSummary: "展会引导、客户接待、现场资料协助",
     points: ["展会引导", "客户接待", "现场协助"],
     intro:
@@ -83,7 +83,7 @@ const scenarios = [
     img: "./assets/provider-chengdu.jpg",
     budget: 300,
     desc: "适合接机送机、中转协助、行李动线和酒店衔接。",
-    meta: "已审核｜3 年交通枢纽经验｜普通话",
+    meta: "能力示例｜交通衔接｜普通话服务场景",
     skillSummary: "航班衔接、行李动线、酒店路线",
     points: ["航班衔接", "行李协助", "酒店路线"],
     intro:
@@ -342,7 +342,7 @@ function validateLeadForm(form) {
     showToast("提交过于频繁，请稍后再试。");
     return false;
   }
-  localStorage.setItem(duplicateKey, String(Date.now()));
+  form.dataset.duplicateKey = duplicateKey;
   return true;
 }
 
@@ -409,10 +409,12 @@ function bindLeadForms() {
       event.preventDefault();
       if (!validateLeadForm(form)) return;
       const submitButton = form.querySelector('[type="submit"]');
+      const originalLabel = submitButton.textContent;
       submitButton.disabled = true;
       submitButton.textContent = "正在提交...";
       try {
         const result = await submitLead(form);
+        if (form.dataset.duplicateKey) localStorage.setItem(form.dataset.duplicateKey, String(Date.now()));
         form.reset();
         showFormResult(form, result, "success");
         showToast(result.replace(/\n/g, " "), result.includes("编号：") ? 7000 : 3200);
@@ -422,7 +424,7 @@ function bindLeadForms() {
         showToast(message, 5200);
       } finally {
         submitButton.disabled = false;
-        submitButton.textContent = submitButton.dataset.label || submitButton.textContent.replace("正在提交...", "提交");
+        submitButton.textContent = originalLabel;
       }
     });
   });

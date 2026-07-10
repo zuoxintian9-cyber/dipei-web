@@ -73,8 +73,50 @@ const TABLE_CONFIG = {
 };
 
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const RATE_LIMIT_MAX = 20;
+const RATE_LIMIT_MAX_PER_IP = 12;
+const RATE_LIMIT_MAX_PER_CONTACT = 5;
 const rateStore = new Map();
+
+const FIELD_MAX_LENGTHS = {
+  customerName: 30,
+  name: 30,
+  complainantName: 30,
+  phone: 20,
+  contact: 80,
+  wechat: 50,
+  city: 30,
+  area: 80,
+  service: 40,
+  serviceArea: 120,
+  serviceType: 120,
+  availableTime: 120,
+  billingType: 30,
+  price: 30,
+  date: 20,
+  timeSlot: 40,
+  duration: 40,
+  people: 20,
+  budgetRange: 50,
+  languageNeed: 80,
+  pickupNeed: 80,
+  target: 120,
+  needCallback: 30,
+  orderRef: 40,
+  providerRef: 40,
+  preferredTime: 40,
+  topic: 60,
+  reportType: 60,
+  accountRole: 40,
+  accountAction: 40,
+  evidenceNote: 500,
+  strengths: 120,
+  languages: 120,
+  detail: 800,
+  intro: 1000,
+  source: 200,
+  sourcePage: 200,
+  来源页面: 200
+};
 
 function clean(value, fallback = "") {
   return String(value ?? fallback).replace(/[<>]/g, "").trim();
@@ -124,25 +166,30 @@ function todayInputValue() {
 }
 
 function publicId(prefix) {
-  const timePart = Date.now().toString().slice(-4);
-  const randomPart = crypto.randomInt(0, 100).toString().padStart(2, "0");
-  return `${prefix}${localDateStamp()}${timePart}${randomPart}`;
+  const randomValue = BigInt(`0x${crypto.randomBytes(8).toString("hex")}`) % 10000000000000000n;
+  return `${prefix}${randomValue.toString().padStart(16, "0")}`;
 }
 
-function requestKey(req, payload) {
+function requestKeys(req, payload) {
   const forwardedFor = clean(req.headers["x-forwarded-for"]).split(",")[0].trim();
   const ip = forwardedFor || req.socket?.remoteAddress || "unknown";
   const contact = clean(payload.phone || payload.contact || payload.wechat || payload.customerName || payload.name || payload.complainantName);
-  return `${ip}:${contact}`;
+  const contactHash = crypto.createHash("sha256").update(contact || "unknown").digest("hex");
+  return { ip: `ip:${ip}`, contact: `contact:${contactHash}` };
+}
+
+function checkRateBucket(key, max, now) {
+  const recent = (rateStore.get(key) || []).filter((time) => now - time < RATE_LIMIT_WINDOW_MS);
+  recent.push(now);
+  rateStore.set(key, recent);
+  return recent.length <= max;
 }
 
 function checkRateLimit(req, payload) {
   const now = Date.now();
-  const key = requestKey(req, payload);
-  const recent = (rateStore.get(key) || []).filter((time) => now - time < RATE_LIMIT_WINDOW_MS);
-  recent.push(now);
-  rateStore.set(key, recent);
-  return recent.length <= RATE_LIMIT_MAX;
+  const keys = requestKeys(req, payload);
+  return checkRateBucket(keys.ip, RATE_LIMIT_MAX_PER_IP, now)
+    && checkRateBucket(keys.contact, RATE_LIMIT_MAX_PER_CONTACT, now);
 }
 
 function hasRiskContent(value) {
@@ -176,6 +223,10 @@ function riskyValues(payload) {
 }
 
 function validatePayload(formType, payload) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    return { ok: false, status: 400, code: "INVALID_PAYLOAD", message: "提交数据格式不正确" };
+  }
+
   if (clean(payload.website || payload.companyWebsite)) {
     return { ok: false, status: 400, code: "SPAM_REJECTED", message: "提交异常，请刷新页面后重试" };
   }
@@ -189,6 +240,16 @@ function validatePayload(formType, payload) {
   const phone = clean(payload.phone || payload.contact);
   if (payload.phone && !/^1[3-9]\d{9}$/.test(phone)) {
     return { ok: false, status: 400, code: "INVALID_PHONE", message: "手机号格式不正确" };
+  }
+
+  const oversized = Object.entries(FIELD_MAX_LENGTHS).find(([key, max]) => clean(payload[key]).length > max);
+  if (oversized) {
+    return { ok: false, status: 400, code: "FIELD_TOO_LONG", message: "部分内容超过长度限制，请精简后重试", field: oversized[0] };
+  }
+
+  const totalLength = Object.values(payload).reduce((sum, value) => sum + clean(Array.isArray(value) ? value.join(",") : value).length, 0);
+  if (totalLength > 5000) {
+    return { ok: false, status: 413, code: "PAYLOAD_TOO_LARGE", message: "提交内容过长，请精简后重试" };
   }
 
   if (formType === "用户预约需求表" && clean(payload.date) && clean(payload.date) < todayInputValue()) {
@@ -533,7 +594,17 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    let payload;
+    try {
+      payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    } catch {
+      res.status(400).json({ ok: false, code: "INVALID_JSON", message: "提交数据格式不正确" });
+      return;
+    }
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+      res.status(400).json({ ok: false, code: "INVALID_PAYLOAD", message: "提交数据格式不正确" });
+      return;
+    }
     const formType = payload["表单类型"] || payload.formType || payload.type;
     const config = TABLE_CONFIG[formType];
     if (!config) {
@@ -555,8 +626,7 @@ module.exports = async function handler(req, res) {
       res.status(503).json({
         ok: false,
         code: "FEISHU_NOT_CONFIGURED",
-        message: "飞书应用凭证未配置",
-        requiredEnv: ["FEISHU_APP_ID", "FEISHU_APP_SECRET", "FEISHU_BASE_APP_TOKEN", config.env]
+        message: "提交服务暂时不可用，请稍后重试"
       });
       return;
     }
@@ -566,8 +636,7 @@ module.exports = async function handler(req, res) {
       res.status(503).json({
         ok: false,
         code: "FEISHU_TABLE_NOT_FOUND",
-        message: `未找到飞书表：${config.name}`,
-        requiredEnv: [config.env]
+        message: "提交服务暂时不可用，请稍后重试"
       });
       return;
     }
@@ -583,8 +652,11 @@ module.exports = async function handler(req, res) {
     } catch (notifyError) {
       console.error("Feishu notification failed:", notifyError.message);
     }
-    res.status(200).json({ ok: true, table: config.name, recordId, publicId: payload.publicId, trackingNo: payload.publicId, notified });
+    res.status(200).json({ ok: true, publicId: payload.publicId, trackingNo: payload.publicId });
   } catch (error) {
-    res.status(500).json({ ok: false, code: "FEISHU_SUBMIT_FAILED", message: error.message });
+    console.error("Feishu submission failed:", error.message);
+    res.status(500).json({ ok: false, code: "FEISHU_SUBMIT_FAILED", message: "提交服务暂时繁忙，请稍后重试" });
   }
 };
+
+module.exports._test = { validatePayload, publicId, checkRateLimit };

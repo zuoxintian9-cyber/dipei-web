@@ -158,7 +158,17 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    let payload;
+    try {
+      payload = typeof req.body === "string" ? JSON.parse(req.body) : req.body || {};
+    } catch {
+      res.status(400).json({ ok: false, code: "INVALID_JSON", message: "查询数据格式不正确。" });
+      return;
+    }
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+      res.status(400).json({ ok: false, code: "INVALID_PAYLOAD", message: "查询数据格式不正确。" });
+      return;
+    }
     const trackingNo = clean(payload.trackingNo || payload.orderRef).toUpperCase();
     const phone = normalizePhone(payload.phone);
     if (!/^DP\d{12,16}$/.test(trackingNo) || !/^1[3-9]\d{9}$/.test(phone)) {

@@ -1204,6 +1204,84 @@ img {
   gap: 18px;
 }
 
+.faq-layout,
+.notice-list,
+.resource-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.faq-layout,
+.notice-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.resource-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.resource-grid a {
+  min-height: 116px;
+  border: 1px solid rgba(242, 211, 155, 0.22);
+  border-radius: var(--radius);
+  padding: 18px;
+  background: rgba(214, 168, 90, 0.07);
+  text-decoration: none;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.resource-grid a:hover {
+  border-color: rgba(242, 211, 155, 0.42);
+  background: rgba(214, 168, 90, 0.13);
+  transform: translateY(-1px);
+}
+
+.resource-grid strong {
+  display: block;
+  color: var(--gold-light);
+  font-size: 17px;
+}
+
+.resource-grid span {
+  display: block;
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.notice-feature {
+  position: relative;
+}
+
+.notice-meta {
+  color: var(--muted) !important;
+  font-size: 14px;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  border: 1px solid rgba(242, 211, 155, 0.28);
+  border-radius: 999px;
+  padding: 0 12px;
+  color: var(--gold-light);
+  background: rgba(214, 168, 90, 0.08);
+  font-size: 13px;
+}
+
+.inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 18px;
+}
+
 .page-card h2 + p,
 .page-card h3 + p {
   margin-top: 8px;
@@ -1628,6 +1706,9 @@ img {
   .split-feature,
   .help-grid,
   .account-panels,
+  .faq-layout,
+  .notice-list,
+  .resource-grid,
   .dialog-provider {
     grid-template-columns: 1fr;
   }
@@ -1682,6 +1763,9 @@ img {
   .category-strip,
   .trust-grid,
   .review-grid,
+  .resource-grid,
+  .faq-layout,
+  .notice-list,
   .booking-form,
   .console-form,
   .contact-form {

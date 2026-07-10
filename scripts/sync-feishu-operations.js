@@ -88,11 +88,13 @@ const cities = [
 ];
 
 const configs = [
-  ["客服邮箱", "zuoxintian9@gmail.com", "公开客服邮箱，网站联系页使用"],
+  ["客服邮箱", "service@dipeikehu.com", "公开客服邮箱，网站联系页使用"],
   ["服务开放城市", "北京、上海、广州、深圳、成都、杭州、西安、重庆", "第一期城市范围"],
-  ["默认预约成功提示语", "提交成功，客服会尽快联系你。", "网站表单成功提示"],
-  ["入驻成功提示语", "入驻申请已提交，平台会进行人工审核。", "服务者入驻表单提示"],
-  ["投诉邮箱", "zuoxintian9@gmail.com", "投诉举报兜底联系方式"],
+  ["默认预约成功提示语", "预约已提交，页面会返回预约编号，客服会尽快联系你。", "网站表单成功提示"],
+  ["入驻成功提示语", "入驻申请已提交，页面会返回入驻申请编号，平台会进行人工审核。", "服务者入驻表单提示"],
+  ["投诉邮箱", "service@dipeikehu.com", "投诉举报兜底联系方式"],
+  ["客服响应时间", "工作日 10:00 - 22:00", "公开客服响应时间"],
+  ["投诉处理时限", "一般投诉 3 个工作日内初步响应，严重安全风险优先处理。", "公开投诉处理说明"],
   ["禁止服务说明", "严禁违法违规、低俗色情、私下交易、侵害隐私及诱导绕开平台的行为。", "首页和规则页合规提示"],
   ["隐私政策链接", "https://www.dipeikehu.com/privacy.html", "公开隐私政策"],
   ["服务协议链接", "https://www.dipeikehu.com/terms.html", "公开服务协议"],
@@ -151,12 +153,34 @@ async function createRecord(token, tableId, fields) {
   });
 }
 
+async function updateRecord(token, tableId, recordId, fields) {
+  await api(`/bitable/v1/apps/${APP_TOKEN}/tables/${tableId}/records/${recordId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ fields })
+  });
+}
+
+function sameValue(left, right) {
+  return JSON.stringify(left ?? "") === JSON.stringify(right ?? "");
+}
+
 async function syncByKey(token, tableId, tableName, keyField, rows) {
   const records = await listRecords(token, tableId);
-  const existing = new Set(records.map((record) => record.fields?.[keyField]).filter(Boolean));
+  const existing = new Map(records.map((record) => [record.fields?.[keyField], record]).filter(([key]) => Boolean(key)));
   for (const row of rows) {
-    if (existing.has(row[keyField])) {
-      console.log(`= ${tableName} 已存在：${row[keyField]}`);
+    const current = existing.get(row[keyField]);
+    if (current) {
+      const changed = Object.entries(row).some(([key, value]) => !sameValue(current.fields?.[key], value));
+      if (!changed) {
+        console.log(`= ${tableName} 已存在：${row[keyField]}`);
+        continue;
+      }
+      await updateRecord(token, tableId, current.record_id, row);
+      console.log(`~ ${tableName} 更新：${row[keyField]}`);
       continue;
     }
     await createRecord(token, tableId, row);

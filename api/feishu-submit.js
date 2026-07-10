@@ -6,18 +6,28 @@ const BASE_APP_URL = process.env.FEISHU_BASE_URL || `https://my.feishu.cn/base/$
 const RISK_WORDS = [
   "色情",
   "特殊服务",
-  "夜陪",
   "陪睡",
   "裸聊",
   "私下交易",
+  "加微信绕平台",
   "绕开平台",
   "违法交易",
+  "代办违法证件",
+  "查别人隐私",
+  "偷拍",
+  "赌博",
+  "约炮",
+  "援交",
+  "包养",
+  "嫖",
+  "卖淫",
+  "夜陪",
   "小姐",
   "包夜"
 ];
 
 const REQUIRED_FIELDS = {
-  "用户预约需求表": ["customerName", "phone", "wechat", "city", "service", "date", "timeSlot", "duration", "people", "budgetRange", "detail"],
+  "用户预约需求表": ["customerName", "phone", "city", "service", "date", "detail"],
   "服务者入驻申请表": ["name", "phone", "wechat", "city", "serviceArea", "serviceType", "availableTime", "price", "billingType", "intro"],
   "投诉举报表": ["complainantName", "contact", "target", "detail"],
   "客户咨询线索表": ["name", "contact", "city", "detail"]
@@ -27,6 +37,8 @@ const TABLE_CONFIG = {
   "用户预约需求表": {
     env: "FEISHU_TABLE_BOOKING",
     name: "用户预约需求表",
+    idPrefix: "DP",
+    idField: "预约编号",
     notifyEnv: "FEISHU_NOTIFY_BOOKING_WEBHOOK",
     notifySecretEnv: "FEISHU_NOTIFY_BOOKING_SECRET",
     buildFields: buildBookingFields
@@ -34,6 +46,8 @@ const TABLE_CONFIG = {
   "服务者入驻申请表": {
     env: "FEISHU_TABLE_PROVIDER_APPLY",
     name: "服务者入驻申请表",
+    idPrefix: "FWZ",
+    idField: "申请编号",
     notifyEnv: "FEISHU_NOTIFY_PROVIDER_WEBHOOK",
     notifySecretEnv: "FEISHU_NOTIFY_PROVIDER_SECRET",
     buildFields: buildProviderFields
@@ -41,6 +55,8 @@ const TABLE_CONFIG = {
   "投诉举报表": {
     env: "FEISHU_TABLE_REPORT",
     name: "投诉举报表",
+    idPrefix: "TS",
+    idField: "投诉编号",
     notifyEnv: "FEISHU_NOTIFY_REPORT_WEBHOOK",
     notifySecretEnv: "FEISHU_NOTIFY_REPORT_SECRET",
     buildFields: buildReportFields
@@ -48,14 +64,20 @@ const TABLE_CONFIG = {
   "客户咨询线索表": {
     env: "FEISHU_TABLE_CONSULT",
     name: "客户咨询线索表",
+    idPrefix: "ZX",
+    idField: "线索编号",
     notifyEnv: "FEISHU_NOTIFY_CONSULT_WEBHOOK",
     notifySecretEnv: "FEISHU_NOTIFY_CONSULT_SECRET",
     buildFields: buildConsultFields
   }
 };
 
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX = 20;
+const rateStore = new Map();
+
 function clean(value, fallback = "") {
-  return String(value ?? fallback).trim();
+  return String(value ?? fallback).replace(/[<>]/g, "").trim();
 }
 
 function localSubmitTime() {
@@ -81,9 +103,76 @@ function submitTime(payload) {
   return clean(payload.提交时间) || localSubmitTime();
 }
 
+function localDateStamp() {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("zh-CN", {
+      timeZone: "Asia/Shanghai",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    })
+      .formatToParts(new Date())
+      .filter((part) => part.type !== "literal")
+      .map((part) => [part.type, part.value])
+  );
+  return `${parts.year}${parts.month}${parts.day}`;
+}
+
+function todayInputValue() {
+  const stamp = localDateStamp();
+  return `${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6, 8)}`;
+}
+
+function publicId(prefix) {
+  const timePart = Date.now().toString().slice(-4);
+  const randomPart = crypto.randomInt(0, 100).toString().padStart(2, "0");
+  return `${prefix}${localDateStamp()}${timePart}${randomPart}`;
+}
+
+function requestKey(req, payload) {
+  const forwardedFor = clean(req.headers["x-forwarded-for"]).split(",")[0].trim();
+  const ip = forwardedFor || req.socket?.remoteAddress || "unknown";
+  const contact = clean(payload.phone || payload.contact || payload.wechat || payload.customerName || payload.name || payload.complainantName);
+  return `${ip}:${contact}`;
+}
+
+function checkRateLimit(req, payload) {
+  const now = Date.now();
+  const key = requestKey(req, payload);
+  const recent = (rateStore.get(key) || []).filter((time) => now - time < RATE_LIMIT_WINDOW_MS);
+  recent.push(now);
+  rateStore.set(key, recent);
+  return recent.length <= RATE_LIMIT_MAX;
+}
+
 function hasRiskContent(value) {
   const text = clean(value).toLowerCase();
   return RISK_WORDS.some((word) => text.includes(word.toLowerCase()));
+}
+
+function riskyValues(payload) {
+  const ignore = new Set([
+    "表单类型",
+    "formType",
+    "type",
+    "来源页面",
+    "sourcePage",
+    "source",
+    "提交时间",
+    "处理状态",
+    "website",
+    "companyWebsite",
+    "phone",
+    "contact",
+    "wechat",
+    "customerName",
+    "name",
+    "complainantName",
+    "consent"
+  ]);
+  return Object.entries(payload)
+    .filter(([key]) => !ignore.has(key))
+    .map(([, value]) => value);
 }
 
 function validatePayload(formType, payload) {
@@ -102,12 +191,12 @@ function validatePayload(formType, payload) {
     return { ok: false, status: 400, code: "INVALID_PHONE", message: "手机号格式不正确" };
   }
 
-  const riskFields =
-    formType === "投诉举报表"
-      ? []
-      : [payload.detail, payload.intro, payload.serviceType, payload.serviceArea, payload.availableTime, payload.strengths];
-  if (riskFields.some(hasRiskContent)) {
-    return { ok: false, status: 422, code: "RISK_CONTENT_REJECTED", message: "提交内容包含平台禁止服务或高风险表述，请修改后再提交" };
+  if (formType === "用户预约需求表" && clean(payload.date) && clean(payload.date) < todayInputValue()) {
+    return { ok: false, status: 400, code: "INVALID_DATE", message: "预约日期不能早于今天" };
+  }
+
+  if (formType !== "投诉举报表" && riskyValues(payload).some(hasRiskContent)) {
+    return { ok: false, status: 422, code: "RISK_CONTENT_REJECTED", message: "当前内容可能涉及违规服务，请修改后再提交。" };
   }
 
   return { ok: true };
@@ -150,6 +239,7 @@ function withSource(payload, fields) {
 
 function buildBookingFields(payload) {
   return withSource(payload, {
+    预约编号: clean(payload.publicId),
     "客户姓名/称呼": clean(payload.customerName),
     手机号: clean(payload.phone),
     微信号: clean(payload.wechat),
@@ -170,6 +260,7 @@ function buildBookingFields(payload) {
 
 function buildProviderFields(payload) {
   return compactFields({
+    申请编号: clean(payload.publicId),
     提交时间: submitTime(payload),
     "姓名/昵称": clean(payload.name),
     手机号: clean(payload.phone),
@@ -192,7 +283,9 @@ function buildProviderFields(payload) {
 }
 
 function buildReportFields(payload) {
+  const complaintDetail = [clean(payload.detail), clean(payload.needCallback) ? `回访需求：${clean(payload.needCallback)}` : ""].filter(Boolean).join("\n");
   return compactFields({
+    投诉编号: clean(payload.publicId),
     提交时间: submitTime(payload),
     "投诉人姓名/称呼": clean(payload.complainantName),
     联系方式: clean(payload.contact || payload.phone),
@@ -200,7 +293,8 @@ function buildReportFields(payload) {
     被投诉对象: clean(payload.target),
     投诉类型: clean(payload.topic || payload.reportType),
     相关城市: clean(payload.city),
-    投诉内容: clean(payload.detail),
+    投诉内容: complaintDetail,
+    "证据附件说明/链接": clean(payload.evidenceNote),
     处理状态: "待处理",
     风险等级: clean(payload.riskLevel, "中")
   });
@@ -210,9 +304,11 @@ function normalizeConsultTopic(topic) {
   const rawTopic = clean(topic);
   const topicMap = {
     订单进度: "预约咨询",
+    紧急预约: "预约咨询",
     服务者资料补充: "入驻合作",
     服务者中心: "入驻合作",
     服务反馈: "其他",
+    投诉处理: "其他",
     用户注册: "其他",
     登录帮助: "其他",
     账号中心: "其他",
@@ -238,6 +334,7 @@ function buildConsultFields(payload) {
   ].filter(Boolean);
   const detail = clean(payload.detail || rawTopic);
   return compactFields({
+    线索编号: clean(payload.publicId),
     提交时间: submitTime(payload),
     客户称呼: clean(payload.name),
     联系方式: clean(payload.contact),
@@ -268,7 +365,8 @@ function truncate(value, maxLength = 160) {
 
 function buildNotificationText(config, fields, recordId) {
   const header = `【地陪客户网】${config.name}新增记录`;
-  const common = [`记录ID：${recordId || "未返回"}`, `后台：${BASE_APP_URL}`];
+  const trackingId = config.idField ? clean(fields[config.idField]) : "";
+  const common = [trackingId ? `编号：${trackingId}` : "", `记录ID：${recordId || "未返回"}`, `后台：${BASE_APP_URL}`].filter(Boolean);
 
   if (config.name === "用户预约需求表") {
     return [
@@ -447,6 +545,10 @@ module.exports = async function handler(req, res) {
       res.status(validation.status).json(validation);
       return;
     }
+    if (!checkRateLimit(req, payload)) {
+      res.status(429).json({ ok: false, code: "RATE_LIMITED", message: "提交过于频繁，请稍后再试。" });
+      return;
+    }
 
     const token = await getTenantToken();
     if (!token) {
@@ -470,6 +572,7 @@ module.exports = async function handler(req, res) {
       return;
     }
 
+    payload.publicId = publicId(config.idPrefix);
     const fields = config.buildFields(payload);
     const writableFields = await filterKnownFields(token, tableId, fields);
     const record = await createRecord(token, tableId, writableFields);
@@ -480,7 +583,7 @@ module.exports = async function handler(req, res) {
     } catch (notifyError) {
       console.error("Feishu notification failed:", notifyError.message);
     }
-    res.status(200).json({ ok: true, table: config.name, recordId, notified });
+    res.status(200).json({ ok: true, table: config.name, recordId, publicId: payload.publicId, trackingNo: payload.publicId, notified });
   } catch (error) {
     res.status(500).json({ ok: false, code: "FEISHU_SUBMIT_FAILED", message: error.message });
   }

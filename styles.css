@@ -328,6 +328,13 @@ img {
   background: rgba(242, 211, 155, 0.55);
 }
 
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+
 .notice-card {
   width: min(760px, 100%);
   margin-top: 24px;
@@ -705,6 +712,17 @@ img {
   line-height: 1.4;
 }
 
+.scenario-meta,
+.scenario-skill {
+  min-height: 0 !important;
+  color: var(--muted-2) !important;
+  font-size: 13px !important;
+}
+
+.scenario-skill strong {
+  color: var(--gold-light);
+}
+
 .scenario-body p {
   margin: 8px 0 12px;
   color: var(--muted);
@@ -925,6 +943,23 @@ img {
   gap: 16px;
 }
 
+.booking-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0 24px;
+}
+
+.booking-steps span {
+  border: 1px solid rgba(242, 211, 155, 0.22);
+  border-radius: var(--radius);
+  padding: 12px;
+  color: var(--gold-light);
+  background: rgba(214, 168, 90, 0.07);
+  text-align: center;
+  font-size: 13px;
+}
+
 .console-form,
 .contact-form {
   grid-template-columns: repeat(2, 1fr);
@@ -971,6 +1006,42 @@ img {
   color: var(--muted);
   line-height: 1.7;
   font-size: 13px;
+}
+
+.form-result {
+  grid-column: 1 / -1;
+  white-space: pre-line;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  color: #d1fae5;
+  background: rgba(22, 101, 52, 0.16);
+  line-height: 1.7;
+}
+
+.form-result.error {
+  border-color: rgba(248, 113, 113, 0.42);
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.18);
+}
+
+.mobile-quickbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 60;
+  display: none;
+  gap: 10px;
+  padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(242, 211, 155, 0.24);
+  background: rgba(4, 10, 19, 0.94);
+  backdrop-filter: blur(18px);
+}
+
+.mobile-quickbar .btn {
+  flex: 1;
+  min-height: 44px;
 }
 
 .join-section {
@@ -1392,6 +1463,11 @@ img {
   line-height: 1.75;
 }
 
+.provider-audit {
+  color: var(--gold-light) !important;
+  font-size: 13px;
+}
+
 .provider-meta,
 .provider-tags {
   display: flex;
@@ -1763,6 +1839,7 @@ img {
   .category-strip,
   .trust-grid,
   .review-grid,
+  .booking-steps,
   .resource-grid,
   .faq-layout,
   .notice-list,
@@ -1825,5 +1902,13 @@ img {
 
   .consent-line {
     grid-column: 1 / -1;
+  }
+
+  body {
+    padding-bottom: 72px;
+  }
+
+  .mobile-quickbar {
+    display: flex;
   }
 }

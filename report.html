@@ -34,11 +34,21 @@
         <div class="container">
           <p class="eyebrow">投诉举报</p>
           <h1>提交投诉或违规线索</h1>
-          <p>如发现违规服务、虚假资料、诱导私下交易、骚扰或隐私泄露，请尽量提供时间、对象、证据和联系方式。</p>
+          <p>如发现违规服务、虚假资料、诱导私下交易、骚扰或隐私泄露，请尽量提供时间、对象、证据和联系方式。提交成功后会生成投诉编号。</p>
         </div>
       </section>
       <section class="page-main">
-        <div class="container">
+        <div class="container page-grid">
+          <article class="page-card">
+            <h2>投诉处理说明</h2>
+            <ul>
+              <li>一般投诉会在 3 个工作日内给出初步响应。</li>
+              <li>严重违规、安全风险、隐私泄露和诱导私下交易会优先处理。</li>
+              <li>经核实存在违规的，平台可采取暂停展示、限制接单、加入风险名单等处理方式。</li>
+              <li>第一版暂不开放网页附件上传，如有截图证据，请在客服回访时补充。</li>
+            </ul>
+          </article>
+
           <div class="contact-card">
             <form class="contact-form" data-lead-form data-lead-type="投诉举报表" data-source="/report.html" novalidate>
               <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -86,11 +96,23 @@
                 问题描述
                 <textarea name="detail" rows="6" minlength="12" maxlength="800" placeholder="请描述发生时间、对象、经过和证据线索，至少 12 个字。" required></textarea>
               </label>
+              <label class="full">
+                证据截图说明/链接（选填）
+                <textarea name="evidenceNote" rows="3" maxlength="500" placeholder="第一版暂不上传附件，可填写截图说明、聊天记录摘要或后续可补充的证据。"></textarea>
+              </label>
+              <label>
+                是否需要平台回访
+                <select name="needCallback">
+                  <option>需要回访</option>
+                  <option>仅记录，不需要回访</option>
+                </select>
+              </label>
               <label class="consent-line full">
                 <input type="checkbox" name="consent" value="已同意" required />
                 <span>我确认提交内容真实，并同意平台按 <a href="./privacy.html">隐私政策</a> 处理本次投诉信息</span>
               </label>
               <button class="btn gold" type="submit">提交投诉举报</button>
+              <p class="form-note full">提交成功后页面会返回投诉编号，请保存编号用于后续补充证据或查询处理进展。</p>
             </form>
           </div>
         </div>

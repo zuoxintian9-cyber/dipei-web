@@ -117,6 +117,14 @@ const providerProfiles = [
 
 const providerCities = ["北京", "上海", "广州", "深圳", "成都", "杭州", "西安", "重庆"];
 const providerServices = ["商务接待", "城市陪同", "旅游向导", "办事协助", "展会陪同", "机场接送"];
+const providerAuditLines = {
+  "beijing-business": "已审核｜3 年本地接待经验｜普通话/英语",
+  "shanghai-city": "已审核｜4 年城市陪同经验｜普通话/英语",
+  "xian-guide": "已审核｜5 年文化路线经验｜普通话",
+  "guangzhou-assist": "已审核｜3 年现场协助经验｜普通话/粤语",
+  "shenzhen-expo": "已审核｜4 年展会服务经验｜普通话/英语",
+  "chengdu-airport": "已审核｜3 年交通枢纽经验｜普通话"
+};
 
 const $p = (selector, root = document) => root.querySelector(selector);
 
@@ -136,6 +144,7 @@ function providerCard(profile) {
           <h3>${esc(profile.title)}</h3>
           <strong>¥${esc(profile.price)}起</strong>
         </div>
+        <p class="provider-audit">${esc(providerAuditLines[profile.id] || "已审核｜本地服务经验｜普通话")}</p>
         <p>${esc(profile.intro)}</p>
         <div class="provider-meta">
           <span>${esc(profile.area)}</span>
@@ -146,7 +155,7 @@ function providerCard(profile) {
         <div class="provider-tags">${profile.tags.map((tag) => `<span>${esc(tag)}</span>`).join("")}</div>
         <div class="provider-actions">
           <a class="btn ghost" href="./provider.html?id=${encodeURIComponent(profile.id)}">查看详情</a>
-          <a class="btn gold" href="./index.html#booking">立即预约</a>
+          <a class="btn gold" href="./index.html#booking">提交需求匹配</a>
         </div>
       </div>
     </article>
@@ -180,6 +189,7 @@ function renderProviderDetail() {
       <div>
         <p class="eyebrow">已认证服务者</p>
         <h1>${esc(profile.title)}</h1>
+        <p>${esc(providerAuditLines[profile.id] || "已审核｜本地服务经验｜普通话")}</p>
         <p>${esc(profile.intro)}</p>
         <div class="detail-stats">
           <span><strong>${esc(profile.rating)}</strong>评分</span>

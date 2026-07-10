@@ -123,6 +123,10 @@
               <i></i>
               <span>可靠</span>
             </div>
+            <div class="hero-actions">
+              <a class="btn gold" href="#booking">立即提交预约</a>
+              <a class="btn ghost" href="#process">查看服务流程</a>
+            </div>
           </div>
 
           <div class="notice-card" role="note">
@@ -180,7 +184,7 @@
             </label>
             <button class="btn gold search-btn" type="submit">
               <svg><use href="#i-search"></use></svg>
-              查看服务
+              匹配服务
             </button>
           </form>
         </div>
@@ -280,9 +284,9 @@
 
           <div class="list-content">
             <div class="section-heading compact">
-              <p class="eyebrow">开放城市</p>
-              <h2>首批覆盖热门城市，更多城市陆续开放</h2>
-              <p id="resultSummary">可按城市、服务类型和预算筛选合适的服务场景。</p>
+              <p class="eyebrow">精选脱敏服务者</p>
+              <h2>展示能力画像，不公开个人隐私</h2>
+              <p id="resultSummary">可按城市、服务类型和预算筛选合适的服务者画像，再提交需求由客服人工匹配。</p>
             </div>
             <div class="scenario-list" id="scenarioGrid"></div>
           </div>
@@ -293,25 +297,25 @@
         <div class="container split-feature">
           <div>
             <p class="eyebrow">服务流程</p>
-            <h2>从提交需求到客服确认，全流程留痕</h2>
+            <h2>从提交预约到完成服务，全流程留痕</h2>
             <p>
               用户提交预约后，由平台客服人工确认城市、时间、服务边界和费用说明。预约记录、服务者资料和审核信息均不在公开页面展示。
             </p>
             <div class="feature-points">
-              <span>需求提交</span>
-              <span>客服确认</span>
-              <span>服务匹配</span>
-              <span>风险提醒</span>
-              <span>投诉入口</span>
+              <span>提交预约需求</span>
+              <span>核对时间城市</span>
+              <span>匹配服务者</span>
+              <span>确认价格地点</span>
+              <span>反馈与投诉</span>
             </div>
           </div>
           <div class="process-card">
             <h3>预约处理流程</h3>
             <ol>
-              <li>选择城市、服务类型和服务时间</li>
-              <li>填写人数、预算、联系方式和具体需求</li>
-              <li>平台客服核对服务边界和可服务情况</li>
-              <li>确认服务方案、价格和注意事项</li>
+              <li>提交预约需求</li>
+              <li>客服核对时间、城市和服务边界</li>
+              <li>匹配合适服务者</li>
+              <li>确认价格、地点和注意事项</li>
               <li>服务完成后可提交反馈或投诉举报</li>
             </ol>
           </div>
@@ -384,7 +388,14 @@
           <div class="section-heading">
             <p class="eyebrow">预约需求</p>
             <h2>提交预约需求</h2>
-            <p>请填写真实需求和可联系信息。提交前需阅读并同意隐私政策和服务协议。</p>
+            <p>第一步只需填写核心信息，预算、人数、接送和外语需求可由客服回访时继续确认。</p>
+          </div>
+          <div class="booking-steps" aria-label="预约确认流程">
+            <span>1. 提交需求</span>
+            <span>2. 生成预约编号</span>
+            <span>3. 客服核对边界</span>
+            <span>4. 匹配服务者</span>
+            <span>5. 完成后反馈</span>
           </div>
           <form class="booking-form" id="bookingForm" data-lead-form data-lead-type="用户预约需求表" data-source="/#booking" novalidate>
             <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -397,8 +408,8 @@
               <input name="phone" inputmode="tel" maxlength="20" placeholder="请输入 11 位手机号" required />
             </label>
             <label>
-              微信号
-              <input name="wechat" maxlength="40" placeholder="请输入微信号" required />
+              微信号（选填）
+              <input name="wechat" maxlength="40" placeholder="可填写微信号，便于客服联系" />
             </label>
             <label>
               服务城市
@@ -415,8 +426,8 @@
               </select>
             </label>
             <label>
-              服务区域
-              <input name="area" maxlength="60" placeholder="如：朝阳 CBD / 浦东机场 / 会展中心" required />
+              服务区域（选填）
+              <input name="area" maxlength="60" placeholder="如：朝阳 CBD / 浦东机场 / 会展中心" />
             </label>
             <label>
               服务类型
@@ -435,9 +446,9 @@
               <input type="date" name="date" required />
             </label>
             <label>
-              预约时间段
-              <select name="timeSlot" required>
-                <option value="">请选择时间段</option>
+              预约时间段（选填）
+              <select name="timeSlot">
+                <option value="">客服回访确认</option>
                 <option>上午</option>
                 <option>下午</option>
                 <option>晚上</option>
@@ -445,9 +456,9 @@
               </select>
             </label>
             <label>
-              服务时长
-              <select name="duration" required>
-                <option value="">请选择时长</option>
+              服务时长（选填）
+              <select name="duration">
+                <option value="">客服回访确认</option>
                 <option>2 小时</option>
                 <option>半天</option>
                 <option>全天</option>
@@ -455,13 +466,13 @@
               </select>
             </label>
             <label>
-              人数
-              <input type="number" min="1" max="99" name="people" placeholder="1" required />
+              人数（选填）
+              <input type="number" min="1" max="99" name="people" placeholder="如：1" />
             </label>
             <label>
-              预算
-              <select name="budgetRange" required>
-                <option value="">请选择预算范围</option>
+              预算（选填）
+              <select name="budgetRange">
+                <option value="">客服回访确认</option>
                 <option>300以内</option>
                 <option>300-500</option>
                 <option>500-1000</option>
@@ -498,7 +509,7 @@
               <span>我已阅读并同意 <a href="./privacy.html">隐私政策</a> 和 <a href="./terms.html">服务协议</a></span>
             </label>
             <button class="btn gold" type="submit">提交预约需求</button>
-            <p class="form-note full">请确保联系方式真实有效。提交成功后，客服会根据需求信息继续跟进。</p>
+            <p class="form-note full">提交成功后页面会返回预约编号，请保存编号用于订单进度查询。</p>
           </form>
         </div>
       </section>
@@ -620,6 +631,7 @@
                 <span>我已阅读并同意 <a href="./provider-rule.html">服务者入驻规则</a>、<a href="./privacy.html">隐私政策</a></span>
               </label>
               <button class="btn gold" type="submit">提交入驻申请</button>
+              <p class="form-note full">提交成功后页面会返回入驻申请编号，请保存编号用于后续补充资料或查询审核状态。</p>
             </form>
           </div>
         </div>
@@ -662,6 +674,11 @@
         </div>
       </section>
     </main>
+
+    <div class="mobile-quickbar" aria-label="移动端快捷操作">
+      <a class="btn ghost" href="./contact.html">联系客服</a>
+      <a class="btn gold" href="#booking">提交预约</a>
+    </div>
 
     <footer class="site-footer">
       <div class="container footer-inner">

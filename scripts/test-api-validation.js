@@ -73,6 +73,8 @@ async function main() {
 
   assert.equal(submitTest.hasAllowedOrigin(request({ origin: "https://www.dipeikehu.com" })), true);
   assert.equal(submitTest.hasAllowedOrigin(request({ origin: "https://dipei-web.vercel.app" })), true);
+  assert.equal(submitTest.hasAllowedOrigin(request({ origin: "https://dipei-abc123-zuoxintian9-7231s-projects.vercel.app" })), true);
+  assert.equal(submitTest.hasAllowedOrigin(request({ origin: "https://dipei-abc123-another-team.vercel.app" })), false);
   assert.equal(submitTest.hasAllowedOrigin(request({ origin: "https://attacker.vercel.app" })), false);
   assert.equal(submitTest.hasAllowedOrigin(request({ origin: "https://evil.example" })), false);
   assert.equal(submitTest.hasJsonContentType(request({ "content-type": "application/json; charset=utf-8" })), true);

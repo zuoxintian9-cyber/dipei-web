@@ -190,7 +190,9 @@ function hasAllowedOrigin(req) {
     const url = new URL(origin);
     const host = url.hostname.toLowerCase();
     const productionHosts = new Set(["www.dipeikehu.com", "dipeikehu.com", "dipei-web.vercel.app"]);
-    return (url.protocol === "https:" && productionHosts.has(host))
+    const isProjectDeployment = host.startsWith("dipei-")
+      && host.endsWith("-zuoxintian9-7231s-projects.vercel.app");
+    return (url.protocol === "https:" && (productionHosts.has(host) || isProjectDeployment))
       || (url.protocol === "http:" && (host === "127.0.0.1" || host === "localhost"));
   } catch {
     return false;

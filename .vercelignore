@@ -1,6 +1,7 @@
 111.txt
 FIRST_VERSION_CHECKLIST.md
 SEARCH_INDEXING_HANDOFF.md
+SECURITY_AUDIT.md
 scripts/
 .env
 .env.*

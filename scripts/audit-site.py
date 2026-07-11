@@ -26,18 +26,29 @@ class PageParser(HTMLParser):
         self.ids: list[str] = []
         self.title_parts: list[str] = []
         self.in_title = False
+        self.tag_counts: dict[str, int] = {}
+        self.forms: list[dict[str, object]] = []
+        self.current_form: dict[str, object] | None = None
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = {key: value or "" for key, value in attrs}
         self.attrs.append((tag, values))
+        self.tag_counts[tag] = self.tag_counts.get(tag, 0) + 1
         if values.get("id"):
             self.ids.append(values["id"])
         if tag == "title":
             self.in_title = True
+        if tag == "form":
+            self.current_form = {"attrs": values, "controls": []}
+        elif self.current_form is not None and tag in {"input", "select", "textarea", "button"}:
+            self.current_form["controls"].append((tag, values))
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "title":
             self.in_title = False
+        if tag == "form" and self.current_form is not None:
+            self.forms.append(self.current_form)
+            self.current_form = None
 
     def handle_data(self, data: str) -> None:
         if self.in_title:
@@ -76,6 +87,9 @@ def main() -> int:
         title = "".join(parser.title_parts).strip()
         if not title:
             errors.append(f"{page.name}: 缺少 title")
+        expected_h1 = 0 if page.name == "provider.html" else 1
+        if parser.tag_counts.get("h1", 0) != expected_h1:
+            errors.append(f"{page.name}: h1 数量不正确")
         if len(parser.ids) != len(set(parser.ids)):
             duplicates = sorted({item for item in parser.ids if parser.ids.count(item) > 1})
             errors.append(f"{page.name}: 重复 id {duplicates}")
@@ -87,6 +101,40 @@ def main() -> int:
             tag == "link" and attrs.get("rel") == "canonical" for tag, attrs in parser.attrs
         ):
             errors.append(f"{page.name}: 缺少 canonical")
+        if not any(meta.get("name") == "description" and meta.get("content") for meta in metas):
+            errors.append(f"{page.name}: 缺少 description")
+
+        canonical_links = [attrs.get("href", "") for tag, attrs in parser.attrs if tag == "link" and attrs.get("rel") == "canonical"]
+        if len(canonical_links) > 1:
+            errors.append(f"{page.name}: canonical 重复")
+        if canonical_links and page.name != "index.html" and urlsplit(canonical_links[0]).path != f"/{page.name}":
+            errors.append(f"{page.name}: canonical 与文件路径不一致")
+
+        for tag, attrs in parser.attrs:
+            if tag == "img" and "alt" not in attrs:
+                errors.append(f"{page.name}: 图片缺少 alt")
+            if any(name.lower().startswith("on") for name in attrs):
+                errors.append(f"{page.name}: 存在内联事件处理器")
+            if tag == "script" and not attrs.get("src"):
+                errors.append(f"{page.name}: 存在内联脚本，不符合 CSP")
+            if attrs.get("target") == "_blank" and "noopener" not in attrs.get("rel", ""):
+                errors.append(f"{page.name}: 新窗口链接缺少 noopener")
+
+        for form in parser.forms:
+            attrs = form["attrs"]
+            controls = form["controls"]
+            if "data-lead-form" not in attrs:
+                continue
+            if attrs.get("data-lead-type") not in {"用户预约需求表", "服务者入驻申请表", "投诉举报表", "客户咨询线索表"}:
+                errors.append(f"{page.name}: 表单类型不受支持")
+            if "novalidate" not in attrs:
+                errors.append(f"{page.name}: 线索表单缺少统一校验标记")
+            names = [control_attrs.get("name", "") for _, control_attrs in controls]
+            if "website" not in names or "consent" not in names:
+                errors.append(f"{page.name}: 线索表单缺少蜜罐或协议勾选")
+            submit_buttons = [control_attrs for tag, control_attrs in controls if tag == "button" and control_attrs.get("type") == "submit"]
+            if len(submit_buttons) != 1:
+                errors.append(f"{page.name}: 线索表单应只有一个提交按钮")
 
         for tag, attrs in parser.attrs:
             for attr in ("href", "src"):

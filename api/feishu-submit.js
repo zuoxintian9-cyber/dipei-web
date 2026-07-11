@@ -27,11 +27,21 @@ const RISK_WORDS = [
 ];
 
 const REQUIRED_FIELDS = {
-  "用户预约需求表": ["customerName", "phone", "city", "service", "date", "detail"],
-  "服务者入驻申请表": ["name", "phone", "wechat", "city", "serviceArea", "serviceType", "availableTime", "price", "billingType", "intro"],
-  "投诉举报表": ["complainantName", "contact", "target", "detail"],
-  "客户咨询线索表": ["name", "contact", "city", "detail"]
+  "用户预约需求表": ["customerName", "phone", "city", "service", "date", "detail", "协议同意"],
+  "服务者入驻申请表": ["name", "phone", "wechat", "city", "serviceArea", "serviceType", "availableTime", "price", "billingType", "intro", "协议同意"],
+  "投诉举报表": ["complainantName", "contact", "topic", "target", "city", "riskLevel", "detail", "协议同意"],
+  "客户咨询线索表": ["name", "contact", "topic", "city", "detail", "协议同意"]
 };
+
+const OPEN_CITIES = new Set(["北京", "上海", "广州", "深圳", "成都", "杭州", "西安", "重庆"]);
+const SERVICE_TYPES = new Set(["商务接待", "城市陪同", "旅游向导", "办事协助", "展会陪同", "机场接送"]);
+const BILLING_TYPES = new Set(["小时", "半天", "全天", "按次沟通"]);
+const REPORT_RISK_LEVELS = new Set(["低", "中", "高", "严重"]);
+const PROVIDER_GENDERS = new Set(["", "男", "女", "不便透露"]);
+const PROVIDER_AGE_RANGES = new Set(["", "18-24", "25-30", "31-40", "41以上"]);
+const FEEDBACK_RATINGS = new Set(["5 分 - 很满意", "4 分 - 满意", "3 分 - 一般", "2 分 - 不满意", "1 分 - 很不满意"]);
+const RECOMMEND_OPTIONS = new Set(["愿意推荐", "暂不确定", "不愿意推荐"]);
+const MAX_REQUEST_BYTES = 16 * 1024;
 
 const TABLE_CONFIG = {
   "用户预约需求表": {
@@ -76,8 +86,17 @@ const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_PER_IP = 12;
 const RATE_LIMIT_MAX_PER_CONTACT = 5;
 const rateStore = new Map();
+let tokenCache = { value: "", expiresAt: 0 };
+let tableCache = { items: [], expiresAt: 0 };
+const fieldCache = new Map();
 
 const FIELD_MAX_LENGTHS = {
+  表单类型: 30,
+  formType: 30,
+  type: 30,
+  website: 200,
+  companyWebsite: 200,
+  consent: 20,
   customerName: 30,
   name: 30,
   complainantName: 30,
@@ -115,11 +134,71 @@ const FIELD_MAX_LENGTHS = {
   intro: 1000,
   source: 200,
   sourcePage: 200,
-  来源页面: 200
+  来源页面: 200,
+  提交时间: 40,
+  处理状态: 20,
+  协议同意: 20,
+  gender: 20,
+  ageRange: 20,
+  riskLevel: 20,
+  rating: 20,
+  wouldRecommend: 20,
+  serviceDate: 20
 };
 
+const ALLOWED_PAYLOAD_FIELDS = new Set([
+  ...Object.keys(FIELD_MAX_LENGTHS),
+  "表单类型", "formType", "type", "website", "companyWebsite", "consent"
+]);
+const MULTILINE_FIELDS = new Set(["detail", "intro", "evidenceNote"]);
+
 function clean(value, fallback = "") {
-  return String(value ?? fallback).replace(/[<>]/g, "").trim();
+  return String(value ?? fallback)
+    .replace(/[<>\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F\u202A-\u202E\u2066-\u2069]/g, "")
+    .replace(/\r\n?/g, "\n")
+    .trim();
+}
+
+function requestIp(req) {
+  return clean(req.headers["x-vercel-forwarded-for"] || req.headers["x-forwarded-for"])
+    .split(",")[0]
+    .trim() || req.socket?.remoteAddress || "unknown";
+}
+
+function hasJsonContentType(req) {
+  return clean(req.headers["content-type"]).toLowerCase().split(";", 1)[0] === "application/json";
+}
+
+function requestTooLarge(req) {
+  const length = Number(req.headers["content-length"] || 0);
+  return Number.isFinite(length) && length > MAX_REQUEST_BYTES;
+}
+
+function bodyTooLarge(req) {
+  try {
+    const raw = typeof req.body === "string" ? req.body : JSON.stringify(req.body ?? {});
+    return Buffer.byteLength(raw, "utf8") > MAX_REQUEST_BYTES;
+  } catch {
+    return true;
+  }
+}
+
+function hasAllowedOrigin(req) {
+  const origin = clean(req.headers.origin);
+  if (!origin) return true;
+  try {
+    const url = new URL(origin);
+    const host = url.hostname.toLowerCase();
+    const productionHosts = new Set(["www.dipeikehu.com", "dipeikehu.com", "dipei-web.vercel.app"]);
+    return (url.protocol === "https:" && productionHosts.has(host))
+      || (url.protocol === "http:" && (host === "127.0.0.1" || host === "localhost"));
+  } catch {
+    return false;
+  }
+}
+
+function hasOnlyScalarValues(payload) {
+  return Object.values(payload).every((value) => value === null || ["string", "number", "boolean"].includes(typeof value));
 }
 
 function localSubmitTime() {
@@ -142,10 +221,10 @@ function localSubmitTime() {
 }
 
 function submitTime(payload) {
-  return clean(payload.提交时间) || localSubmitTime();
+  return localSubmitTime();
 }
 
-function localDateStamp() {
+function localDateStamp(date = new Date()) {
   const parts = Object.fromEntries(
     new Intl.DateTimeFormat("zh-CN", {
       timeZone: "Asia/Shanghai",
@@ -153,7 +232,7 @@ function localDateStamp() {
       month: "2-digit",
       day: "2-digit"
     })
-      .formatToParts(new Date())
+      .formatToParts(date)
       .filter((part) => part.type !== "literal")
       .map((part) => [part.type, part.value])
   );
@@ -165,24 +244,53 @@ function todayInputValue() {
   return `${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6, 8)}`;
 }
 
+function maxBookingDateInput() {
+  const date = new Date(Date.now() + 366 * 24 * 60 * 60 * 1000);
+  const stamp = localDateStamp(date);
+  return `${stamp.slice(0, 4)}-${stamp.slice(4, 6)}-${stamp.slice(6, 8)}`;
+}
+
+function isValidDateInput(value) {
+  const text = clean(value);
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(text);
+  if (!match) return false;
+  const [, year, month, day] = match.map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
 function publicId(prefix) {
   const randomValue = BigInt(`0x${crypto.randomBytes(8).toString("hex")}`) % 10000000000000000n;
   return `${prefix}${randomValue.toString().padStart(16, "0")}`;
 }
 
 function requestKeys(req, payload) {
-  const forwardedFor = clean(req.headers["x-forwarded-for"]).split(",")[0].trim();
-  const ip = forwardedFor || req.socket?.remoteAddress || "unknown";
   const contact = clean(payload.phone || payload.contact || payload.wechat || payload.customerName || payload.name || payload.complainantName);
   const contactHash = crypto.createHash("sha256").update(contact || "unknown").digest("hex");
-  return { ip: `ip:${ip}`, contact: `contact:${contactHash}` };
+  return { ip: `ip:${requestIp(req)}`, contact: `contact:${contactHash}` };
 }
 
 function checkRateBucket(key, max, now) {
   const recent = (rateStore.get(key) || []).filter((time) => now - time < RATE_LIMIT_WINDOW_MS);
   recent.push(now);
   rateStore.set(key, recent);
+  if (rateStore.size > 5000) {
+    for (const [storedKey, times] of rateStore) {
+      if (!times.some((time) => now - time < RATE_LIMIT_WINDOW_MS)) rateStore.delete(storedKey);
+    }
+    while (rateStore.size > 5000) rateStore.delete(rateStore.keys().next().value);
+  }
   return recent.length <= max;
+}
+
+function checkIpRateLimit(req) {
+  return checkRateBucket(`ip:${requestIp(req)}`, RATE_LIMIT_MAX_PER_IP, Date.now());
+}
+
+function checkContactRateLimit(payload) {
+  const contact = clean(payload.phone || payload.contact || payload.wechat || payload.customerName || payload.name || payload.complainantName);
+  const hash = crypto.createHash("sha256").update(contact || "unknown").digest("hex");
+  return checkRateBucket(`contact:${hash}`, RATE_LIMIT_MAX_PER_CONTACT, Date.now());
 }
 
 function checkRateLimit(req, payload) {
@@ -195,6 +303,13 @@ function checkRateLimit(req, payload) {
 function hasRiskContent(value) {
   const text = clean(value).toLowerCase();
   return RISK_WORDS.some((word) => text.includes(word.toLowerCase()));
+}
+
+function isContactValueValid(value) {
+  const contact = clean(value);
+  return /^1[3-9]\d{9}$/.test(contact)
+    || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)
+    || /^[a-zA-Z0-9][-_a-zA-Z0-9]{4,29}$/.test(contact);
 }
 
 function riskyValues(payload) {
@@ -231,15 +346,58 @@ function validatePayload(formType, payload) {
     return { ok: false, status: 400, code: "SPAM_REJECTED", message: "提交异常，请刷新页面后重试" };
   }
 
+  if (!hasOnlyScalarValues(payload)) {
+    return { ok: false, status: 400, code: "INVALID_FIELD_TYPE", message: "提交字段类型不正确" };
+  }
+
+  const unexpected = Object.keys(payload).filter((key) => !ALLOWED_PAYLOAD_FIELDS.has(key));
+  if (unexpected.length) {
+    return { ok: false, status: 400, code: "UNEXPECTED_FIELDS", message: "提交包含未支持的字段" };
+  }
+
+  const multilineSingleField = Object.entries(payload).find(([key, value]) => !MULTILINE_FIELDS.has(key) && /[\r\n]/.test(String(value ?? "")));
+  if (multilineSingleField) {
+    return { ok: false, status: 400, code: "INVALID_LINE_BREAK", message: "单行字段不能包含换行" };
+  }
+
   const required = REQUIRED_FIELDS[formType] || [];
   const missing = required.filter((key) => !clean(payload[key]));
   if (missing.length) {
     return { ok: false, status: 400, code: "MISSING_REQUIRED_FIELDS", message: "请完整填写必填项", missing };
   }
 
+  if (clean(payload.协议同意) !== "已阅读并同意") {
+    return { ok: false, status: 400, code: "CONSENT_REQUIRED", message: "请先阅读并同意相关协议" };
+  }
+
   const phone = clean(payload.phone || payload.contact);
   if (payload.phone && !/^1[3-9]\d{9}$/.test(phone)) {
     return { ok: false, status: 400, code: "INVALID_PHONE", message: "手机号格式不正确" };
+  }
+  if (payload.contact && !isContactValueValid(payload.contact)) {
+    return { ok: false, status: 400, code: "INVALID_CONTACT", message: "联系方式格式不正确" };
+  }
+  if (payload.wechat && !isContactValueValid(payload.wechat)) {
+    return { ok: false, status: 400, code: "INVALID_WECHAT", message: "微信号格式不正确" };
+  }
+
+  if (payload.serviceType && !SERVICE_TYPES.has(clean(payload.serviceType))) {
+    return { ok: false, status: 400, code: "INVALID_SERVICE_TYPE", message: "服务类型不正确" };
+  }
+  if (payload.serviceDate && !isValidDateInput(payload.serviceDate)) {
+    return { ok: false, status: 400, code: "INVALID_SERVICE_DATE", message: "服务日期格式不正确" };
+  }
+  if (payload.rating && !FEEDBACK_RATINGS.has(clean(payload.rating))) {
+    return { ok: false, status: 400, code: "INVALID_RATING", message: "评分选项不正确" };
+  }
+  if (payload.wouldRecommend && !RECOMMEND_OPTIONS.has(clean(payload.wouldRecommend))) {
+    return { ok: false, status: 400, code: "INVALID_RECOMMEND_OPTION", message: "推荐选项不正确" };
+  }
+  if (payload.people !== undefined && clean(payload.people) !== "") {
+    const people = Number(clean(payload.people));
+    if (!Number.isInteger(people) || people < 1 || people > 99) {
+      return { ok: false, status: 400, code: "INVALID_PEOPLE", message: "人数应为 1 到 99 之间的整数" };
+    }
   }
 
   const oversized = Object.entries(FIELD_MAX_LENGTHS).find(([key, max]) => clean(payload[key]).length > max);
@@ -252,8 +410,39 @@ function validatePayload(formType, payload) {
     return { ok: false, status: 413, code: "PAYLOAD_TOO_LARGE", message: "提交内容过长，请精简后重试" };
   }
 
-  if (formType === "用户预约需求表" && clean(payload.date) && clean(payload.date) < todayInputValue()) {
-    return { ok: false, status: 400, code: "INVALID_DATE", message: "预约日期不能早于今天" };
+  const detailLength = clean(payload.detail).length;
+  if (formType !== "服务者入驻申请表" && detailLength < 12) {
+    return { ok: false, status: 400, code: "DETAIL_TOO_SHORT", message: "具体说明至少需要 12 个字" };
+  }
+
+  if (formType === "用户预约需求表") {
+    if (!OPEN_CITIES.has(clean(payload.city)) || !SERVICE_TYPES.has(clean(payload.service))) {
+      return { ok: false, status: 400, code: "INVALID_BOOKING_OPTION", message: "请选择当前支持的城市和服务类型" };
+    }
+    const date = clean(payload.date);
+    if (!isValidDateInput(date) || date < todayInputValue() || date > maxBookingDateInput()) {
+      return { ok: false, status: 400, code: "INVALID_DATE", message: "请选择今天起一年内的有效预约日期" };
+    }
+  }
+
+  if (formType === "服务者入驻申请表") {
+    if (!OPEN_CITIES.has(clean(payload.city)) || !SERVICE_TYPES.has(clean(payload.serviceType)) || !BILLING_TYPES.has(clean(payload.billingType))) {
+      return { ok: false, status: 400, code: "INVALID_PROVIDER_OPTION", message: "请选择当前支持的城市、服务类型和计费方式" };
+    }
+    const price = Number(clean(payload.price));
+    if (!Number.isInteger(price) || price < 1 || price > 100000) {
+      return { ok: false, status: 400, code: "INVALID_PRICE", message: "起步价格应为 1 到 100000 之间的整数" };
+    }
+    if (clean(payload.intro).length < 20) {
+      return { ok: false, status: 400, code: "INTRO_TOO_SHORT", message: "服务介绍至少需要 20 个字" };
+    }
+    if (!PROVIDER_GENDERS.has(clean(payload.gender)) || !PROVIDER_AGE_RANGES.has(clean(payload.ageRange))) {
+      return { ok: false, status: 400, code: "INVALID_PROVIDER_PROFILE", message: "性别或年龄段选项不正确" };
+    }
+  }
+
+  if (formType === "投诉举报表" && payload.riskLevel && !REPORT_RISK_LEVELS.has(clean(payload.riskLevel))) {
+    return { ok: false, status: 400, code: "INVALID_RISK_LEVEL", message: "风险等级不正确" };
   }
 
   if (formType !== "投诉举报表" && riskyValues(payload).some(hasRiskContent)) {
@@ -487,6 +676,11 @@ function signFeishuBot(timestamp, secret) {
   return crypto.createHmac("sha256", stringToSign).update("").digest("base64");
 }
 
+function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+  const signal = options.signal || (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(timeoutMs) : undefined);
+  return fetch(url, { ...options, signal });
+}
+
 async function sendNotification(config, fields, recordId) {
   const webhook = clean(process.env[config.notifyEnv] || process.env.FEISHU_NOTIFY_WEBHOOK || process.env.FEISHU_BOT_WEBHOOK);
   if (!webhook) return false;
@@ -504,11 +698,11 @@ async function sendNotification(config, fields, recordId) {
     body.sign = signFeishuBot(timestamp, secret);
   }
 
-  const response = await fetch(webhook, {
+  const response = await fetchWithTimeout(webhook, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json; charset=utf-8" },
     body: JSON.stringify(body)
-  });
+  }, 5000);
   const result = await response.json().catch(() => ({}));
   const okCode = result.code === 0 || result.StatusCode === 0 || result.status_code === 0;
   if (!response.ok || !okCode) {
@@ -518,7 +712,7 @@ async function sendNotification(config, fields, recordId) {
 }
 
 async function feishuFetch(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetchWithTimeout(url, options);
   const body = await response.json().catch(() => ({}));
   if (!response.ok || body.code !== 0) {
     const message = body.msg || body.error || response.statusText;
@@ -533,6 +727,7 @@ async function getTenantToken() {
   if (!appId || !appSecret || !BASE_APP_TOKEN) {
     return null;
   }
+  if (tokenCache.value && tokenCache.expiresAt > Date.now()) return tokenCache.value;
 
   const body = await feishuFetch("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal", {
     method: "POST",
@@ -542,21 +737,28 @@ async function getTenantToken() {
       app_secret: appSecret
     })
   });
-  return body.tenant_access_token;
+  tokenCache = { value: body.tenant_access_token || "", expiresAt: Date.now() + 60 * 60 * 1000 };
+  return tokenCache.value;
 }
 
 async function listTables(token) {
-  const body = await feishuFetch(`https://open.feishu.cn/open-apis/bitable/v1/apps/${BASE_APP_TOKEN}/tables`, {
+  if (tableCache.items.length && tableCache.expiresAt > Date.now()) return tableCache.items;
+  const body = await feishuFetch(`https://open.feishu.cn/open-apis/bitable/v1/apps/${BASE_APP_TOKEN}/tables?page_size=100`, {
     headers: { Authorization: `Bearer ${token}` }
   });
-  return body.data?.items || [];
+  tableCache = { items: body.data?.items || [], expiresAt: Date.now() + 10 * 60 * 1000 };
+  return tableCache.items;
 }
 
 async function listFields(token, tableId) {
+  const cached = fieldCache.get(tableId);
+  if (cached?.expiresAt > Date.now()) return cached.items;
   const body = await feishuFetch(`https://open.feishu.cn/open-apis/bitable/v1/apps/${BASE_APP_TOKEN}/tables/${tableId}/fields?page_size=100`, {
     headers: { Authorization: `Bearer ${token}` }
   });
-  return body.data?.items || [];
+  const items = body.data?.items || [];
+  fieldCache.set(tableId, { items, expiresAt: Date.now() + 10 * 60 * 1000 });
+  return items;
 }
 
 async function filterKnownFields(token, tableId, fields) {
@@ -579,7 +781,7 @@ async function createRecord(token, tableId, fields) {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json"
+      "Content-Type": "application/json; charset=utf-8"
     },
     body: JSON.stringify({ fields })
   });
@@ -587,9 +789,28 @@ async function createRecord(token, tableId, fields) {
 }
 
 module.exports = async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store, max-age=0");
+  res.setHeader("X-Robots-Tag", "noindex, nofollow, nosnippet");
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     res.status(405).json({ ok: false, code: "METHOD_NOT_ALLOWED" });
+    return;
+  }
+
+  if (!hasAllowedOrigin(req)) {
+    res.status(403).json({ ok: false, code: "ORIGIN_REJECTED", message: "请求来源不受支持" });
+    return;
+  }
+  if (!hasJsonContentType(req)) {
+    res.status(415).json({ ok: false, code: "UNSUPPORTED_MEDIA_TYPE", message: "仅支持 JSON 请求" });
+    return;
+  }
+  if (requestTooLarge(req) || bodyTooLarge(req)) {
+    res.status(413).json({ ok: false, code: "PAYLOAD_TOO_LARGE", message: "提交内容过长，请精简后重试" });
+    return;
+  }
+  if (!checkIpRateLimit(req)) {
+    res.status(429).json({ ok: false, code: "RATE_LIMITED", message: "提交过于频繁，请稍后再试。" });
     return;
   }
 
@@ -616,7 +837,7 @@ module.exports = async function handler(req, res) {
       res.status(validation.status).json(validation);
       return;
     }
-    if (!checkRateLimit(req, payload)) {
+    if (!checkContactRateLimit(payload)) {
       res.status(429).json({ ok: false, code: "RATE_LIMITED", message: "提交过于频繁，请稍后再试。" });
       return;
     }
@@ -644,8 +865,12 @@ module.exports = async function handler(req, res) {
     payload.publicId = publicId(config.idPrefix);
     const fields = config.buildFields(payload);
     const writableFields = await filterKnownFields(token, tableId, fields);
+    if (!writableFields[config.idField] || Object.keys(writableFields).length < 3) {
+      throw new Error("飞书数据表字段配置不完整");
+    }
     const record = await createRecord(token, tableId, writableFields);
     const recordId = record?.record_id || "";
+    if (!recordId) throw new Error("飞书未返回记录 ID");
     let notified = false;
     try {
       notified = await sendNotification(config, fields, recordId);
@@ -659,4 +884,13 @@ module.exports = async function handler(req, res) {
   }
 };
 
-module.exports._test = { validatePayload, publicId, checkRateLimit };
+module.exports._test = {
+  validatePayload,
+  publicId,
+  checkRateLimit,
+  hasAllowedOrigin,
+  hasJsonContentType,
+  requestTooLarge,
+  bodyTooLarge,
+  submitTime
+};

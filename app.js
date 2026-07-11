@@ -291,6 +291,22 @@ function formHasRiskContent(form) {
   });
 }
 
+function lastSubmitTime(key) {
+  try {
+    return Number(localStorage.getItem(key) || 0);
+  } catch {
+    return 0;
+  }
+}
+
+function rememberSubmit(key) {
+  try {
+    localStorage.setItem(key, String(Date.now()));
+  } catch {
+    // Storage can be unavailable in private or embedded browser modes.
+  }
+}
+
 function validateLeadForm(form) {
   const errors = [];
   const today = localDateInputValue();
@@ -305,6 +321,7 @@ function validateLeadForm(form) {
 
   const date = form.elements.date?.value;
   if (date && date < today) errors.push("预约日期不能早于今天。");
+  if (date && form.elements.date.max && date > form.elements.date.max) errors.push("预约日期不能超过一年。");
 
   const people = form.elements.people?.value;
   if (people && (Number(people) < 1 || Number(people) > 99)) errors.push("人数需在 1 到 99 之间。");
@@ -313,7 +330,7 @@ function validateLeadForm(form) {
   if (budget && !isBudgetValid(budget)) errors.push("预算请填写数字或区间，例如 500 或 500-800。");
 
   const price = form.elements.price?.value;
-  if (price && !/^\d{2,6}$/.test(cleanInput(price, 8))) errors.push("起步价格请填写纯数字。");
+  if (price && !/^\d{1,6}$/.test(cleanInput(price, 8))) errors.push("起步价格请填写纯数字。");
 
   const contact = form.elements.contact?.value || form.elements.phone?.value;
   if (form.elements.phone?.value && !isPhoneValid(form.elements.phone.value)) errors.push("手机号请填写 11 位大陆手机号。");
@@ -336,8 +353,8 @@ function validateLeadForm(form) {
     return false;
   }
 
-  const duplicateKey = `dipei:last-submit:${formType}:${contact || cleanInput(form.elements.name?.value || "", 40)}`;
-  const lastSubmit = Number(localStorage.getItem(duplicateKey) || 0);
+  const duplicateKey = `dipei:last-submit:${formType}`;
+  const lastSubmit = lastSubmitTime(duplicateKey);
   if (Date.now() - lastSubmit < DUPLICATE_WINDOW_MS) {
     showToast("提交过于频繁，请稍后再试。");
     return false;
@@ -356,7 +373,10 @@ function collectFormPayload(form) {
   };
   data.forEach((value, key) => {
     if (key === "consent") return;
-    payload[key] = cleanInput(value, 500);
+    const field = form.elements.namedItem(key);
+    const declaredLimit = Number(field?.maxLength || 0);
+    const limit = declaredLimit > 0 ? Math.min(declaredLimit, 1000) : 500;
+    payload[key] = cleanInput(value, limit);
   });
   payload.协议同意 = "已阅读并同意";
   return payload;
@@ -414,7 +434,7 @@ function bindLeadForms() {
       submitButton.textContent = "正在提交...";
       try {
         const result = await submitLead(form);
-        if (form.dataset.duplicateKey) localStorage.setItem(form.dataset.duplicateKey, String(Date.now()));
+        if (form.dataset.duplicateKey) rememberSubmit(form.dataset.duplicateKey);
         form.reset();
         showFormResult(form, result, "success");
         showToast(result.replace(/\n/g, " "), result.includes("编号：") ? 7000 : 3200);
@@ -499,9 +519,12 @@ $("#resetFilters")?.addEventListener("click", () => {
 });
 
 const today = localDateInputValue();
+const maxBookingDate = new Date();
+maxBookingDate.setDate(maxBookingDate.getDate() + 366);
 $$('input[type="date"]').forEach((input) => {
   if (input.dataset.allowPast === "true") return;
   input.min = today;
+  input.max = localDateInputValue(maxBookingDate);
 });
 
 $$('[type="submit"]').forEach((button) => {

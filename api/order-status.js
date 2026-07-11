@@ -3,7 +3,10 @@ const crypto = require("crypto");
 const BASE_APP_TOKEN = process.env.FEISHU_BASE_APP_TOKEN || "GgevbG7I6aQzsJsbWRtcPCnCn4c";
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX = 12;
+const MAX_REQUEST_BYTES = 2048;
 const rateStore = new Map();
+let tokenCache = { value: "", expiresAt: 0 };
+let tableCache = { items: [], expiresAt: 0 };
 
 const BOOKING_STATUS = {
   新线索: ["预约已提交", 1, "active", "预约已经进入运营后台，客服会在工作时间内核对。"],
@@ -28,7 +31,9 @@ const ORDER_STATUS = {
 };
 
 function clean(value) {
-  return String(value ?? "").replace(/[<>]/g, "").trim();
+  return String(value ?? "")
+    .replace(/[<>\u0000-\u001F\u007F\u202A-\u202E\u2066-\u2069]/g, "")
+    .trim();
 }
 
 function normalizePhone(value) {
@@ -36,7 +41,39 @@ function normalizePhone(value) {
 }
 
 function requestIp(req) {
-  return clean(req.headers["x-forwarded-for"]).split(",")[0].trim() || req.socket?.remoteAddress || "unknown";
+  return clean(req.headers["x-vercel-forwarded-for"] || req.headers["x-forwarded-for"]).split(",")[0].trim() || req.socket?.remoteAddress || "unknown";
+}
+
+function hasJsonContentType(req) {
+  return clean(req.headers["content-type"]).toLowerCase().split(";", 1)[0] === "application/json";
+}
+
+function requestTooLarge(req) {
+  const length = Number(req.headers["content-length"] || 0);
+  return Number.isFinite(length) && length > MAX_REQUEST_BYTES;
+}
+
+function bodyTooLarge(req) {
+  try {
+    const raw = typeof req.body === "string" ? req.body : JSON.stringify(req.body ?? {});
+    return Buffer.byteLength(raw, "utf8") > MAX_REQUEST_BYTES;
+  } catch {
+    return true;
+  }
+}
+
+function hasAllowedOrigin(req) {
+  const origin = clean(req.headers.origin);
+  if (!origin) return true;
+  try {
+    const url = new URL(origin);
+    const host = url.hostname.toLowerCase();
+    const productionHosts = new Set(["www.dipeikehu.com", "dipeikehu.com", "dipei-web.vercel.app"]);
+    return (url.protocol === "https:" && productionHosts.has(host))
+      || (url.protocol === "http:" && (host === "127.0.0.1" || host === "localhost"));
+  } catch {
+    return false;
+  }
 }
 
 function withinRateLimit(req) {
@@ -45,6 +82,12 @@ function withinRateLimit(req) {
   const recent = (rateStore.get(key) || []).filter((time) => now - time < RATE_LIMIT_WINDOW_MS);
   recent.push(now);
   rateStore.set(key, recent);
+  if (rateStore.size > 5000) {
+    for (const [storedKey, times] of rateStore) {
+      if (!times.some((time) => now - time < RATE_LIMIT_WINDOW_MS)) rateStore.delete(storedKey);
+    }
+    while (rateStore.size > 5000) rateStore.delete(rateStore.keys().next().value);
+  }
   return recent.length <= RATE_LIMIT_MAX;
 }
 
@@ -79,8 +122,13 @@ function dateText(value) {
   }).format(date);
 }
 
+function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+  const signal = options.signal || (typeof AbortSignal !== "undefined" && typeof AbortSignal.timeout === "function" ? AbortSignal.timeout(timeoutMs) : undefined);
+  return fetch(url, { ...options, signal });
+}
+
 async function feishuFetch(url, options = {}) {
-  const response = await fetch(url, options);
+  const response = await fetchWithTimeout(url, options);
   const body = await response.json().catch(() => ({}));
   if (!response.ok || body.code !== 0) {
     throw new Error(body.msg || body.error || response.statusText || "飞书接口请求失败");
@@ -92,37 +140,62 @@ async function getTenantToken() {
   const appId = process.env.FEISHU_APP_ID;
   const appSecret = process.env.FEISHU_APP_SECRET;
   if (!appId || !appSecret || !BASE_APP_TOKEN) return "";
+  if (tokenCache.value && tokenCache.expiresAt > Date.now()) return tokenCache.value;
   const body = await feishuFetch("https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json; charset=utf-8" },
     body: JSON.stringify({ app_id: appId, app_secret: appSecret })
   });
-  return body.tenant_access_token || "";
+  tokenCache = { value: body.tenant_access_token || "", expiresAt: Date.now() + 60 * 60 * 1000 };
+  return tokenCache.value;
 }
 
 async function listTables(token) {
+  if (tableCache.items.length && tableCache.expiresAt > Date.now()) return tableCache.items;
   const body = await feishuFetch(`https://open.feishu.cn/open-apis/bitable/v1/apps/${BASE_APP_TOKEN}/tables?page_size=100`, {
     headers: { Authorization: `Bearer ${token}` }
   });
+  tableCache = { items: body.data?.items || [], expiresAt: Date.now() + 10 * 60 * 1000 };
+  return tableCache.items;
+}
+
+async function searchRecords(token, tableId, fieldNames, filter, pageSize = 20) {
+  const body = await feishuFetch(
+    `https://open.feishu.cn/open-apis/bitable/v1/apps/${BASE_APP_TOKEN}/tables/${tableId}/records/search?page_size=${pageSize}`,
+    {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({ field_names: fieldNames, filter, automatic_fields: false })
+    }
+  );
   return body.data?.items || [];
 }
 
-async function findRecord(token, tableId, predicate) {
-  let pageToken = "";
-  for (let page = 0; page < 20; page += 1) {
-    const query = new URLSearchParams({ page_size: "100" });
-    if (pageToken) query.set("page_token", pageToken);
-    const body = await feishuFetch(
-      `https://open.feishu.cn/open-apis/bitable/v1/apps/${BASE_APP_TOKEN}/tables/${tableId}/records?${query}`,
-      { headers: { Authorization: `Bearer ${token}` } }
+async function findBookingByTrackingNo(token, tableId, trackingNo) {
+  const records = await searchRecords(
+    token,
+    tableId,
+    ["预约编号", "手机号", "所在城市", "服务类型", "预约日期", "跟进状态"],
+    { conjunction: "and", conditions: [{ field_name: "预约编号", operator: "is", value: [trackingNo] }] },
+    2
+  );
+  return records.find((record) => fieldText(record.fields?.预约编号) === trackingNo) || null;
+}
+
+async function findOrderByBooking(token, tableId, booking) {
+  try {
+    const records = await searchRecords(
+      token,
+      tableId,
+      ["订单编号", "关联预约需求", "订单状态", "服务城市", "服务类型", "服务日期"],
+      { conjunction: "and", conditions: [{ field_name: "关联预约需求", operator: "contains", value: [booking.record_id] }] },
+      5
     );
-    const items = body.data?.items || [];
-    const match = items.find(predicate);
-    if (match) return match;
-    if (!body.data?.has_more || !body.data?.page_token) break;
-    pageToken = body.data.page_token;
+    return records[0] || null;
+  } catch (error) {
+    console.warn("Order relation lookup skipped:", error.message);
+    return null;
   }
-  return null;
 }
 
 function statusData(booking, order) {
@@ -132,23 +205,25 @@ function statusData(booking, order) {
   return { label, step, tone, message };
 }
 
-function orderMatches(order, booking, trackingNo, phone) {
-  const fields = order.fields || {};
-  const reference = fieldText(fields.关联预约需求);
-  if (reference.includes(trackingNo) || reference.includes(booking.record_id)) return true;
-
-  const samePhone = safeEqual(normalizePhone(fieldText(fields.客户手机号)), phone);
-  const sameCity = fieldText(fields.服务城市) === fieldText(booking.fields?.所在城市);
-  const sameService = fieldText(fields.服务类型) === fieldText(booking.fields?.服务类型);
-  const sameDate = dateText(fields.服务日期) === dateText(booking.fields?.预约日期);
-  return samePhone && sameCity && sameService && sameDate;
-}
-
 module.exports = async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store, max-age=0");
+  res.setHeader("X-Robots-Tag", "noindex, nofollow, nosnippet");
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     res.status(405).json({ ok: false, code: "METHOD_NOT_ALLOWED", message: "仅支持提交查询" });
+    return;
+  }
+
+  if (!hasAllowedOrigin(req)) {
+    res.status(403).json({ ok: false, code: "ORIGIN_REJECTED", message: "请求来源不受支持" });
+    return;
+  }
+  if (!hasJsonContentType(req)) {
+    res.status(415).json({ ok: false, code: "UNSUPPORTED_MEDIA_TYPE", message: "仅支持 JSON 请求" });
+    return;
+  }
+  if (requestTooLarge(req) || bodyTooLarge(req)) {
+    res.status(413).json({ ok: false, code: "PAYLOAD_TOO_LARGE", message: "查询内容过长。" });
     return;
   }
 
@@ -169,6 +244,11 @@ module.exports = async function handler(req, res) {
       res.status(400).json({ ok: false, code: "INVALID_PAYLOAD", message: "查询数据格式不正确。" });
       return;
     }
+    const allowedKeys = new Set(["trackingNo", "orderRef", "phone"]);
+    if (Object.keys(payload).some((key) => !allowedKeys.has(key)) || Object.values(payload).some((value) => !["string", "number"].includes(typeof value))) {
+      res.status(400).json({ ok: false, code: "INVALID_PAYLOAD", message: "查询数据格式不正确。" });
+      return;
+    }
     const trackingNo = clean(payload.trackingNo || payload.orderRef).toUpperCase();
     const phone = normalizePhone(payload.phone);
     if (!/^DP\d{12,16}$/.test(trackingNo) || !/^1[3-9]\d{9}$/.test(phone)) {
@@ -182,25 +262,27 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    const tables = await listTables(token);
-    const tableMap = new Map(tables.map((table) => [table.name, table.table_id]));
-    const bookingTableId = process.env.FEISHU_TABLE_BOOKING || tableMap.get("用户预约需求表");
-    const orderTableId = process.env.FEISHU_TABLE_ORDER || tableMap.get("订单跟进表");
+    let bookingTableId = process.env.FEISHU_TABLE_BOOKING || "";
+    let orderTableId = process.env.FEISHU_TABLE_ORDER || "";
+    if (!bookingTableId || !orderTableId) {
+      const tables = await listTables(token);
+      const tableMap = new Map(tables.map((table) => [table.name, table.table_id]));
+      bookingTableId ||= tableMap.get("用户预约需求表") || "";
+      orderTableId ||= tableMap.get("订单跟进表") || "";
+    }
     if (!bookingTableId) {
       res.status(503).json({ ok: false, code: "BOOKING_TABLE_NOT_FOUND", message: "查询服务暂不可用，请稍后重试。" });
       return;
     }
 
-    const booking = await findRecord(token, bookingTableId, (record) => fieldText(record.fields?.预约编号) === trackingNo);
+    const booking = await findBookingByTrackingNo(token, bookingTableId, trackingNo);
     const bookingPhone = normalizePhone(fieldText(booking?.fields?.手机号));
     if (!booking || !safeEqual(bookingPhone, phone)) {
       res.status(404).json({ ok: false, code: "BOOKING_NOT_FOUND", message: "未找到匹配的预约，请检查预约编号和提交手机号。" });
       return;
     }
 
-    const order = orderTableId
-      ? await findRecord(token, orderTableId, (record) => orderMatches(record, booking, trackingNo, phone))
-      : null;
+    const order = orderTableId ? await findOrderByBooking(token, orderTableId, booking) : null;
     const status = statusData(booking, order);
     res.status(200).json({
       ok: true,
@@ -220,3 +302,5 @@ module.exports = async function handler(req, res) {
     res.status(500).json({ ok: false, code: "ORDER_STATUS_FAILED", message: "查询服务暂时繁忙，请稍后重试。" });
   }
 };
+
+module.exports._test = { normalizePhone, safeEqual, statusData, hasAllowedOrigin, hasJsonContentType, requestTooLarge, bodyTooLarge };

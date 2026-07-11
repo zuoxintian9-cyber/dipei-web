@@ -108,6 +108,8 @@ async function main() {
   assert.equal(submitTooLarge.status, 413);
   const submitMalformed = await invoke(submitHandler, request({ "content-type": "application/json", "x-vercel-forwarded-for": "203.0.113.4" }, "{bad-json"));
   assert.equal(submitMalformed.status, 400);
+  const submitWrappedMalformed = await invoke(submitHandler, request({ "content-type": "application/json", "x-vercel-forwarded-for": "203.0.113.8" }, Buffer.from("{bad-json")));
+  assert.equal(submitWrappedMalformed.status, 400);
 
   const orderNoType = await invoke(orderHandler, request({ "x-vercel-forwarded-for": "203.0.113.5" }, "{}"));
   assert.equal(orderNoType.status, 415);
@@ -115,6 +117,8 @@ async function main() {
   assert.equal(orderBadOrigin.status, 403);
   const orderMalformed = await invoke(orderHandler, request({ "content-type": "application/json", "x-vercel-forwarded-for": "203.0.113.7" }, "{bad-json"));
   assert.equal(orderMalformed.status, 400);
+  const orderWrappedMalformed = await invoke(orderHandler, request({ "content-type": "application/json", "x-vercel-forwarded-for": "203.0.113.9" }, Buffer.from("{bad-json")));
+  assert.equal(orderWrappedMalformed.status, 400);
 
   console.log("API security tests passed: validation, consent, origins, payload limits, IDs, status privacy and rate limits.");
 }

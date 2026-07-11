@@ -62,6 +62,12 @@ function bodyTooLarge(req) {
   }
 }
 
+function isPlainObject(value) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
+}
+
 function hasAllowedOrigin(req) {
   const origin = clean(req.headers.origin);
   if (!origin) return true;
@@ -224,7 +230,7 @@ module.exports = async function handler(req, res) {
     res.status(415).json({ ok: false, code: "UNSUPPORTED_MEDIA_TYPE", message: "仅支持 JSON 请求" });
     return;
   }
-  if (requestTooLarge(req) || bodyTooLarge(req)) {
+  if (requestTooLarge(req) || ((typeof req.body === "string" || Buffer.isBuffer(req.body)) && bodyTooLarge(req))) {
     res.status(413).json({ ok: false, code: "PAYLOAD_TOO_LARGE", message: "查询内容过长。" });
     return;
   }
@@ -242,8 +248,12 @@ module.exports = async function handler(req, res) {
       res.status(400).json({ ok: false, code: "INVALID_JSON", message: "查询数据格式不正确。" });
       return;
     }
-    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    if (!isPlainObject(payload)) {
       res.status(400).json({ ok: false, code: "INVALID_PAYLOAD", message: "查询数据格式不正确。" });
+      return;
+    }
+    if (bodyTooLarge({ body: payload })) {
+      res.status(413).json({ ok: false, code: "PAYLOAD_TOO_LARGE", message: "查询内容过长。" });
       return;
     }
     const allowedKeys = new Set(["trackingNo", "orderRef", "phone"]);

@@ -23,9 +23,9 @@
     <meta name="theme-color" content="#08111f" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260712-city-images" />
   </head>
-  <body>
+  <body class="home-page">
     <svg class="svg-defs" aria-hidden="true">
       <symbol id="i-logo" viewBox="0 0 48 48">
         <path d="M24 5 35 13v22l-11 8-11-8V13L24 5Z" fill="none" stroke="currentColor" stroke-width="2.4" />
@@ -113,90 +113,125 @@
     </header>
 
     <main>
-      <section class="hero" id="home">
-        <div class="hero-light hero-light-left"></div>
-        <div class="hero-light hero-light-right"></div>
-        <div class="container hero-inner">
-          <div class="hero-copy">
-            <p class="eyebrow">严格审核 · 正规服务 · 隐私保护</p>
-            <h1>专业本地陪同与商务接待服务</h1>
-            <p class="hero-subtitle">
-              覆盖商务接待、城市向导、旅游陪同、办事协助、机场高铁接送等正规场景。你提交需求后，平台客服将根据城市、时间和服务类型协助确认合适方案。
-            </p>
-            <div class="hero-traits" aria-label="平台特点">
-              <span>高效</span>
-              <i></i>
-              <span>专业</span>
-              <i></i>
-              <span>私密</span>
-              <i></i>
-              <span>可靠</span>
-            </div>
-            <div class="hero-actions">
-              <a class="btn gold" href="#booking">立即提交预约</a>
-              <a class="btn ghost" href="#process">查看服务流程</a>
-            </div>
-          </div>
-
-          <div class="notice-card" role="note">
-            <strong>服务边界说明</strong>
-            <p>
-              平台仅提供正规本地陪同、城市向导、商务接待和办事协助服务，严禁任何违法违规、低俗色情、私下交易、侵害隐私及诱导绕开平台的行为。
-            </p>
-          </div>
-
-          <form class="search-panel" id="searchForm" novalidate>
-            <label class="search-field">
-              <svg><use href="#i-pin"></use></svg>
-              <span>选择城市</span>
-              <select name="city" aria-label="选择城市">
-                <option value="">请选择城市</option>
-                <option>北京</option>
-                <option>上海</option>
-                <option>广州</option>
-                <option>深圳</option>
-                <option>成都</option>
-                <option>西安</option>
-                <option>杭州</option>
-                <option>重庆</option>
-              </select>
-            </label>
-            <label class="search-field">
-              <svg><use href="#i-pin"></use></svg>
-              <span>服务区域</span>
-              <select name="area" aria-label="选择区域">
-                <option value="">请选择区域</option>
-                <option>核心商圈</option>
-                <option>机场高铁</option>
-                <option>会展中心</option>
-                <option>热门景区</option>
-                <option>政务大厅</option>
-              </select>
-            </label>
-            <label class="search-field">
-              <svg><use href="#i-briefcase"></use></svg>
-              <span>服务类型</span>
-              <select name="service" aria-label="选择服务类型">
-                <option value="">请选择服务类型</option>
-                <option>商务接待</option>
-                <option>城市陪同</option>
-                <option>旅游向导</option>
-                <option>办事协助</option>
-                <option>展会陪同</option>
-                <option>机场接送</option>
-              </select>
-            </label>
-            <label class="search-field">
-              <svg><use href="#i-calendar"></use></svg>
-              <span>服务日期</span>
-              <input type="date" name="date" aria-label="选择日期" />
-            </label>
-            <button class="btn gold search-btn" type="submit">
-              <svg><use href="#i-search"></use></svg>
-              匹配服务
-            </button>
-          </form>
+      <section class="world-hero is-ready" id="home" tabindex="0" aria-labelledby="worldHeroTitle">
+        <canvas class="world-canvas" id="cityWorldCanvas" aria-hidden="true"></canvas>
+        <div class="city-image-stage" id="cityImageStage" aria-hidden="true">
+          <img class="city-image-layer is-active" id="cityImageFront" src="./City/北京-朝阳区.webp" alt="" />
+          <img class="city-image-layer" id="cityImageBack" src="./City/北京-朝阳区.webp" alt="" />
+          <div class="city-image-depth"></div>
         </div>
+        <div class="world-vignette" aria-hidden="true"></div>
+        <div class="world-intro" id="worldIntro" aria-label="正在进入地陪客户城市服务网络" hidden>
+          <button class="world-skip" id="worldSkip" type="button">跳过动画</button>
+          <div class="world-intro-copy">
+            <span id="worldIntroStatus">正在定位抵达城市</span>
+            <strong>抵达一座城<br /><em>有人接应</em></strong>
+            <p>接站衔接 · 路线熟悉 · 商务接待 · 正规陪同</p>
+          </div>
+        </div>
+        <div class="world-interface">
+          <div class="world-topline">
+            <span>DIPEI / CITY SERVICE NETWORK</span>
+            <span><i></i>当前城市已锁定 · 人工客服确认</span>
+          </div>
+          <div class="world-map-lock"><svg><use href="#i-pin"></use></svg><span id="worldMapLock">北京定位已锁定</span></div>
+          <div class="world-copy">
+            <p class="world-kicker"><span id="worldCitySequence">01</span> / <span id="worldCityTotal">08</span> · <b id="worldCityCode">BJS</b></p>
+            <h1 id="worldHeroTitle"><span id="worldLocationCityName">北京</span><br />有人熟悉你的路线</h1>
+            <p id="worldLocationSummary">从机场高铁衔接到商务会面，由客服根据区域、时间和服务边界人工确认。</p>
+            <div class="world-actions">
+              <button class="btn gold" id="worldConfirmLocation" type="button">按朝阳区提交预约</button>
+              <a class="world-text-link" href="#process">查看正规服务流程 →</a>
+            </div>
+          </div>
+          <div class="world-core-label" aria-hidden="true">
+            <span>DISTRICT LANDMARK</span><i></i><strong id="worldCoreLabel">朝阳区 · 中国尊</strong>
+          </div>
+          <div class="world-landmarks" id="worldLandmarkList" aria-label="当前城市热门地点"></div>
+          <div class="world-city-axis" aria-label="横向切换城市">
+            <button type="button" data-world-city-step="-1" aria-label="上一个城市">←</button>
+            <span id="worldPreviousCity">深圳</span>
+            <strong id="worldCurrentCity">北京</strong>
+            <span id="worldNextCity">上海</span>
+            <button type="button" data-world-city-step="1" aria-label="下一个城市">→</button>
+            <small>左右滑动切换城市</small>
+          </div>
+          <div class="world-district-axis" aria-label="纵向切换区县">
+            <button type="button" data-world-district-step="-1" aria-label="上一个区县">↑</button>
+            <div id="worldDistrictList"></div>
+            <button type="button" data-world-district-step="1" aria-label="下一个区县">↓</button>
+            <small>上下滑动深入区域</small>
+          </div>
+          <div class="world-boundary">仅提供正规本地陪同、接待与向导服务，不接受违规、低俗或私下交易。</div>
+        </div>
+        <a class="world-map-attribution" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a>
+        <div class="world-fallback" id="worldFallback" hidden>当前设备暂不支持 3D 场景，仍可使用城市与区县按钮完成选择。</div>
+
+        <img class="location-backdrop" src="./assets/hero-city.jpg" alt="城市夜景与本地陪同路线场景" />
+        <div class="location-shade" aria-hidden="true"></div>
+        <div class="location-grid" aria-hidden="true"></div>
+        <svg class="location-map" viewBox="0 0 900 620" aria-hidden="true">
+          <path class="map-contour contour-a" d="M78 428C196 312 278 466 395 330s212-98 346-226" />
+          <path class="map-contour contour-b" d="M38 510c188-74 260-12 386-122s238-42 438-214" />
+          <path class="map-route route-shadow" d="M102 486c108-174 248-28 344-174s207-42 330-170" />
+          <path class="map-route route-live" d="M102 486c108-174 248-28 344-174s207-42 330-170" />
+          <circle cx="102" cy="486" r="6" />
+          <circle cx="446" cy="312" r="6" />
+          <circle cx="776" cy="142" r="6" />
+        </svg>
+
+        <div class="location-shell">
+          <div class="location-topline">
+            <span>DIPEI CITY NETWORK</span>
+            <span><i></i>人工客服在线确认</span>
+          </div>
+
+          <div class="location-layout">
+            <div class="location-copy">
+              <div class="city-sequence"><span id="citySequence">01</span> / <span id="cityTotal">06</span></div>
+              <p class="location-kicker">重点城市 · 正规本地陪同</p>
+              <div class="legacy-location-title"><span id="locationCityName">北京</span>本地陪同，<br />熟悉你的路线</div>
+              <p class="location-summary" id="locationSummary">
+                从机场高铁衔接到商务会面，由客服根据区域、时间和服务边界人工确认。
+              </p>
+              <div class="location-signals" aria-label="可提供的服务">
+                <span><svg><use href="#i-plane"></use></svg>接站衔接</span>
+                <span><svg><use href="#i-route"></use></svg>路线熟悉</span>
+                <span><svg><use href="#i-briefcase"></use></svg>商务接待</span>
+              </div>
+              <div class="location-actions">
+                <button class="btn gold location-confirm" id="confirmLocation" type="button">按朝阳区提交预约</button>
+                <a class="btn ghost" href="#process">查看服务流程</a>
+              </div>
+              <p class="location-boundary">仅提供正规陪同与接待服务，平台人工审核需求，不接受违规、低俗或私下交易。</p>
+            </div>
+
+            <div class="district-navigator" aria-label="区县选择">
+              <div class="district-head">
+                <span>纵向滑动</span>
+                <strong>选择服务区域</strong>
+              </div>
+              <button class="axis-button axis-up" type="button" data-district-step="-1" aria-label="上一个区县">↑</button>
+              <div class="district-rail" id="districtRail" role="listbox" aria-label="当前城市区县"></div>
+              <button class="axis-button axis-down" type="button" data-district-step="1" aria-label="下一个区县">↓</button>
+              <div class="district-meta">
+                <span id="districtIndex">01 / 05</span>
+                <span>继续下滑浏览服务</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="city-navigator" aria-label="重点城市选择">
+            <div class="city-axis-label">
+              <span>横向滑动</span>
+              <strong>切换城市</strong>
+            </div>
+            <button class="city-arrow" type="button" data-city-step="-1" aria-label="上一个城市">←</button>
+            <div class="city-rail" id="cityRail" role="listbox" aria-label="重点城市"></div>
+            <button class="city-arrow" type="button" data-city-step="1" aria-label="下一个城市">→</button>
+          </div>
+        </div>
+        <div class="location-live" id="locationLive" aria-live="polite"></div>
       </section>
 
       <section class="section-band" id="categories">
@@ -408,6 +443,7 @@
           </div>
           <form class="booking-form" id="bookingForm" data-lead-form data-lead-type="用户预约需求表" data-source="/#booking" novalidate>
             <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <input type="hidden" name="area" id="bookingArea" />
             <label>
               客户姓名/称呼
               <input name="customerName" maxlength="30" placeholder="如：张先生 / 李女士" required />
@@ -672,5 +708,6 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="./seo-schema.js"></script>
     <script src="./app.js"></script>
+    <script type="module" src="./location-experience.js?v=20260712-city-images"></script>
   </body>
 </html>

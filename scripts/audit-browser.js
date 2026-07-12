@@ -3,6 +3,7 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const { chromium, firefox, webkit } = require("playwright");
+const { PNG } = require("pngjs");
 
 const root = path.resolve(__dirname, "..");
 const baseUrl = process.env.SITE_URL || "http://127.0.0.1:4173";
@@ -27,7 +28,7 @@ async function inspectPage(page, pathname, viewport) {
 
   const response = await page.goto(`${baseUrl}/${pathname === "index.html" ? "" : pathname}`, { waitUntil: "load", timeout: 20000 });
   assert.equal(response?.status(), 200, `${pathname}: HTTP ${response?.status()}`);
-  await page.waitForTimeout(50);
+  await page.waitForTimeout(pathname === "index.html" ? 450 : 50);
 
   const result = await page.evaluate(() => {
     const visible = (element) => {
@@ -38,6 +39,7 @@ async function inspectPage(page, pathname, viewport) {
     const overflowElements = [...document.querySelectorAll("main input:not(.hp-field), main select, main textarea, main button, main article")]
       .filter(visible)
       .filter((element) => {
+        if (element.closest(".city-rail")) return false;
         const rect = element.getBoundingClientRect();
         return rect.left < -1 || rect.right > window.innerWidth + 1;
       })
@@ -73,6 +75,19 @@ async function inspectPage(page, pathname, viewport) {
   assert.equal(result.jsonLd.length, expectsSchema ? 1 : 0, `${pathname}: structured data count`);
   for (const json of result.jsonLd) assert.doesNotThrow(() => JSON.parse(json), `${pathname}: invalid structured data`);
   if (seoLandingPages.has(baseFile) || baseFile === "index.html") assert.ok(result.ogImage.startsWith("https://"), `${pathname}: og:image missing`);
+  if (baseFile === "index.html") {
+    const activeScene = page.locator(".city-image-layer.is-active");
+    assert.equal(await activeScene.count(), 1, `${pathname}: active city image count`);
+    const canvasPng = PNG.sync.read(await activeScene.screenshot({ animations: "disabled" }));
+    let minimum = 255;
+    let maximum = 0;
+    for (let index = 0; index < canvasPng.data.length; index += 64) {
+      const luminance = (canvasPng.data[index] + canvasPng.data[index + 1] + canvasPng.data[index + 2]) / 3;
+      minimum = Math.min(minimum, luminance);
+      maximum = Math.max(maximum, luminance);
+    }
+    assert.ok(maximum > 24 && maximum - minimum > 18, `${pathname}: city image pixels are blank at ${viewport.width}px`);
+  }
   assert.equal(consoleErrors.length, 0, `${pathname}: console errors ${JSON.stringify(consoleErrors)}`);
   assert.equal(pageErrors.length, 0, `${pathname}: page errors ${JSON.stringify(pageErrors)}`);
   assert.equal(failedRequests.length, 0, `${pathname}: failed requests ${JSON.stringify(failedRequests)}`);
@@ -86,17 +101,31 @@ async function testInteractions(page) {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`${baseUrl}/`, { waitUntil: "load" });
 
+  const arrivalIntro = page.locator("#worldIntro:not([hidden])");
+  if (await arrivalIntro.count()) {
+    await page.getByRole("button", { name: "跳过动画" }).click();
+    await arrivalIntro.waitFor({ state: "hidden" });
+  }
+
   const menu = page.getByRole("button", { name: "展开导航" });
   await menu.click();
   assert.equal(await menu.getAttribute("aria-expanded"), "true");
   await menu.click();
   assert.equal(await menu.getAttribute("aria-expanded"), "false");
 
+  await page.locator('[data-world-city-step="1"]').click();
+  assert.equal(await page.locator("#worldLocationCityName").textContent(), "上海");
+  await page.locator('[data-world-district-step="1"]').click();
+  assert.ok((await page.locator("#worldConfirmLocation").textContent()).includes("黄浦区"));
+  await page.locator("#worldConfirmLocation").click();
+
   const form = page.locator("#bookingForm");
   assert.deepEqual(
     await form.locator("input:not(.hp-field), select, textarea").evaluateAll((elements) => elements.map((element) => element.name)),
-    ["customerName", "phone", "city", "service", "date", "detail", "consent"]
+    ["area", "customerName", "phone", "city", "service", "date", "detail", "consent"]
   );
+  assert.equal(await form.locator('select[name="city"]').inputValue(), "上海");
+  assert.equal(await form.locator('input[name="area"]').inputValue(), "黄浦区");
   const date = form.locator('input[name="date"]');
   assert.ok(await date.getAttribute("max"));
 
@@ -154,6 +183,14 @@ async function runBrowser(browserType, name, pages, viewports, launchOptions = {
     if (name === "chromium") {
       await testInteractions(page);
       await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(`${baseUrl}/`, { waitUntil: "load" });
+      await page.evaluate(() => sessionStorage.removeItem("dipei:world-intro"));
+      await page.reload({ waitUntil: "load" });
+      await page.waitForTimeout(1250);
+      await page.screenshot({ path: path.join(artifactDir, "home-intro.png"), fullPage: false });
+      const skip = page.locator("#worldSkip");
+      if (await skip.isVisible()) await skip.click();
+      await page.locator("#worldIntro").waitFor({ state: "hidden" });
       await page.goto(`${baseUrl}/`, { waitUntil: "load" });
       await page.screenshot({ path: path.join(artifactDir, "home-desktop.png"), fullPage: false });
       await page.setViewportSize({ width: 390, height: 844 });

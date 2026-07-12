@@ -5,3 +5,4 @@ SECURITY_AUDIT.md
 scripts/
 .env
 .env.*
+City/*.png

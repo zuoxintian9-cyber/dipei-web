@@ -227,7 +227,7 @@ button { color: inherit; }
 .map-legend span { display: flex; align-items: center; gap: 7px; }
 .map-legend i { display: block; width: 18px; }
 .boundary-key { height: 9px; border: 1px solid var(--gold); background: rgba(239,191,105,.24); }
-.route-key { height: 2px; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+.route-key { height: 2px; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
 .map-marker { padding: 7px 10px; display: grid; gap: 2px; border: 1px solid rgba(239,191,105,.45); border-radius: 6px; background: rgba(3,10,20,.84); color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.25); white-space: nowrap; }
 .map-marker strong { color: var(--gold-strong); font-size: 12px; }

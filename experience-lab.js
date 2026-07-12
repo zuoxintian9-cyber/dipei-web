@@ -392,32 +392,49 @@ async function ensureMap() {
             tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
             tileSize: 256,
             attribution: "© OpenStreetMap contributors"
+          },
+          tone: {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              properties: {},
+              geometry: { type: "Polygon", coordinates: [[[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]]] }
+            }
           }
         },
-        layers: [{
-          id: "osm-base",
-          type: "raster",
-          source: "osm",
-          paint: {
-            "raster-saturation": -0.82,
-            "raster-contrast": 0.32,
-            "raster-brightness-min": 0.02,
-            "raster-brightness-max": 0.42
+        layers: [
+          {
+            id: "osm-base",
+            type: "raster",
+            source: "osm",
+            paint: {
+              "raster-saturation": -0.72,
+              "raster-contrast": 0.28,
+              "raster-brightness-min": 0.03,
+              "raster-brightness-max": 0.58,
+              "raster-fade-duration": 100
+            }
+          },
+          {
+            id: "brand-tone",
+            type: "fill",
+            source: "tone",
+            paint: { "fill-color": "#03152d", "fill-opacity": 0.66 }
           }
-        }]
+        ]
       }
     });
     map.addControl(new maplibregl.NavigationControl({ showCompass: true }), "bottom-left");
     map.on("load", () => {
       map.addSource("districts", { type: "geojson", data: boundary });
-      map.addLayer({ id: "district-fill", type: "fill", source: "districts", paint: { "fill-color": "#1d4f63", "fill-opacity": 0.08 } });
-      map.addLayer({ id: "district-line", type: "line", source: "districts", paint: { "line-color": "rgba(105,210,197,.45)", "line-width": 1 } });
-      map.addLayer({ id: "district-selected-fill", type: "fill", source: "districts", paint: { "fill-color": "#efbf69", "fill-opacity": 0.2 } });
-      map.addLayer({ id: "district-selected-extrusion", type: "fill-extrusion", source: "districts", paint: { "fill-extrusion-color": "#d89d45", "fill-extrusion-height": 900, "fill-extrusion-base": 0, "fill-extrusion-opacity": 0.17 } });
+      map.addLayer({ id: "district-fill", type: "fill", source: "districts", paint: { "fill-color": "#155070", "fill-opacity": 0.09 } });
+      map.addLayer({ id: "district-line", type: "line", source: "districts", paint: { "line-color": "#56a4c5", "line-width": 1, "line-opacity": 0.5 } });
+      map.addLayer({ id: "district-selected-fill", type: "fill", source: "districts", paint: { "fill-color": "#d7aa5d", "fill-opacity": 0.27 } });
+      map.addLayer({ id: "district-selected-extrusion", type: "fill-extrusion", source: "districts", paint: { "fill-extrusion-color": "#c99342", "fill-extrusion-height": 760, "fill-extrusion-base": 0, "fill-extrusion-opacity": 0.14 } });
       map.addLayer({ id: "district-selected-line", type: "line", source: "districts", paint: { "line-color": "#ffd890", "line-width": 3, "line-blur": 0.3 } });
       map.addSource("service-route", { type: "geojson", data: routeGeoJson(city, city.districts[0]) });
-      map.addLayer({ id: "service-route-glow", type: "line", source: "service-route", paint: { "line-color": "#69d2c5", "line-width": 8, "line-opacity": 0.18, "line-blur": 5 } });
-      map.addLayer({ id: "service-route", type: "line", source: "service-route", paint: { "line-color": "#8ff2e5", "line-width": 2.5, "line-dasharray": [2, 1.5] } });
+      map.addLayer({ id: "service-route-glow", type: "line", source: "service-route", paint: { "line-color": "#d7aa5d", "line-width": 9, "line-opacity": 0.2, "line-blur": 5 } });
+      map.addLayer({ id: "service-route", type: "line", source: "service-route", paint: { "line-color": "#ffd890", "line-width": 2.6, "line-dasharray": [2, 1.4] } });
       mapReady = true;
       applyMapSelection(false);
       loading.hidden = true;

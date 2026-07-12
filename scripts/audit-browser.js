@@ -21,7 +21,11 @@ async function inspectPage(page, pathname, viewport) {
   const failedRequests = [];
   const onConsole = (message) => { if (message.type() === "error") consoleErrors.push(message.text()); };
   const onPageError = (error) => pageErrors.push(error.message);
-  const onRequestFailed = (request) => failedRequests.push(`${request.method()} ${request.url()}: ${request.failure()?.errorText || "failed"}`);
+  const onRequestFailed = (request) => {
+    const errorText = request.failure()?.errorText || "failed";
+    if (request.url().startsWith("https://tile.openstreetmap.org/") && errorText.includes("ERR_ABORTED")) return;
+    failedRequests.push(`${request.method()} ${request.url()}: ${errorText}`);
+  };
   page.on("console", onConsole);
   page.on("pageerror", onPageError);
   page.on("requestfailed", onRequestFailed);
@@ -76,8 +80,9 @@ async function inspectPage(page, pathname, viewport) {
   for (const json of result.jsonLd) assert.doesNotThrow(() => JSON.parse(json), `${pathname}: invalid structured data`);
   if (seoLandingPages.has(baseFile) || baseFile === "index.html") assert.ok(result.ogImage.startsWith("https://"), `${pathname}: og:image missing`);
   if (baseFile === "index.html") {
-    const activeScene = page.locator(".city-image-layer.is-active");
-    assert.equal(await activeScene.count(), 1, `${pathname}: active city image count`);
+    const activeScene = page.locator("#home.map-ready #cityRealMap canvas");
+    await activeScene.waitFor({ state: "visible", timeout: 10000 });
+    assert.equal(await activeScene.count(), 1, `${pathname}: active real map canvas count`);
     const canvasPng = PNG.sync.read(await activeScene.screenshot({ animations: "disabled" }));
     let minimum = 255;
     let maximum = 0;
@@ -86,7 +91,7 @@ async function inspectPage(page, pathname, viewport) {
       minimum = Math.min(minimum, luminance);
       maximum = Math.max(maximum, luminance);
     }
-    assert.ok(maximum > 24 && maximum - minimum > 18, `${pathname}: city image pixels are blank at ${viewport.width}px`);
+    assert.ok(maximum > 24 && maximum - minimum > 18, `${pathname}: real map pixels are blank at ${viewport.width}px`);
   }
   assert.equal(consoleErrors.length, 0, `${pathname}: console errors ${JSON.stringify(consoleErrors)}`);
   assert.equal(pageErrors.length, 0, `${pathname}: page errors ${JSON.stringify(pageErrors)}`);

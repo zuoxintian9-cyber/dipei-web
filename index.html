@@ -23,7 +23,8 @@
     <meta name="theme-color" content="#08111f" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./styles.css?v=20260712-city-images" />
+    <link rel="stylesheet" href="./assets/vendor/maplibre/maplibre-gl.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260712-real-map" />
   </head>
   <body class="home-page">
     <svg class="svg-defs" aria-hidden="true">
@@ -115,6 +116,10 @@
     <main>
       <section class="world-hero is-ready" id="home" tabindex="0" aria-labelledby="worldHeroTitle">
         <canvas class="world-canvas" id="cityWorldCanvas" aria-hidden="true"></canvas>
+        <div class="city-real-map-stage" id="cityRealMapStage" aria-hidden="true">
+          <div class="city-real-map" id="cityRealMap"></div>
+          <div class="city-map-status"><i></i><span>正在定位真实城市地图</span></div>
+        </div>
         <div class="city-image-stage" id="cityImageStage" aria-hidden="true">
           <img class="city-image-layer is-active" id="cityImageFront" src="./City/北京-朝阳区.webp" alt="" decoding="async" fetchpriority="high" />
           <img class="city-image-layer" id="cityImageBack" src="./City/北京-朝阳区.webp" alt="" decoding="async" />
@@ -720,6 +725,7 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="./seo-schema.js"></script>
     <script src="./app.js"></script>
-    <script type="module" src="./location-experience.js?v=20260712-fast-switch"></script>
+    <script src="./assets/vendor/maplibre/maplibre-gl.js"></script>
+    <script type="module" src="./location-experience.js?v=20260712-real-map"></script>
   </body>
 </html>

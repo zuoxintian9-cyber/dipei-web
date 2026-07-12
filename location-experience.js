@@ -5,6 +5,7 @@ const cities = [
     name: "北京",
     code: "BJS",
     color: 0xd7aa5d,
+    map: { center: [116.4074, 39.9042], boundary: "./assets/maps/beijing-districts.geojson", origin: [116.6031, 40.0799], originName: "首都机场" },
     summary: "从首都机场、高铁站到 CBD 商务会面，由客服根据区域、时间和服务边界人工确认。",
     districts: [
       { name: "朝阳区", center: [39.9185, 116.4551], landmark: "中国尊", type: "skyscraper", hotspots: ["中国尊", "国贸 CBD", "三里屯"] },
@@ -18,6 +19,7 @@ const cities = [
     name: "上海",
     code: "SHA",
     color: 0x70c0b0,
+    map: { center: [121.4737, 31.2304], boundary: "./assets/maps/shanghai-districts.geojson", origin: [121.8052, 31.1443], originName: "浦东机场" },
     summary: "覆盖浦东商务区、核心商圈、酒店会面与交通衔接，按行程节奏匹配本地服务。",
     districts: [
       { name: "浦东新区", center: [31.2397, 121.4998], landmark: "东方明珠", type: "pearl", hotspots: ["东方明珠", "陆家嘴", "上海中心"] },
@@ -31,6 +33,7 @@ const cities = [
     name: "广州",
     code: "CAN",
     color: 0xe0b46b,
+    map: { center: [113.2644, 23.1291], boundary: "./assets/maps/guangzhou-districts.geojson", origin: [113.2988, 23.3924], originName: "白云机场" },
     summary: "面向商务到访、会展支持和正规办事协助，可备注普通话、粤语及路线需求。",
     districts: [
       { name: "天河区", center: [23.1203, 113.3248], landmark: "周大福金融中心", type: "skyscraper", hotspots: ["珠江新城", "天河路", "广州东站"] },
@@ -44,6 +47,7 @@ const cities = [
     name: "深圳",
     code: "SZX",
     color: 0x68b7a1,
+    map: { center: [114.0579, 22.5431], boundary: "./assets/maps/shenzhen-districts.geojson", origin: [113.8107, 22.6393], originName: "宝安机场" },
     summary: "适合会展接待、企业到访、口岸与机场衔接，客服提前核对集合地点和时间。",
     districts: [
       { name: "福田区", center: [22.5366, 114.0547], landmark: "平安金融中心", type: "skyscraper", hotspots: ["平安中心", "市民中心", "会展中心"] },
@@ -57,19 +61,21 @@ const cities = [
     name: "成都",
     code: "CTU",
     color: 0xc79a5d,
+    map: { center: [104.0665, 30.5728], boundary: "./assets/maps/chengdu-districts.geojson", origin: [103.9471, 30.5785], originName: "双流机场" },
     summary: "覆盖核心商圈、会展商务、文化街区和机场高铁衔接，适合商务到访与城市路线陪同。",
     districts: [
       { name: "锦江区", center: [30.6543, 104.0818], landmark: "成都 IFS", type: "skyscraper", hotspots: ["成都 IFS", "太古里", "春熙路"] },
       { name: "武侯区", center: [30.6455, 104.0492], landmark: "锦里牌坊", type: "arch", hotspots: ["锦里", "武侯祠", "金融城"] },
       { name: "青羊区", center: [30.6720, 104.0476], landmark: "四川博物院", type: "museum", hotspots: ["四川博物院", "宽窄巷子", "杜甫草堂"] },
       { name: "成华区", center: [30.6846, 104.1133], landmark: "天府熊猫塔", type: "broadcast", hotspots: ["熊猫塔", "东郊记忆", "建设路"] },
-      { name: "天府新区", center: [30.5084, 104.0715], landmark: "中国西部博览城", type: "megacenter", hotspots: ["西博城", "天府公园", "兴隆湖"] }
+      { name: "天府新区", mapName: "双流区", center: [30.5084, 104.0715], landmark: "中国西部博览城", type: "megacenter", hotspots: ["西博城", "天府公园", "兴隆湖"] }
     ]
   },
   {
     name: "杭州",
     code: "HGH",
     color: 0x69b49d,
+    map: { center: [120.1551, 30.2741], boundary: "./assets/maps/hangzhou-districts.geojson", origin: [120.4344, 30.2295], originName: "萧山机场" },
     summary: "覆盖西湖文化路线、钱江新城商务区、滨江科技企业与高铁机场衔接场景。",
     districts: [
       { name: "西湖区", center: [30.2315, 120.1452], landmark: "雷峰塔", type: "pagoda", hotspots: ["雷峰塔", "西湖", "灵隐寺"] },
@@ -83,6 +89,7 @@ const cities = [
     name: "西安",
     code: "XIY",
     color: 0xd2a663,
+    map: { center: [108.9398, 34.3416], boundary: "./assets/maps/xian-districts.geojson", origin: [108.7516, 34.4471], originName: "咸阳机场" },
     summary: "覆盖历史文化路线、高新区商务到访、会展接待以及机场和高铁站交通衔接。",
     districts: [
       { name: "碑林区", center: [34.2610, 108.9470], landmark: "西安钟楼", type: "clocktower", hotspots: ["西安钟楼", "城墙", "碑林博物馆"] },
@@ -97,6 +104,7 @@ const cities = [
     code: "CKG",
     color: 0xc97862,
     asset: "./City/重庆.webp",
+    map: { center: [106.5516, 29.563], boundary: "./assets/maps/chongqing-districts.geojson", origin: [106.6417, 29.7192], originName: "江北机场" },
     summary: "适合山地城市路线、商务会面、会展接待、景点向导和机场高铁站衔接服务。",
     districts: [
       { name: "渝中区", center: [29.5647, 106.5790], landmark: "重庆来福士", type: "sail", hotspots: ["重庆来福士", "解放碑", "洪崖洞"] },
@@ -111,6 +119,7 @@ const cities = [
     code: "WUH",
     color: 0xd9a55e,
     asset: "./City/武汉.webp",
+    map: { center: [114.3055, 30.5928], boundary: "./assets/maps/wuhan-city.geojson", origin: [114.2081, 30.7766], originName: "天河机场", cityOnly: true },
     summary: "武汉现开放城市级预约，具体服务区县、集合地点和路线由客服根据需求人工确认。",
     landmark: "黄鹤楼与长江城市路线",
     hotspots: ["黄鹤楼", "武汉天地", "汉口站"],
@@ -121,6 +130,7 @@ const cities = [
     code: "SZV",
     color: 0x78b9a8,
     asset: "./City/苏州.webp",
+    map: { center: [120.5853, 31.2989], boundary: "./assets/maps/suzhou-city.geojson", origin: [120.642, 31.421], originName: "苏州北站", cityOnly: true },
     summary: "苏州现开放城市级预约，具体服务区县、集合地点和路线由客服根据需求人工确认。",
     landmark: "东方之门与古城路线",
     hotspots: ["东方之门", "金鸡湖", "苏州站"],
@@ -131,6 +141,7 @@ const cities = [
     code: "NKG",
     color: 0xd5aa65,
     asset: "./City/南京.webp",
+    map: { center: [118.7969, 32.0603], boundary: "./assets/maps/nanjing-city.geojson", origin: [118.862, 31.742], originName: "禄口机场", cityOnly: true },
     summary: "南京现开放城市级预约，具体服务区县、集合地点和路线由客服根据需求人工确认。",
     landmark: "紫峰大厦与金陵城市路线",
     hotspots: ["紫峰大厦", "新街口", "南京南站"],
@@ -141,6 +152,7 @@ const cities = [
     code: "CSX",
     color: 0xd58f62,
     asset: "./City/长沙.webp",
+    map: { center: [112.9388, 28.2282], boundary: "./assets/maps/changsha-city.geojson", origin: [113.22, 28.19], originName: "黄花机场", cityOnly: true },
     summary: "长沙现开放城市级预约，具体服务区县、集合地点和路线由客服根据需求人工确认。",
     landmark: "橘子洲与湘江城市路线",
     hotspots: ["橘子洲", "五一广场", "长沙南站"],
@@ -173,6 +185,9 @@ const live = document.querySelector("#locationLive");
 const cityImageStage = document.querySelector("#cityImageStage");
 const cityImageFront = document.querySelector("#cityImageFront");
 const cityImageBack = document.querySelector("#cityImageBack");
+const cityRealMapStage = document.querySelector("#cityRealMapStage");
+const cityRealMap = document.querySelector("#cityRealMap");
+const cityMapStatus = document.querySelector(".city-map-status span");
 
 let activeCity = 0;
 let activeDistrict = 0;
@@ -236,7 +251,8 @@ function renderInterface() {
     return button;
   }));
 
-  stage.style.setProperty("--world-accent", `#${city.color.toString(16).padStart(6, "0")}`);
+  const accent = stage.classList.contains("map-ready") ? 0xd7aa5d : city.color;
+  stage.style.setProperty("--world-accent", `#${accent.toString(16).padStart(6, "0")}`);
   sceneApi?.setLocation(activeCity, activeDistrict);
 }
 
@@ -295,6 +311,7 @@ function bindControls() {
 
   stage.addEventListener("wheel", (event) => {
     if (!introFinished) return;
+    if (stage.classList.contains("map-ready")) return;
     const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 0.72;
     const distance = horizontal ? event.deltaX : event.deltaY;
     const districtCount = cities[activeCity].districts.length;
@@ -315,6 +332,7 @@ function bindControls() {
 
   stage.addEventListener("pointerdown", (event) => {
     if (!introFinished || (event.pointerType === "mouse" && event.button !== 0)) return;
+    if (stage.classList.contains("map-ready")) return;
     if (event.target.closest("button, a, input, select, textarea")) return;
     pointerStart = { x: event.clientX, y: event.clientY, id: event.pointerId };
     stage.setPointerCapture?.(event.pointerId);
@@ -958,7 +976,208 @@ function createCityScene(city, index) {
   return group;
 }
 
-function createImageWorld() {
+function createMapWorld() {
+  const maplibre = window.maplibregl;
+  if (!maplibre || !cityRealMapStage || !cityRealMap) throw new Error("Real map runtime unavailable");
+
+  const boundaryCache = new Map();
+  let ready = false;
+  let requestedCity = activeCity;
+  let requestedDistrict = activeDistrict;
+  let shownCity = activeCity;
+  let updateToken = 0;
+  let movingTimer = 0;
+  let mapMarkers = [];
+
+  const map = new maplibre.Map({
+    container: cityRealMap,
+    center: cities[0].map.center,
+    zoom: 9.45,
+    pitch: 44,
+    bearing: -10,
+    attributionControl: false,
+    fadeDuration: 120,
+    style: {
+      version: 8,
+      sources: {
+        osm: {
+          type: "raster",
+          tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+          tileSize: 256,
+          attribution: "© OpenStreetMap contributors"
+        },
+        tone: {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "Polygon",
+              coordinates: [[[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]]]
+            }
+          }
+        }
+      },
+      layers: [
+        {
+          id: "brand-background",
+          type: "background",
+          paint: { "background-color": "#031126" }
+        },
+        {
+          id: "osm-base",
+          type: "raster",
+          source: "osm",
+          paint: {
+            "raster-saturation": -0.72,
+            "raster-contrast": 0.28,
+            "raster-brightness-min": 0.03,
+            "raster-brightness-max": 0.58,
+            "raster-fade-duration": 100
+          }
+        },
+        {
+          id: "brand-tone",
+          type: "fill",
+          source: "tone",
+          paint: { "fill-color": "#03152d", "fill-opacity": 0.66 }
+        }
+      ]
+    }
+  });
+
+  map.on("error", () => {
+    // Tile requests can be canceled during camera moves or page navigation.
+  });
+
+  function loadBoundary(city) {
+    if (!boundaryCache.has(city.map.boundary)) {
+      boundaryCache.set(city.map.boundary, fetch(city.map.boundary).then((response) => {
+        if (!response.ok) throw new Error(`Map boundary HTTP ${response.status}`);
+        return response.json();
+      }));
+    }
+    return boundaryCache.get(city.map.boundary);
+  }
+
+  function districtPoint(city, district) {
+    return district ? [district.center[1], district.center[0]] : city.map.center;
+  }
+
+  function routeData(city, district) {
+    const destination = districtPoint(city, district);
+    const midpoint = [
+      city.map.origin[0] + (destination[0] - city.map.origin[0]) * 0.56,
+      city.map.origin[1] + (destination[1] - city.map.origin[1]) * 0.42
+    ];
+    return {
+      type: "Feature",
+      properties: {},
+      geometry: { type: "LineString", coordinates: [city.map.origin, midpoint, destination] }
+    };
+  }
+
+  function clearMarkers() {
+    mapMarkers.forEach((marker) => marker.remove());
+    mapMarkers = [];
+  }
+
+  function addMarker(point, title, detail, type) {
+    const element = document.createElement("div");
+    element.className = `city-map-marker ${type}`;
+    const dot = document.createElement("i");
+    const copy = document.createElement("span");
+    const strong = document.createElement("strong");
+    const small = document.createElement("small");
+    strong.textContent = title;
+    small.textContent = detail;
+    copy.append(strong, small);
+    element.append(dot, copy);
+    mapMarkers.push(new maplibre.Marker({ element, anchor: "bottom" }).setLngLat(point).addTo(map));
+  }
+
+  function finishMovement(token) {
+    if (token !== updateToken) return;
+    cityRealMapStage.classList.remove("is-moving");
+  }
+
+  async function applyLocation(cityIndex, districtIndex, immediate = false) {
+    if (!ready) return;
+    const token = ++updateToken;
+    const city = cities[cityIndex];
+    const district = city.districts[districtIndex] || null;
+    const cityChanged = cityIndex !== shownCity;
+    shownCity = cityIndex;
+    cityRealMapStage.classList.add("is-moving");
+    cityMapStatus.textContent = cityChanged ? `正在前往${city.name}` : `正在定位${district?.name || city.name}`;
+
+    try {
+      const boundary = await loadBoundary(city);
+      if (token !== updateToken) return;
+      map.getSource("city-boundaries").setData(boundary);
+      const selectedName = district?.mapName || district?.name || `${city.name}市`;
+      const filter = ["==", ["get", "name"], selectedName];
+      map.setFilter("selected-area-fill", filter);
+      map.setFilter("selected-area-extrusion", filter);
+      map.setFilter("selected-area-line", filter);
+      map.getSource("service-route").setData(routeData(city, district));
+
+      clearMarkers();
+      addMarker(city.map.origin, city.map.originName, "接应起点", "origin");
+      addMarker(districtPoint(city, district), district?.landmark || city.landmark, district?.name || "城市服务范围", "destination");
+
+      const destination = districtPoint(city, district);
+      map.flyTo({
+        center: destination,
+        zoom: district ? (cityChanged ? 10.45 : 11.15) : 9.55,
+        pitch: district ? 49 : 42,
+        bearing: cityIndex % 2 === 0 ? -12 : 14,
+        duration: immediate ? 0 : (cityChanged ? 1050 : 760),
+        essential: true
+      });
+
+      window.clearTimeout(movingTimer);
+      movingTimer = window.setTimeout(() => finishMovement(token), 3200);
+      map.once("idle", () => finishMovement(token));
+      loadBoundary(cities[indexWrap(cityIndex - 1, cities.length)]).catch(() => {});
+      loadBoundary(cities[indexWrap(cityIndex + 1, cities.length)]).catch(() => {});
+    } catch (error) {
+      console.warn("Map boundary unavailable:", error.message);
+      cityRealMapStage.classList.remove("is-moving");
+    }
+  }
+
+  map.once("style.load", () => {
+    map.addSource("city-boundaries", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+    map.addLayer({ id: "area-fill", type: "fill", source: "city-boundaries", paint: { "fill-color": "#155070", "fill-opacity": 0.09 } });
+    map.addLayer({ id: "area-line", type: "line", source: "city-boundaries", paint: { "line-color": "#56a4c5", "line-width": 1, "line-opacity": 0.5 } });
+    map.addLayer({ id: "selected-area-fill", type: "fill", source: "city-boundaries", paint: { "fill-color": "#d7aa5d", "fill-opacity": 0.27 } });
+    map.addLayer({ id: "selected-area-extrusion", type: "fill-extrusion", source: "city-boundaries", paint: { "fill-extrusion-color": "#c99342", "fill-extrusion-height": 760, "fill-extrusion-base": 0, "fill-extrusion-opacity": 0.14 } });
+    map.addLayer({ id: "selected-area-line", type: "line", source: "city-boundaries", paint: { "line-color": "#ffd890", "line-width": 3, "line-blur": 0.25 } });
+    map.addSource("service-route", { type: "geojson", data: routeData(cities[0], cities[0].districts[0]) });
+    map.addLayer({ id: "service-route-glow", type: "line", source: "service-route", paint: { "line-color": "#d7aa5d", "line-width": 10, "line-opacity": 0.22, "line-blur": 6 } });
+    map.addLayer({ id: "service-route", type: "line", source: "service-route", paint: { "line-color": "#ffd890", "line-width": 2.7, "line-dasharray": [2.2, 1.3] } });
+    ready = true;
+    stage.classList.add("use-real-map", "map-ready");
+    stage.style.setProperty("--world-accent", "#d7aa5d");
+    applyLocation(requestedCity, requestedDistrict, true);
+    window.setTimeout(() => map.resize(), 60);
+  });
+
+  const resizeObserver = new ResizeObserver(() => map.resize());
+  resizeObserver.observe(stage);
+
+  return {
+    setLocation(cityIndex, districtIndex) {
+      requestedCity = cityIndex;
+      requestedDistrict = districtIndex;
+      applyLocation(cityIndex, districtIndex);
+    },
+    finishIntro() {}
+  };
+}
+
+function createImageWorld({ warm = true } = {}) {
   if (!stage || !cityImageStage || !cityImageFront || !cityImageBack) throw new Error("Image city stage unavailable");
   stage.classList.add("use-image-world");
   let frontLayer = cityImageFront;
@@ -1023,7 +1242,7 @@ function createImageWorld() {
   frontLayer.src = initialSource;
   frontLayer.dataset.source = frontLayer.src;
   preloadSource(initialSource, "high");
-  warmNearby(shownCity, shownDistrict);
+  if (warm) warmNearby(shownCity, shownDistrict);
 
   function settleTransition() {
     if (!transitionTimer) return;
@@ -1076,7 +1295,7 @@ function createImageWorld() {
         frontLayer.className = "city-image-layer is-active";
         backLayer.className = "city-image-layer";
       }, 540);
-      warmNearby(cityIndex, districtIndex);
+      if (warm) warmNearby(cityIndex, districtIndex);
     });
   }
 
@@ -1264,10 +1483,30 @@ if (stage) {
   renderInterface();
   bindControls();
   try {
-    sceneApi = createImageWorld();
+    const imageWorld = createImageWorld({ warm: !window.maplibregl });
+    if (window.maplibregl) {
+      try {
+        const mapWorld = createMapWorld();
+        sceneApi = {
+          setLocation(cityIndex, districtIndex) {
+            imageWorld.setLocation(cityIndex, districtIndex);
+            mapWorld.setLocation(cityIndex, districtIndex);
+          },
+          finishIntro(force) {
+            imageWorld.finishIntro(force);
+            mapWorld.finishIntro(force);
+          }
+        };
+      } catch (mapError) {
+        console.warn("Real map unavailable, using city images:", mapError.message);
+        sceneApi = imageWorld;
+      }
+    } else {
+      sceneApi = imageWorld;
+    }
     renderInterface();
   } catch (error) {
-    console.warn("3D city scene unavailable:", error.message);
+    console.warn("City scene unavailable:", error.message);
     stage.classList.add("no-webgl", "is-ready");
     fallback.hidden = false;
   }

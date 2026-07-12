@@ -113,6 +113,17 @@ async function testInteractions(page) {
   await menu.click();
   assert.equal(await menu.getAttribute("aria-expanded"), "false");
 
+  await page.locator('[data-world-city-step="-1"]').click();
+  assert.equal(await page.locator("#worldLocationCityName").textContent(), "长沙");
+  assert.equal(await page.locator(".world-district-axis").isVisible(), false);
+  assert.ok((await page.locator("#worldConfirmLocation").textContent()).includes("长沙"));
+  await page.locator("#worldConfirmLocation").click();
+  const cityOnlyForm = page.locator("#bookingForm");
+  assert.equal(await cityOnlyForm.locator('select[name="city"]').inputValue(), "长沙");
+  assert.equal(await cityOnlyForm.locator('input[name="area"]').inputValue(), "");
+  await page.locator("#home").scrollIntoViewIfNeeded();
+  await page.locator('[data-world-city-step="1"]').click();
+
   await page.locator('[data-world-city-step="1"]').click();
   assert.equal(await page.locator("#worldLocationCityName").textContent(), "上海");
   await page.locator('[data-world-district-step="1"]').click();
@@ -126,6 +137,8 @@ async function testInteractions(page) {
   );
   assert.equal(await form.locator('select[name="city"]').inputValue(), "上海");
   assert.equal(await form.locator('input[name="area"]').inputValue(), "黄浦区");
+  await form.locator('select[name="city"]').selectOption("武汉");
+  assert.equal(await form.locator('input[name="area"]').inputValue(), "");
   const date = form.locator('input[name="date"]');
   assert.ok(await date.getAttribute("max"));
 

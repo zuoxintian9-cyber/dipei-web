@@ -105,6 +105,46 @@ const cities = [
       { name: "沙坪坝区", center: [29.5814, 106.4568], landmark: "磁器口牌坊", type: "arch", hotspots: ["磁器口", "三峡广场", "大学城"] },
       { name: "九龙坡区", center: [29.5058, 106.4350], landmark: "重庆西站", type: "station", hotspots: ["重庆西站", "杨家坪", "黄桷坪"] }
     ]
+  },
+  {
+    name: "武汉",
+    code: "WUH",
+    color: 0xd9a55e,
+    asset: "./City/武汉.webp",
+    summary: "武汉现开放城市级预约，具体服务区县、集合地点和路线由客服根据需求人工确认。",
+    landmark: "黄鹤楼与长江城市路线",
+    hotspots: ["黄鹤楼", "武汉天地", "汉口站"],
+    districts: []
+  },
+  {
+    name: "苏州",
+    code: "SZV",
+    color: 0x78b9a8,
+    asset: "./City/苏州.webp",
+    summary: "苏州现开放城市级预约，具体服务区县、集合地点和路线由客服根据需求人工确认。",
+    landmark: "东方之门与古城路线",
+    hotspots: ["东方之门", "金鸡湖", "苏州站"],
+    districts: []
+  },
+  {
+    name: "南京",
+    code: "NKG",
+    color: 0xd5aa65,
+    asset: "./City/南京.webp",
+    summary: "南京现开放城市级预约，具体服务区县、集合地点和路线由客服根据需求人工确认。",
+    landmark: "紫峰大厦与金陵城市路线",
+    hotspots: ["紫峰大厦", "新街口", "南京南站"],
+    districts: []
+  },
+  {
+    name: "长沙",
+    code: "CSX",
+    color: 0xd58f62,
+    asset: "./City/长沙.webp",
+    summary: "长沙现开放城市级预约，具体服务区县、集合地点和路线由客服根据需求人工确认。",
+    landmark: "橘子洲与湘江城市路线",
+    hotspots: ["橘子洲", "五一广场", "长沙南站"],
+    districts: []
   }
 ];
 
@@ -123,6 +163,8 @@ const currentCityLabel = document.querySelector("#worldCurrentCity");
 const previousCityLabel = document.querySelector("#worldPreviousCity");
 const nextCityLabel = document.querySelector("#worldNextCity");
 const districtList = document.querySelector("#worldDistrictList");
+const districtAxis = document.querySelector(".world-district-axis");
+const coreType = document.querySelector("#worldCoreType");
 const coreLabel = document.querySelector("#worldCoreLabel");
 const mapLock = document.querySelector("#worldMapLock");
 const landmarkList = document.querySelector("#worldLandmarkList");
@@ -146,7 +188,7 @@ function indexWrap(value, length) {
 
 function selectedLocation() {
   const city = cities[activeCity];
-  return { city, district: city.districts[activeDistrict] };
+  return { city, district: city.districts[activeDistrict] || null };
 }
 
 function renderInterface() {
@@ -162,11 +204,16 @@ function renderInterface() {
   currentCityLabel.textContent = city.name;
   previousCityLabel.textContent = previous.name;
   nextCityLabel.textContent = next.name;
-  coreLabel.textContent = `${district.name} · ${district.landmark}`;
-  mapLock.textContent = `${city.name} · ${district.name}已锁定`;
-  confirmLocation.textContent = `按${district.name}提交预约`;
+  const cityOnly = !district;
+  coreType.textContent = cityOnly ? "CITY LANDMARK" : "DISTRICT LANDMARK";
+  coreLabel.textContent = cityOnly ? city.landmark : `${district.name} · ${district.landmark}`;
+  mapLock.textContent = cityOnly ? `${city.name}已锁定 · 区县由客服确认` : `${city.name} · ${district.name}已锁定`;
+  confirmLocation.textContent = cityOnly ? `按${city.name}提交预约` : `按${district.name}提交预约`;
+  districtAxis.classList.toggle("is-city-only", cityOnly);
+  districtAxis.setAttribute("aria-hidden", String(cityOnly));
 
-  landmarkList.replaceChildren(...district.hotspots.map((hotspot, index) => {
+  const hotspots = cityOnly ? city.hotspots : district.hotspots;
+  landmarkList.replaceChildren(...hotspots.map((hotspot, index) => {
     const item = document.createElement("span");
     item.className = index === 0 ? "active" : "";
     item.textContent = hotspot;
@@ -197,11 +244,15 @@ function changeCity(step) {
   activeCity = indexWrap(activeCity + step, cities.length);
   activeDistrict = 0;
   renderInterface();
-  live.textContent = `已切换到${cities[activeCity].name}，上下滑动可进入区县层级。`;
+  const city = cities[activeCity];
+  live.textContent = city.districts.length
+    ? `已切换到${city.name}，上下滑动可进入区县层级。`
+    : `已切换到${city.name}，当前仅开放城市级预约，区县由客服确认。`;
 }
 
 function changeDistrict(step) {
   const districts = cities[activeCity].districts;
+  if (!districts.length) return false;
   const next = activeDistrict + step;
   if (next < 0 || next >= districts.length) return false;
   activeDistrict = next;
@@ -215,6 +266,11 @@ function continueToContent() {
 }
 
 function bindControls() {
+  const booking = document.querySelector("#bookingForm");
+  booking?.elements.city?.addEventListener("change", () => {
+    if (booking.elements.area) booking.elements.area.value = "";
+  });
+
   document.querySelectorAll("[data-world-city-step]").forEach((button) => {
     button.addEventListener("click", (event) => {
       event.stopPropagation();
@@ -241,7 +297,9 @@ function bindControls() {
     if (!introFinished) return;
     const horizontal = Math.abs(event.deltaX) > Math.abs(event.deltaY) * 0.72;
     const distance = horizontal ? event.deltaX : event.deltaY;
-    const atExit = !horizontal && distance > 0 && activeDistrict === cities[activeCity].districts.length - 1;
+    const districtCount = cities[activeCity].districts.length;
+    if (!horizontal && districtCount === 0) return;
+    const atExit = !horizontal && distance > 0 && activeDistrict === districtCount - 1;
     if (atExit) return;
 
     event.preventDefault();
@@ -274,16 +332,18 @@ function bindControls() {
 
   confirmLocation.addEventListener("click", () => {
     const { city, district } = selectedLocation();
-    const booking = document.querySelector("#bookingForm");
     if (booking?.elements.city) booking.elements.city.value = city.name;
-    if (booking?.elements.area) booking.elements.area.value = district.name;
+    if (booking?.elements.area) booking.elements.area.value = district?.name || "";
     const filterCity = document.querySelector("#filterCity");
     if (filterCity && [...filterCity.options].some((option) => option.value === city.name)) {
       filterCity.value = city.name;
       filterCity.dispatchEvent(new Event("change", { bubbles: true }));
     }
     document.querySelector("#booking")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    if (typeof showToast === "function") showToast(`已选择${city.name} · ${district.name}，请补充预约信息。`, 4200);
+    if (typeof showToast === "function") {
+      const location = district ? `${city.name} · ${district.name}` : `${city.name}（区县由客服确认）`;
+      showToast(`已选择${location}，请补充预约信息。`, 4200);
+    }
   });
 }
 
@@ -911,7 +971,7 @@ function createImageWorld() {
   const sourceFor = (cityIndex, districtIndex) => {
     const city = cities[cityIndex];
     const district = city.districts[districtIndex];
-    return district.asset || city.asset || `./City/${city.name}-${district.name}.webp`;
+    return district?.asset || city.asset || (district ? `./City/${city.name}-${district.name}.webp` : "./assets/hero-city.jpg");
   };
 
   const setFallback = (layer) => {
@@ -942,8 +1002,9 @@ function createImageWorld() {
     settleTransition();
 
     const cityChanged = cityIndex !== shownCity;
+    const forwardDistance = indexWrap(cityIndex - shownCity, cities.length);
     const direction = cityChanged
-      ? (cityIndex > shownCity || (shownCity === cities.length - 1 && cityIndex === 0) ? 1 : -1)
+      ? (forwardDistance <= cities.length / 2 ? 1 : -1)
       : (districtIndex >= shownDistrict ? 1 : -1);
     const enteringClass = cityChanged
       ? (direction > 0 ? "from-right" : "from-left")

@@ -1139,8 +1139,6 @@ function createMapWorld() {
       window.clearTimeout(movingTimer);
       movingTimer = window.setTimeout(() => finishMovement(token), 3200);
       map.once("idle", () => finishMovement(token));
-      loadBoundary(cities[indexWrap(cityIndex - 1, cities.length)]).catch(() => {});
-      loadBoundary(cities[indexWrap(cityIndex + 1, cities.length)]).catch(() => {});
     } catch (error) {
       console.warn("Map boundary unavailable:", error.message);
       cityRealMapStage.classList.remove("is-moving");

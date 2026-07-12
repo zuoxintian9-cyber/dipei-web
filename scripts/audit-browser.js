@@ -39,7 +39,7 @@ async function inspectPage(page, pathname, viewport) {
     const overflowElements = [...document.querySelectorAll("main input:not(.hp-field), main select, main textarea, main button, main article")]
       .filter(visible)
       .filter((element) => {
-        if (element.closest(".city-rail")) return false;
+        if (element.closest(".city-rail, .gallery-track")) return false;
         const rect = element.getBoundingClientRect();
         return rect.left < -1 || rect.right > window.innerWidth + 1;
       })

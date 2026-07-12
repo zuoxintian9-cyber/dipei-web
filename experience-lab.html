@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="description" content="地陪客户北京、上海城市交互样板，对比跟手图片画廊与真实地图导航两种首页方案。" />
+    <link rel="canonical" href="https://www.dipeikehu.com/experience-lab.html" />
+    <title>城市交互方案对比｜地陪客户</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./assets/vendor/maplibre/maplibre-gl.css" />
+    <link rel="stylesheet" href="./experience-lab.css" />
+  </head>
+  <body>
+    <header class="lab-header">
+      <a class="lab-brand" href="./index.html" aria-label="返回地陪客户首页">
+        <img src="./favicon.svg" alt="" />
+        <span><strong>地陪客户</strong><small>城市交互体验样板</small></span>
+      </a>
+      <div class="mode-switch" role="tablist" aria-label="切换体验方案">
+        <button class="active" id="modeBButton" type="button" role="tab" aria-selected="true" aria-controls="modeB">方案 B · 跟手画廊</button>
+        <button id="modeCButton" type="button" role="tab" aria-selected="false" aria-controls="modeC">方案 C · 真实地图</button>
+      </div>
+      <a class="lab-back" href="./index.html">返回当前首页</a>
+    </header>
+
+    <main class="lab-main">
+      <section class="mode-panel active" id="modeB" role="tabpanel" aria-labelledby="modeBButton">
+        <div class="gallery-viewport" id="galleryViewport" tabindex="0" aria-label="左右拖动切换北京和上海">
+          <div class="gallery-track" id="galleryTrack"></div>
+          <div class="gallery-shade" aria-hidden="true"></div>
+          <div class="gallery-progress" aria-hidden="true"><i id="galleryProgress"></i></div>
+        </div>
+
+        <div class="gallery-ui" id="galleryUi">
+          <div class="mode-note"><i></i>方案 B · 图片跟随手指移动</div>
+          <div class="gallery-copy">
+            <p><span id="galleryCityIndex">01</span> / 02 · <b id="galleryCityCode">BJS</b></p>
+            <h1><span id="galleryCityName">北京</span><br />有人熟悉你的路线</h1>
+            <div class="gallery-location"><strong id="galleryDistrictName">朝阳区</strong><span id="galleryLandmark">中国尊 · 国贸 CBD</span></div>
+            <div class="gallery-actions">
+              <button class="primary-action" id="galleryBook" type="button">按朝阳区提交预约</button>
+              <button class="text-action" id="openCityPicker" type="button">全部城市</button>
+            </div>
+          </div>
+
+          <div class="city-peek" aria-label="城市切换状态">
+            <span id="galleryPreviousCity">上海</span>
+            <strong id="galleryCurrentCity">北京</strong>
+            <span id="galleryNextCity">上海</span>
+            <small>按住画面左右拖动</small>
+          </div>
+
+          <div class="district-drawer">
+            <div><small>服务区域</small><strong>点击区县切换地标画面</strong></div>
+            <div class="district-chips" id="galleryDistricts"></div>
+          </div>
+        </div>
+
+        <dialog class="city-picker" id="cityPicker">
+          <div class="picker-head"><strong>选择城市</strong><button id="closeCityPicker" type="button" aria-label="关闭城市选择">×</button></div>
+          <p>样板阶段先对比北京与上海，正式版可在这里直接选择全部开放城市。</p>
+          <div class="picker-grid">
+            <button type="button" data-gallery-city="0"><small>BJS</small><strong>北京</strong><span>5 个示例区县</span></button>
+            <button type="button" data-gallery-city="1"><small>SHA</small><strong>上海</strong><span>5 个示例区县</span></button>
+          </div>
+        </dialog>
+      </section>
+
+      <section class="mode-panel" id="modeC" role="tabpanel" aria-labelledby="modeCButton" hidden>
+        <div class="map-stage" id="mapStage">
+          <div class="real-map" id="realMap" aria-label="北京与上海真实地图导航"></div>
+          <div class="map-loading" id="mapLoading"><i></i><span>正在连接真实地图</span></div>
+          <div class="map-fallback" id="mapFallback" hidden>地图数据暂时无法连接，请稍后重试。方案 B 不受影响。</div>
+        </div>
+
+        <div class="map-ui">
+          <div class="mode-note"><i></i>方案 C · 真实地图镜头与行政区边界</div>
+          <div class="map-copy">
+            <p><span id="mapCityCode">BJS</span> · REAL MAP</p>
+            <div class="map-city-title" id="mapCityName">北京</div>
+            <h2 id="mapDistrictName">朝阳区</h2>
+            <p id="mapSummary">从首都机场到国贸 CBD，地图镜头会定位真实区域并高亮行政区边界。</p>
+            <div class="map-actions">
+              <button class="primary-action" id="mapBook" type="button">按朝阳区提交预约</button>
+              <span><i></i>人工客服确认路线</span>
+            </div>
+          </div>
+
+          <div class="map-city-switch" role="group" aria-label="地图城市选择">
+            <button class="active" type="button" data-map-city="0"><small>01</small>北京</button>
+            <button type="button" data-map-city="1"><small>02</small>上海</button>
+          </div>
+
+          <aside class="map-district-panel">
+            <div><small>区域导航</small><strong>选择区县，镜头自动定位</strong></div>
+            <div id="mapDistricts"></div>
+          </aside>
+
+          <div class="map-legend"><span><i class="boundary-key"></i>区县边界</span><span><i class="route-key"></i>接应路线示意</span></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="lab-toast" id="labToast" role="status" aria-live="polite"></div>
+    <script src="./assets/vendor/maplibre/maplibre-gl.js"></script>
+    <script src="./experience-lab.js"></script>
+  </body>
+</html>

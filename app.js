@@ -353,7 +353,8 @@ function validateLeadForm(form) {
     return false;
   }
 
-  const duplicateKey = `dipei:last-submit:${formType}`;
+  const duplicateScope = form.dataset.source || form.elements.topic?.value || window.location.pathname;
+  const duplicateKey = `dipei:last-submit:${formType}:${duplicateScope}`;
   const lastSubmit = lastSubmitTime(duplicateKey);
   if (Date.now() - lastSubmit < DUPLICATE_WINDOW_MS) {
     showToast("提交过于频繁，请稍后再试。");
@@ -382,8 +383,17 @@ function collectFormPayload(form) {
   return payload;
 }
 
-function successMessage(formType, result = {}) {
-  const label = SUCCESS_LABELS[formType] || "提交成功";
+function successMessage(formType, result = {}, payload = {}) {
+  const consultLabels = {
+    用户注册: "账号登记已提交",
+    登录帮助: "账号协助已提交",
+    订单进度: "订单协助已提交",
+    服务者资料补充: "资料补充申请已提交",
+    服务者中心: "服务者协助已提交"
+  };
+  const label = formType === "客户咨询线索表"
+    ? (consultLabels[payload.topic] || SUCCESS_LABELS[formType])
+    : (SUCCESS_LABELS[formType] || "提交成功");
   const publicId = result.publicId || result.trackingNo || result.recordId;
   const idLine = publicId ? `\n编号：${publicId}` : "";
   return `${label}${idLine}\n客服将在工作时间内联系你，请保存编号用于后续查询。`;
@@ -412,7 +422,7 @@ async function submitLead(form) {
         body: JSON.stringify(payload)
       });
       const result = await response.json().catch(() => ({}));
-      if (response.ok) return successMessage(payload.表单类型, result);
+      if (response.ok) return successMessage(payload.表单类型, result, payload);
       if (result.code !== "FEISHU_NOT_CONFIGURED") throw new Error(result.message || "提交失败");
     } catch (error) {
       if (FORM_ENDPOINT !== "/api/feishu-submit") throw error;

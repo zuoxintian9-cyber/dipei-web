@@ -33,7 +33,7 @@ const REQUIRED_FIELDS = {
   "客户咨询线索表": ["name", "contact", "topic", "city", "detail", "协议同意"]
 };
 
-const OPEN_CITIES = new Set(["北京", "上海", "广州", "深圳", "成都", "杭州", "西安", "重庆"]);
+const OPEN_CITIES = new Set(["北京", "上海", "广州", "深圳", "成都", "杭州", "西安", "重庆", "武汉", "苏州", "南京", "长沙"]);
 const SERVICE_TYPES = new Set(["商务接待", "城市陪同", "旅游向导", "办事协助", "展会陪同", "机场接送"]);
 const BILLING_TYPES = new Set(["小时", "半天", "全天", "按次沟通"]);
 const REPORT_RISK_LEVELS = new Set(["低", "中", "高", "严重"]);

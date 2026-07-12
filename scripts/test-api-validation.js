@@ -1,9 +1,11 @@
 const assert = require("assert");
 const submitHandler = require("../api/feishu-submit");
 const orderHandler = require("../api/order-status");
+const providerStatusHandler = require("../api/provider-status");
 
 const submitTest = submitHandler._test;
 const orderTest = orderHandler._test;
+const providerStatusTest = providerStatusHandler._test;
 const futureDate = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 const farFutureDate = new Date(Date.now() + 800 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -36,6 +38,7 @@ async function main() {
   };
 
   assert.equal(submitTest.validatePayload("用户预约需求表", validBooking).ok, true);
+  assert.equal(submitTest.validatePayload("用户预约需求表", { ...validBooking, city: "武汉" }).ok, true);
   assert.equal(submitTest.validatePayload("用户预约需求表", { ...validBooking, phone: "123" }).code, "INVALID_PHONE");
   assert.equal(submitTest.validatePayload("用户预约需求表", { ...validBooking, date: "2026-02-30" }).code, "INVALID_DATE");
   assert.equal(submitTest.validatePayload("用户预约需求表", { ...validBooking, date: farFutureDate }).code, "INVALID_DATE");
@@ -63,6 +66,7 @@ async function main() {
     协议同意: "已阅读并同意"
   };
   assert.equal(submitTest.validatePayload("服务者入驻申请表", validProvider).ok, true);
+  assert.equal(submitTest.validatePayload("服务者入驻申请表", { ...validProvider, city: "长沙" }).ok, true);
   assert.equal(submitTest.validatePayload("服务者入驻申请表", { ...validProvider, price: "-1" }).code, "INVALID_PRICE");
   assert.equal(submitTest.validatePayload("服务者入驻申请表", { ...validProvider, billingType: "随意收费" }).code, "INVALID_PROVIDER_OPTION");
 
@@ -99,6 +103,10 @@ async function main() {
   assert.equal(orderTest.statusData({ fields: { 跟进状态: "待匹配" } }, null).label, "正在匹配服务者");
   assert.equal(orderTest.statusData({ fields: { 跟进状态: "新线索" } }, { fields: { 订单状态: "服务完成" } }).tone, "complete");
   assert.equal(orderTest.bodyTooLarge(request({}, { trackingNo: "DP".repeat(2000) })), true);
+  assert.equal(providerStatusTest.safeEqual("13800138000", "13800138000"), true);
+  assert.equal(providerStatusTest.safeEqual("13800138000", "13900139000"), false);
+  assert.equal(providerStatusTest.allowedOrigin(request({ origin: "https://www.dipeikehu.com" })), true);
+  assert.equal(providerStatusTest.allowedOrigin(request({ origin: "https://evil.example" })), false);
 
   const submitNoType = await invoke(submitHandler, request({ "x-vercel-forwarded-for": "203.0.113.1" }, "{}"));
   assert.equal(submitNoType.status, 415);
@@ -119,6 +127,11 @@ async function main() {
   assert.equal(orderMalformed.status, 400);
   const orderWrappedMalformed = await invoke(orderHandler, request({ "content-type": "application/json", "x-vercel-forwarded-for": "203.0.113.9" }, Buffer.from("{bad-json")));
   assert.equal(orderWrappedMalformed.status, 400);
+
+  const providerBadOrigin = await invoke(providerStatusHandler, request({ "content-type": "application/json", origin: "https://evil.example", "x-vercel-forwarded-for": "203.0.113.10" }, "{}"));
+  assert.equal(providerBadOrigin.status, 403);
+  const providerMalformed = await invoke(providerStatusHandler, request({ "content-type": "application/json", "x-vercel-forwarded-for": "203.0.113.11" }, "{bad-json"));
+  assert.equal(providerMalformed.status, 400);
 
   console.log("API security tests passed: validation, consent, origins, payload limits, IDs, status privacy and rate limits.");
 }

@@ -45,6 +45,27 @@
 
       <section class="page-main">
         <div class="container page-grid">
+          <article class="page-card order-lookup-shell">
+            <div class="section-heading compact">
+              <p class="eyebrow">审核进度</p>
+              <h2>查询入驻申请状态</h2>
+              <p>输入提交成功后获得的 FWZ 申请编号和入驻手机号，只返回必要审核状态，不公开个人资料。</p>
+            </div>
+            <form class="contact-form order-lookup-form" id="providerStatusForm" novalidate>
+              <label>
+                入驻申请编号
+                <input name="applicationNo" maxlength="20" autocomplete="off" placeholder="如：FWZ1234567890123456" required />
+              </label>
+              <label>
+                入驻手机号
+                <input name="phone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="请输入申请时填写的 11 位手机号" required />
+              </label>
+              <button class="btn gold" type="submit">查询审核状态</button>
+              <p class="form-note full">编号与手机号必须同时匹配，查询不会创建新的咨询记录。</p>
+            </form>
+            <div class="order-status-result" id="providerStatusResult" role="status" aria-live="polite" hidden></div>
+          </article>
+
           <article class="page-card">
             <h2>常见状态说明</h2>
             <div class="status-timeline">
@@ -104,6 +125,10 @@
                   <option>杭州</option>
                   <option>西安</option>
                   <option>重庆</option>
+                  <option>武汉</option>
+                  <option>苏州</option>
+                  <option>南京</option>
+                  <option>长沙</option>
                 </select>
               </label>
               <label>
@@ -149,5 +174,6 @@
     </footer>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="./app.js"></script>
+    <script src="./provider-status.js"></script>
   </body>
 </html>

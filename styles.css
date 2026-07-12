@@ -3097,7 +3097,7 @@ body.arrival-active {
   transform: scale(1.07);
   filter: saturate(1.06) contrast(1.04) brightness(0.88);
   will-change: opacity, transform, filter;
-  transition: opacity 0.82s ease, transform 1.05s cubic-bezier(0.22, 0.72, 0.2, 1), filter 0.82s ease;
+  transition: opacity 0.38s ease, transform 0.52s cubic-bezier(0.22, 0.72, 0.2, 1), filter 0.38s ease;
 }
 
 .city-image-layer.is-active:not(.is-entering) {
@@ -3120,7 +3120,7 @@ body.arrival-active {
 .city-image-layer.is-exiting {
   opacity: 0;
   animation: none;
-  filter: saturate(1.15) contrast(1.08) brightness(0.66) blur(4px);
+  filter: saturate(1.12) contrast(1.06) brightness(0.7);
 }
 
 .city-image-layer.is-exiting.to-left { transform: translate3d(-7%, 0, 0) scale(1.08); }

@@ -967,6 +967,7 @@ function createImageWorld() {
   let shownDistrict = activeDistrict;
   let transitionTimer = 0;
   let loadToken = 0;
+  const preloadCache = new Map();
 
   const sourceFor = (cityIndex, districtIndex) => {
     const city = cities[cityIndex];
@@ -978,10 +979,51 @@ function createImageWorld() {
     layer.src = "./assets/hero-city.jpg";
   };
 
+  const preloadSource = (source, priority = "low") => {
+    if (preloadCache.has(source)) return preloadCache.get(source);
+    const promise = new Promise((resolve) => {
+      const image = new Image();
+      image.decoding = "async";
+      image.fetchPriority = priority;
+      image.onload = async () => {
+        try {
+          await image.decode();
+        } catch {
+          // A completed load is sufficient when explicit decoding is unavailable.
+        }
+        resolve(source);
+      };
+      image.onerror = () => resolve("./assets/hero-city.jpg");
+      image.src = source;
+    });
+    preloadCache.set(source, promise);
+    return promise;
+  };
+
+  const warmNearby = (cityIndex, districtIndex) => {
+    const city = cities[cityIndex];
+    const immediate = [
+      sourceFor(cityIndex, Math.max(0, districtIndex - 1)),
+      sourceFor(cityIndex, Math.min(Math.max(city.districts.length - 1, 0), districtIndex + 1)),
+      sourceFor(indexWrap(cityIndex - 1, cities.length), 0),
+      sourceFor(indexWrap(cityIndex + 1, cities.length), 0)
+    ];
+    immediate.forEach((source) => preloadSource(source));
+
+    const warmCity = () => {
+      city.districts.forEach((_, index) => preloadSource(sourceFor(cityIndex, index)));
+    };
+    if ("requestIdleCallback" in window) window.requestIdleCallback(warmCity, { timeout: 1000 });
+    else window.setTimeout(warmCity, 250);
+  };
+
   frontLayer.addEventListener("error", () => setFallback(frontLayer));
   backLayer.addEventListener("error", () => setFallback(backLayer));
-  frontLayer.src = sourceFor(shownCity, shownDistrict);
+  const initialSource = sourceFor(shownCity, shownDistrict);
+  frontLayer.src = initialSource;
   frontLayer.dataset.source = frontLayer.src;
+  preloadSource(initialSource, "high");
+  warmNearby(shownCity, shownDistrict);
 
   function settleTransition() {
     if (!transitionTimer) return;
@@ -1015,13 +1057,11 @@ function createImageWorld() {
     shownCity = cityIndex;
     shownDistrict = districtIndex;
     const token = ++loadToken;
-    const loader = new Image();
-
-    loader.onload = () => {
+    preloadSource(source, "high").then((readySource) => {
       if (token !== loadToken) return;
       backLayer.className = `city-image-layer is-entering ${enteringClass}`;
-      backLayer.src = source;
-      backLayer.dataset.source = source;
+      backLayer.src = readySource;
+      backLayer.dataset.source = readySource;
       backLayer.getBoundingClientRect();
       window.requestAnimationFrame(() => {
         if (token !== loadToken) return;
@@ -1035,13 +1075,9 @@ function createImageWorld() {
         backLayer = previousFront;
         frontLayer.className = "city-image-layer is-active";
         backLayer.className = "city-image-layer";
-      }, 920);
-    };
-    loader.onerror = () => {
-      if (token !== loadToken) return;
-      backLayer.src = cities[cityIndex].asset || "./assets/hero-city.jpg";
-    };
-    loader.src = source;
+      }, 540);
+      warmNearby(cityIndex, districtIndex);
+    });
   }
 
   return { setLocation, finishIntro() {} };

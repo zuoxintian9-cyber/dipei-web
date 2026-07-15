@@ -23,18 +23,35 @@ const RISK_WORDS = [
   "卖淫",
   "夜陪",
   "小姐",
-  "包夜"
+  "包夜",
+  "陪酒",
+  "私人空间",
+  "现金局",
+  "代练",
+  "租号",
+  "约会撮合"
 ];
 
 const REQUIRED_FIELDS = {
   "用户预约需求表": ["customerName", "phone", "city", "service", "date", "detail", "协议同意"],
-  "服务者入驻申请表": ["name", "phone", "wechat", "city", "serviceArea", "serviceType", "availableTime", "price", "billingType", "intro", "协议同意"],
+  "服务者入驻申请表": ["name", "phone", "wechat", "city", "serviceArea", "serviceType", "availableTime", "price", "billingType", "intro", "photoUrl", "displayAuth", "协议同意"],
   "投诉举报表": ["complainantName", "contact", "topic", "target", "city", "riskLevel", "detail", "协议同意"],
   "客户咨询线索表": ["name", "contact", "topic", "city", "detail", "协议同意"]
 };
 
 const OPEN_CITIES = new Set(["北京", "上海", "广州", "深圳", "成都", "杭州", "西安", "重庆", "武汉", "苏州", "南京", "长沙"]);
-const SERVICE_TYPES = new Set(["商务接待", "城市陪同", "旅游向导", "办事协助", "展会陪同", "机场接送"]);
+const SERVICE_TYPES = new Set([
+  "城市漫游",
+  "旅游打卡",
+  "美食探店",
+  "摄影跟拍",
+  "户外轻运动",
+  "桌游同行",
+  "商务接待",
+  "展会协助",
+  "交通接站",
+  "办事陪同"
+]);
 const BILLING_TYPES = new Set(["小时", "半天", "全天", "按次沟通"]);
 const REPORT_RISK_LEVELS = new Set(["低", "中", "高", "严重"]);
 const PROVIDER_GENDERS = new Set(["", "男", "女", "不便透露"]);
@@ -130,6 +147,9 @@ const FIELD_MAX_LENGTHS = {
   evidenceNote: 500,
   strengths: 120,
   languages: 120,
+  photoUrl: 300,
+  portfolioUrl: 300,
+  displayAuth: 20,
   detail: 800,
   intro: 1000,
   source: 200,
@@ -265,6 +285,15 @@ function isValidDateInput(value) {
   const [, year, month, day] = match.map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
   return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
+function isValidPublicUrl(value) {
+  try {
+    const url = new URL(clean(value));
+    return url.protocol === "https:" && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
 }
 
 function publicId(prefix) {
@@ -444,6 +473,12 @@ function validatePayload(formType, payload) {
     if (clean(payload.intro).length < 20) {
       return { ok: false, status: 400, code: "INTRO_TOO_SHORT", message: "服务介绍至少需要 20 个字" };
     }
+    if (!isValidPublicUrl(payload.photoUrl) || (payload.portfolioUrl && !isValidPublicUrl(payload.portfolioUrl))) {
+      return { ok: false, status: 400, code: "INVALID_PROVIDER_URL", message: "头像和作品链接请填写有效的 HTTPS 地址" };
+    }
+    if (clean(payload.displayAuth) !== "已授权") {
+      return { ok: false, status: 400, code: "DISPLAY_AUTH_REQUIRED", message: "请确认图片和文案的公开展示授权" };
+    }
     if (!PROVIDER_GENDERS.has(clean(payload.gender)) || !PROVIDER_AGE_RANGES.has(clean(payload.ageRange))) {
       return { ok: false, status: 400, code: "INVALID_PROVIDER_PROFILE", message: "性别或年龄段选项不正确" };
     }
@@ -517,6 +552,12 @@ function buildBookingFields(payload) {
 }
 
 function buildProviderFields(payload) {
+  const introWithLinks = [
+    clean(payload.intro),
+    `头像/形象照链接：${clean(payload.photoUrl)}`,
+    clean(payload.portfolioUrl) ? `作品/资料链接：${clean(payload.portfolioUrl)}` : "",
+    `对外展示授权：${clean(payload.displayAuth)}`
+  ].filter(Boolean).join("\n").slice(0, 1000);
   return compactFields({
     申请编号: clean(payload.publicId),
     提交时间: submitTime(payload),
@@ -531,9 +572,12 @@ function buildProviderFields(payload) {
     可服务时间: splitTags(payload.availableTime),
     起步价格: toNumber(payload.price),
     计费方式: clean(payload.billingType),
-    个人介绍: clean(payload.intro),
+    个人介绍: introWithLinks,
     擅长内容: splitTags(payload.strengths),
     语言能力: splitTags(payload.languages),
+    "头像/形象照链接": clean(payload.photoUrl),
+    "作品/资料链接": clean(payload.portfolioUrl),
+    对外展示授权: clean(payload.displayAuth),
     身份认证状态: "未认证",
     审核状态: "待审核",
     是否进入服务者库: false

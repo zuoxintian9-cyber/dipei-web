@@ -34,7 +34,7 @@ const cities = [
     code: "CAN",
     color: 0xe0b46b,
     map: { center: [113.2644, 23.1291], boundary: "./assets/maps/guangzhou-districts.geojson", origin: [113.2988, 23.3924], originName: "白云机场" },
-    summary: "面向商务到访、会展支持和正规办事协助，可备注普通话、粤语及路线需求。",
+    summary: "面向商务到访、展会协助和正规办事陪同，可备注普通话、粤语及路线需求。",
     districts: [
       { name: "天河区", center: [23.1203, 113.3248], landmark: "周大福金融中心", type: "skyscraper", hotspots: ["珠江新城", "天河路", "广州东站"] },
       { name: "越秀区", center: [23.1376, 113.2645], landmark: "镇海楼", type: "pavilion", hotspots: ["镇海楼", "北京路", "中山纪念堂"] },
@@ -160,7 +160,7 @@ const cities = [
   }
 ];
 
-const stage = document.querySelector("#home.world-hero");
+const stage = document.querySelector("#city-map.world-hero");
 const canvas = document.querySelector("#cityWorldCanvas");
 const fallback = document.querySelector("#worldFallback");
 const intro = document.querySelector("#worldIntro");

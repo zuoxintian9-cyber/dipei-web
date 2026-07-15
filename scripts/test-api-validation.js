@@ -58,17 +58,22 @@ async function main() {
     wechat: "test_wechat",
     city: "上海",
     serviceArea: "浦东、虹桥",
-    serviceType: "城市陪同",
+    serviceType: "城市漫游",
     availableTime: "周末白天",
     price: "500",
     billingType: "半天",
     intro: "这是用于验证服务者入驻接口字段规则的正常测试介绍内容。",
+    photoUrl: "https://example.com/provider.jpg",
+    portfolioUrl: "https://example.com/portfolio",
+    displayAuth: "已授权",
     协议同意: "已阅读并同意"
   };
   assert.equal(submitTest.validatePayload("服务者入驻申请表", validProvider).ok, true);
   assert.equal(submitTest.validatePayload("服务者入驻申请表", { ...validProvider, city: "长沙" }).ok, true);
   assert.equal(submitTest.validatePayload("服务者入驻申请表", { ...validProvider, price: "-1" }).code, "INVALID_PRICE");
   assert.equal(submitTest.validatePayload("服务者入驻申请表", { ...validProvider, billingType: "随意收费" }).code, "INVALID_PROVIDER_OPTION");
+  assert.equal(submitTest.validatePayload("服务者入驻申请表", { ...validProvider, photoUrl: "http://example.com/provider.jpg" }).code, "INVALID_PROVIDER_URL");
+  assert.equal(submitTest.validatePayload("服务者入驻申请表", { ...validProvider, displayAuth: "未授权" }).code, "DISPLAY_AUTH_REQUIRED");
 
   const ids = new Set(Array.from({ length: 1000 }, () => submitTest.publicId("DP")));
   assert.equal(ids.size, 1000);

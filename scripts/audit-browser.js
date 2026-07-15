@@ -80,7 +80,7 @@ async function inspectPage(page, pathname, viewport) {
   for (const json of result.jsonLd) assert.doesNotThrow(() => JSON.parse(json), `${pathname}: invalid structured data`);
   if (seoLandingPages.has(baseFile) || baseFile === "index.html") assert.ok(result.ogImage.startsWith("https://"), `${pathname}: og:image missing`);
   if (baseFile === "index.html") {
-    const activeScene = page.locator("#home.map-ready #cityRealMap canvas");
+    const activeScene = page.locator("#city-map.map-ready #cityRealMap canvas");
     await activeScene.waitFor({ state: "visible", timeout: 10000 });
     assert.equal(await activeScene.count(), 1, `${pathname}: active real map canvas count`);
     const canvasPng = PNG.sync.read(await activeScene.screenshot({ animations: "disabled" }));

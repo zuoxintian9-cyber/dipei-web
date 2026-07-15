@@ -1,93 +1,143 @@
 const scenarios = [
   {
+    id: "beijing-citywalk",
+    title: "城市漫游 · 北京",
+    city: "北京",
+    area: "朝阳 / 东城",
+    service: "城市漫游",
+    img: "./assets/provider-beijing.jpg",
+    budget: 199,
+    desc: "适合初次到访、城市街区熟悉和半日公开路线同行。",
+    meta: "城市体验｜公开场所｜提前 24 小时预约",
+    skillSummary: "街区动线、交通建议、本地生活贴士",
+    points: ["路线规划", "公开场所", "人工确认"],
+    intro: "城市漫游仅围绕公开街区、商圈和交通动线提供同行与本地建议，不组织包价旅游。"
+  },
+  {
+    id: "chengdu-checkin",
+    title: "旅游打卡 · 成都",
+    city: "成都",
+    area: "春熙路 / 望平街",
+    service: "旅游打卡",
+    img: "./assets/provider-chengdu.jpg",
+    budget: 239,
+    desc: "按时间、体力和兴趣协助安排公开景点与街区打卡顺序。",
+    meta: "城市体验｜路线不含门票餐费｜人工确认",
+    skillSummary: "打卡路线、时间规划、餐饮交通建议",
+    points: ["打卡路线", "时间管理", "费用边界"],
+    intro: "本服务不含门票、餐饮、车费和旅行社包价产品，需持证导游的场景由合规合作方承接。"
+  },
+  {
+    id: "shanghai-food",
+    title: "美食探店 · 上海",
+    city: "上海",
+    area: "黄浦 / 静安",
+    service: "美食探店",
+    img: "./assets/provider-shanghai.jpg",
+    budget: 228,
+    desc: "结合口味、预算和交通协助安排正规餐厅与公开市集路线。",
+    meta: "城市体验｜餐费自理｜不接受商家暗佣",
+    skillSummary: "口味筛选、预算建议、餐厅交通动线",
+    points: ["口味匹配", "餐费自理", "无暗佣"],
+    intro: "平台服务费与餐饮消费分开，不以强制消费或未披露的商家返佣影响推荐。"
+  },
+  {
+    id: "hangzhou-photo",
+    title: "摄影跟拍 · 杭州",
+    city: "杭州",
+    area: "西湖 / 滨江",
+    service: "摄影跟拍",
+    img: "./assets/provider-xian.jpg",
+    budget: 299,
+    desc: "在公开场景提供轻量跟拍、构图建议和原片交付说明。",
+    meta: "城市体验｜公开场所｜肖像授权单独确认",
+    skillSummary: "轻量跟拍、打卡构图、原片交付",
+    points: ["公开拍摄", "交付说明", "授权确认"],
+    intro: "禁止偷拍、私密场所拍摄和未经同意公开照片；精修数量与交付时间在预约前确认。"
+  },
+  {
+    id: "xian-outdoor",
+    title: "户外轻运动 · 西安",
+    city: "西安",
+    area: "曲江 / 城墙公开区域",
+    service: "户外轻运动",
+    img: "./assets/provider-xian.jpg",
+    budget: 268,
+    desc: "仅开放公园步行、慢跑、入门骑行等低风险活动。",
+    meta: "兴趣同行｜低风险｜天气与装备前置确认",
+    skillSummary: "轻运动路线、节奏陪同、装备清单",
+    points: ["低风险", "公开路线", "天气门禁"],
+    intro: "攀岩、潜水、高海拔、野外穿越等高风险项目不在普通类目内，需专项资质和保险后再评估。"
+  },
+  {
+    id: "shanghai-boardgame",
+    title: "桌游同行 · 上海",
+    city: "上海",
+    area: "经审核桌游门店",
+    service: "桌游同行",
+    img: "./assets/provider-shanghai.jpg",
+    budget: 168,
+    desc: "适合公开门店的桌游、剧本与非现金棋牌入门同行。",
+    meta: "兴趣同行｜公开门店｜禁止赌博",
+    skillSummary: "规则讲解、新人友好、公开门店",
+    points: ["新人友好", "非现金", "禁止赌博"],
+    intro: "禁止现金赌博、私局抽成、诱导借贷与未成年人夜间履约。"
+  },
+  {
     id: "beijing-business",
     title: "商务接待 · 北京",
     city: "北京",
-    area: "朝阳 CBD",
+    area: "国贸 / 望京",
     service: "商务接待",
     img: "./assets/provider-beijing.jpg",
     budget: 500,
-    desc: "适合客户到访、商务会面、酒店会议、城市考察和机场高铁衔接。",
-    meta: "能力示例｜商务接待｜普通话/英语需求可备注",
-    skillSummary: "客户接待、展会陪同、机场高铁衔接",
-    points: ["会面路线规划", "酒店与会场协助", "商务礼仪提醒"],
-    intro:
-      "北京商务接待服务面向客户到访、企业考察、酒店会议和会展活动等正规场景。客服会根据人数、时间、语言和行程安排确认服务边界。"
-  },
-  {
-    id: "shanghai-city",
-    title: "城市陪同 · 上海",
-    city: "上海",
-    area: "陆家嘴 / 外滩",
-    service: "城市陪同",
-    img: "./assets/provider-shanghai.jpg",
-    budget: 400,
-    desc: "适合短期到访、商圈熟悉、城市动线安排和本地生活协助。",
-    meta: "能力示例｜城市陪同｜普通话/英语需求可备注",
-    skillSummary: "商圈动线、酒店会面、本地生活建议",
-    points: ["商圈熟悉", "交通动线", "本地建议"],
-    intro:
-      "上海城市陪同服务覆盖核心商圈、交通枢纽、酒店会面和短期城市熟悉等场景，不包含任何违规或私下交易内容。"
-  },
-  {
-    id: "xian-guide",
-    title: "旅游向导 · 西安",
-    city: "西安",
-    area: "钟楼 / 大雁塔",
-    service: "旅游向导",
-    img: "./assets/provider-xian.jpg",
-    budget: 450,
-    desc: "适合文化路线、景点讲解、行程规划和亲友接待陪同。",
-    meta: "能力示例｜文化路线｜普通话服务场景",
-    skillSummary: "景点讲解、文化路线、亲友接待",
-    points: ["路线规划", "景点讲解", "餐饮建议"],
-    intro:
-      "西安旅游向导服务可按半天、全天或多日行程沟通路线，重点服务历史文化讲解、景区陪同和本地行程建议。"
-  },
-  {
-    id: "guangzhou-assist",
-    title: "办事协助 · 广州",
-    city: "广州",
-    area: "天河 / 越秀",
-    service: "办事协助",
-    img: "./assets/provider-guangzhou.jpg",
-    budget: 350,
-    desc: "适合政务大厅、银行、医院、学校等非敏感事务的现场指引。",
-    meta: "能力示例｜现场协助｜普通话/粤语需求可备注",
-    skillSummary: "资料提醒、路线指引、现场流程协助",
-    points: ["资料提醒", "路线指引", "流程协助"],
-    intro:
-      "广州办事协助服务主要提供资料清单提醒、时间规划、路线指引和现场陪同，不代替用户作出法律、医疗、金融等专业判断。"
+    desc: "面向客户到访、酒店会议和园区考察的路线与现场衔接。",
+    meta: "商务服务｜职责清单｜企业需求人工复审",
+    skillSummary: "客户接待、会面动线、酒店会场衔接",
+    points: ["职责确认", "保密要求", "不涉招聘"],
+    intro: "企业服务不得用于网络招聘、职业中介或劳务派遣；若需相关能力，必须由持许可主体承接。"
   },
   {
     id: "shenzhen-expo",
-    title: "展会陪同 · 深圳",
+    title: "展会协助 · 深圳",
     city: "深圳",
-    area: "福田会展中心",
-    service: "展会陪同",
+    area: "福田 / 宝安会展",
+    service: "展会协助",
     img: "./assets/provider-shenzhen.jpg",
-    budget: 600,
-    desc: "适合参展接待、客户引导、资料协助和基础沟通支持。",
-    meta: "能力示例｜展会支持｜普通话/英语需求可备注",
-    skillSummary: "展会引导、客户接待、现场资料协助",
-    points: ["展会引导", "客户接待", "现场协助"],
-    intro:
-      "深圳展会陪同服务面向展会现场引导、参展客户接待、资料协助和会后路线安排，适合企业临时增加现场支持。"
+    budget: 499,
+    desc: "提供公开展会动线、资料整理和客户到场引导等基础协助。",
+    meta: "商务服务｜公开活动｜职责与保密前置确认",
+    skillSummary: "展馆动线、客户引导、资料协助",
+    points: ["公开展会", "职责清单", "保密要求"],
+    intro: "不承诺销售结果、不代替专业翻译或保安岗位，涉及专项资质时另行核验。"
   },
   {
-    id: "chengdu-airport",
-    title: "机场接送 · 成都",
+    id: "chengdu-arrival",
+    title: "交通接站 · 成都",
     city: "成都",
-    area: "双流 / 天府机场",
-    service: "机场接送",
+    area: "天府机场 / 成都东站",
+    service: "交通接站",
     img: "./assets/provider-chengdu.jpg",
-    budget: 300,
-    desc: "适合接机送机、中转协助、行李动线和酒店衔接。",
-    meta: "能力示例｜交通衔接｜普通话服务场景",
-    skillSummary: "航班衔接、行李动线、酒店路线",
-    points: ["航班衔接", "行李协助", "酒店路线"],
-    intro:
-      "成都机场接送服务根据航班时间、行李数量和目的地安排接送方案，强调准时、路线效率和必要的现场协助。"
+    budget: 259,
+    desc: "协助确认出站口、行李动线和合规交通方式，不自营载客运输。",
+    meta: "商务服务｜抵达协助｜车费由持证运力收取",
+    skillSummary: "集合点、行李动线、酒店交通建议",
+    points: ["抵达协助", "合规运力", "车费分开"],
+    intro: "平台不直接组织无证载客；如需用车，由用户或合规运输服务商完成。"
+  },
+  {
+    id: "guangzhou-errands",
+    title: "办事陪同 · 广州",
+    city: "广州",
+    area: "天河 / 越秀",
+    service: "办事陪同",
+    img: "./assets/provider-guangzhou.jpg",
+    budget: 239,
+    desc: "提供公开流程、路线、资料清单和时间节点的现场协助。",
+    meta: "生活协助｜不代办｜不替代专业判断",
+    skillSummary: "资料提醒、路线指引、现场流程",
+    points: ["公开流程", "不代办", "隐私最小化"],
+    intro: "不冒用身份、不保证办理结果，不替代法律、医疗、金融或政务专业判断。"
   }
 ];
 
@@ -110,7 +160,13 @@ const RISK_WORDS = [
   "包养",
   "卖淫",
   "嫖",
-  "包夜"
+  "包夜",
+  "陪酒",
+  "私人空间",
+  "现金局",
+  "代练",
+  "租号",
+  "约会撮合"
 ];
 const SUCCESS_LABELS = {
   用户预约需求表: "预约已提交",
@@ -481,6 +537,13 @@ function bindNavigation() {
   });
 }
 
+function refreshSharedBrandLabels() {
+  $$(".brand small").forEach((node) => { node.textContent = "城市兴趣服务平台"; });
+  $$("a").forEach((link) => {
+    if (link.textContent.trim() === "精选服务者") link.textContent = "精选达人";
+  });
+}
+
 document.addEventListener("click", (event) => {
   const categoryButton = event.target.closest("[data-service]");
   const detailButton = event.target.closest("[data-detail]");
@@ -541,6 +604,7 @@ $$('[type="submit"]').forEach((button) => {
   button.dataset.label = button.textContent;
 });
 
+refreshSharedBrandLabels();
 bindNavigation();
 bindLeadForms();
 filterScenarios();

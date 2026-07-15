@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>服务能力示例｜地陪客户</title>
-    <meta name="description" content="查看地陪客户正规陪同服务的能力与场景示例，可按城市、服务类型和参考价格筛选，并提交预约需求由客服匹配实际服务者。" />
+    <title>城市达人与服务能力｜地陪客户</title>
+    <meta name="description" content="按城市、服务分组、服务类型和参考价格查看城市达人能力卡片，资料、档期和价格均由平台人工审核确认。" />
     <link rel="canonical" href="https://www.dipeikehu.com/providers.html" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
@@ -14,11 +14,11 @@
       <div class="container header-inner">
         <a class="brand" href="./index.html" aria-label="地陪客户首页">
           <img class="brand-mark" src="./favicon.svg" alt="" />
-          <span><strong>地陪客户</strong><small>专业陪同服务平台</small></span>
+          <span><strong>地陪客户</strong><small>城市兴趣服务平台</small></span>
         </a>
         <nav class="main-nav" id="mainNav" aria-label="主导航">
           <a href="./index.html">首页</a>
-          <a class="active" href="./providers.html">精选服务者</a>
+          <a class="active" href="./providers.html">精选达人</a>
           <a href="./services.html">服务分类</a>
           <a href="./cities.html">开放城市</a>
           <a href="./booking-rule.html">预约规则</a>
@@ -37,15 +37,15 @@
     <main>
       <section class="page-hero provider-page-hero">
         <div class="container">
-          <p class="eyebrow">服务能力示例</p>
-          <h1>按城市和服务类型筛选合适的服务能力</h1>
-          <p>当前页面展示服务能力与可预约场景示例，不对应某一位具体服务者，也不代表真实成交或评价。实际人员、资质、档期和价格由平台客服根据需求审核确认。</p>
+          <p class="eyebrow">城市达人</p>
+          <h1>看清能力、边界与价格，再提交匹配</h1>
+          <p>首批真实达人审核完成前，页面展示的是卡片布局与能力示例，不使用虚构姓名、订单量、评分或评价。真实资料只在取得展示授权后上线。</p>
         </div>
       </section>
 
       <section class="section">
         <div class="container two-column">
-          <aside class="filter-panel" aria-label="服务者筛选">
+          <aside class="filter-panel" aria-label="达人能力筛选">
             <p class="eyebrow">筛选条件</p>
             <h2>快速查找</h2>
             <label>
@@ -70,12 +70,9 @@
               服务类型
               <select id="providerService">
                 <option value="">全部类型</option>
-                <option>商务接待</option>
-                <option>城市陪同</option>
-                <option>旅游向导</option>
-                <option>办事协助</option>
-                <option>展会陪同</option>
-                <option>机场接送</option>
+                <option>城市漫游</option><option>旅游打卡</option><option>美食探店</option><option>摄影跟拍</option>
+                <option>户外轻运动</option><option>桌游同行</option><option>商务接待</option><option>展会协助</option>
+                <option>交通接站</option><option>办事陪同</option>
               </select>
             </label>
             <label>
@@ -88,11 +85,13 @@
               </select>
             </label>
             <label>
-              性别
-              <select id="providerGender">
-                <option value="">不限</option>
-                <option>男</option>
-                <option>女</option>
+              服务分组
+              <select id="providerGroup">
+                <option value="">全部分组</option>
+                <option>城市体验</option>
+                <option>兴趣同行</option>
+                <option>商务服务</option>
+                <option>生活协助</option>
               </select>
             </label>
             <button class="btn gold wide" id="resetProviderFilters" type="button">重置筛选</button>
@@ -101,7 +100,7 @@
             <div class="section-heading compact">
               <p class="eyebrow">能力与场景</p>
               <h2>先了解服务范围，再提交需求由客服匹配</h2>
-              <p id="providerSummary">可按城市、服务类型、参考价格和场景偏好筛选能力示例。</p>
+              <p id="providerSummary">可按城市、服务分组、服务类型和参考价格筛选能力示例。</p>
             </div>
             <div class="provider-grid" id="providerGrid"></div>
           </div>
@@ -112,11 +111,11 @@
     <footer class="site-footer">
       <div class="container footer-inner">
         <div>
-          <a class="brand footer-brand" href="./index.html"><span><strong>地陪客户</strong><small>专业陪同服务平台</small></span></a>
-          <p>面向城市陪同、商务接待、旅游向导、办事协助和机场接送的正规服务预约平台。</p>
+          <a class="brand footer-brand" href="./index.html"><span><strong>地陪客户</strong><small>城市兴趣服务平台</small></span></a>
+          <p>服务能力、城市覆盖和参考价格透明展示，真实达人经审核与授权后上线。</p>
         </div>
         <div class="footer-links">
-          <a href="./providers.html">精选服务者</a>
+          <a href="./providers.html">精选达人</a>
           <a href="./services.html">服务分类</a>
           <a href="./cities.html">开放城市</a>
           <a href="./booking-rule.html">预约规则</a>

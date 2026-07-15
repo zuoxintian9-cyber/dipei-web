@@ -3,28 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>地陪客户｜专业本地陪同与商务接待服务</title>
+    <title>地陪客户｜城市兴趣服务与本地达人预约平台</title>
     <meta
       name="description"
-      content="地陪客户提供正规的本地陪同、商务接待、城市向导、旅游陪同、办事协助、机场高铁接送等服务预约入口；武汉、苏州、南京和长沙现支持城市级预约。"
+      content="地陪客户提供城市漫游、旅游打卡、美食探店、摄影跟拍、户外轻运动、桌游同行、商务接待、展会协助、交通接站和办事陪同预约。"
     />
     <link rel="canonical" href="https://www.dipeikehu.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="zh_CN" />
     <meta property="og:site_name" content="地陪客户" />
-    <meta property="og:title" content="地陪客户｜专业本地陪同与商务接待服务" />
-    <meta property="og:description" content="正规本地陪同、商务接待、旅游向导、办事协助和机场高铁接送服务预约入口。" />
+    <meta property="og:title" content="地陪客户｜城市兴趣服务与本地达人预约平台" />
+    <meta property="og:description" content="按城市和兴趣场景发现本地达人，提交需求后由客服人工审核与匹配。" />
     <meta property="og:url" content="https://www.dipeikehu.com/" />
     <meta property="og:image" content="https://www.dipeikehu.com/assets/hero-city.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="地陪客户｜专业本地陪同与商务接待服务" />
-    <meta name="twitter:description" content="正规本地陪同服务预约入口，提交需求后由客服人工审核匹配。" />
+    <meta name="twitter:title" content="地陪客户｜城市兴趣服务与本地达人预约平台" />
+    <meta name="twitter:description" content="城市兴趣服务预约入口，需求和达人资料均经人工审核。" />
     <meta name="twitter:image" content="https://www.dipeikehu.com/assets/hero-city.jpg" />
-    <meta name="theme-color" content="#08111f" />
+    <meta name="theme-color" content="#fff8f6" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="stylesheet" href="./assets/vendor/maplibre/maplibre-gl.css" />
-    <link rel="stylesheet" href="./styles.css?v=20260712-real-map" />
+    <link rel="stylesheet" href="./styles.css?v=20260716-market" />
   </head>
   <body class="home-page">
     <svg class="svg-defs" aria-hidden="true">
@@ -88,12 +88,12 @@
           <svg class="brand-mark"><use href="#i-logo"></use></svg>
           <span>
             <strong>地陪客户</strong>
-            <small>专业陪同服务平台</small>
+            <small>城市兴趣服务平台</small>
           </span>
         </a>
         <nav class="main-nav" id="mainNav" aria-label="主导航">
           <a class="active" href="#home">首页</a>
-          <a href="./providers.html">精选服务者</a>
+          <a href="./providers.html">精选达人</a>
           <a href="./services.html">服务分类</a>
           <a href="./cities.html">开放城市</a>
           <a href="#process">服务流程</a>
@@ -114,7 +114,75 @@
     </header>
 
     <main>
-      <section class="world-hero is-ready" id="home" tabindex="0" aria-labelledby="worldHeroTitle">
+      <section class="market-landing" id="home" aria-labelledby="marketTitle">
+        <div class="container market-shell">
+          <div class="market-city-row">
+            <a class="market-city-chip" href="./cities.html"><svg><use href="#i-pin"></use></svg>北京<span>切换城市</span></a>
+            <p><i></i> 今日可提交预约 · 客服人工确认</p>
+          </div>
+          <div class="market-banner">
+            <div class="market-banner-copy">
+              <span>发现城市里的同频体验</span>
+              <h1 id="marketTitle">有人懂这座城，<br />也懂你的兴趣</h1>
+              <p>按城市和场景找到本地达人。价格、档期、资质与服务边界均在接单前确认。</p>
+              <div class="market-banner-actions">
+                <a class="btn gold" href="#booking">发布需求</a>
+                <a class="btn ghost" href="#featured">看看达人</a>
+              </div>
+            </div>
+            <div class="market-banner-art" aria-hidden="true">
+              <span class="art-card art-card-a">CITY<br />WALK</span>
+              <span class="art-card art-card-b">LOCAL<br />MATE</span>
+              <span class="art-pin"><svg><use href="#i-pin"></use></svg></span>
+            </div>
+          </div>
+
+          <form class="market-search" id="searchForm">
+            <label>
+              <span>服务城市</span>
+              <select name="city" aria-label="选择服务城市">
+                <option value="">全部城市</option>
+                <option>北京</option><option>上海</option><option>广州</option><option>深圳</option>
+                <option>成都</option><option>杭州</option><option>西安</option><option>重庆</option>
+                <option>武汉</option><option>苏州</option><option>南京</option><option>长沙</option>
+              </select>
+            </label>
+            <label>
+              <span>想要的体验</span>
+              <select name="service" aria-label="选择服务类型">
+                <option value="">全部服务</option>
+                <option>城市漫游</option><option>旅游打卡</option><option>美食探店</option><option>摄影跟拍</option>
+                <option>户外轻运动</option><option>桌游同行</option><option>商务接待</option><option>展会协助</option>
+                <option>交通接站</option><option>办事陪同</option>
+              </select>
+            </label>
+            <button type="submit" aria-label="搜索"><svg><use href="#i-search"></use></svg><span>搜索</span></button>
+          </form>
+
+          <div class="quick-service-grid" aria-label="快捷服务分类">
+            <button class="quick-service-card category-card" data-service="城市漫游"><b>🏙️</b><span>城市漫游</span></button>
+            <button class="quick-service-card category-card" data-service="旅游打卡"><b>🧭</b><span>旅游打卡</span></button>
+            <button class="quick-service-card category-card" data-service="美食探店"><b>🍜</b><span>美食探店</span></button>
+            <button class="quick-service-card category-card" data-service="摄影跟拍"><b>📷</b><span>摄影跟拍</span></button>
+            <button class="quick-service-card category-card" data-service="户外轻运动"><b>🚲</b><span>户外轻运动</span></button>
+            <button class="quick-service-card category-card" data-service="桌游同行"><b>🎲</b><span>桌游同行</span></button>
+            <button class="quick-service-card category-card" data-service="商务接待"><b>💼</b><span>商务接待</span></button>
+            <a class="quick-service-card" href="./services.html"><b>•••</b><span>全部服务</span></a>
+          </div>
+
+          <a class="market-notice" href="./booking-rule.html"><strong>平台公告</strong><span>明码沟通、人工审核、拒绝私下交易与高风险需求</span><em>查看规则 →</em></a>
+
+          <div class="market-featured" id="featured">
+            <div class="section-heading heading-row compact">
+              <div><p class="eyebrow">本地达人</p><h2>先看服务能力，再由客服匹配真人</h2><p>当前为合规卡片示例；首批资料审核通过并取得展示授权后替换上线。</p></div>
+              <a class="link-arrow" href="./providers.html">查看全部<span>→</span></a>
+            </div>
+            <div class="home-provider-grid" id="homeProviderGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="world-hero is-ready" id="city-map" tabindex="0" aria-labelledby="worldHeroTitle">
         <canvas class="world-canvas" id="cityWorldCanvas" aria-hidden="true"></canvas>
         <div class="city-real-map-stage" id="cityRealMapStage" aria-hidden="true">
           <div class="city-real-map" id="cityRealMap"></div>
@@ -142,7 +210,7 @@
           <div class="world-map-lock"><svg><use href="#i-pin"></use></svg><span id="worldMapLock">北京定位已锁定</span></div>
           <div class="world-copy">
             <p class="world-kicker"><span id="worldCitySequence">01</span> / <span id="worldCityTotal">12</span> · <b id="worldCityCode">BJS</b></p>
-            <h1 id="worldHeroTitle"><span id="worldLocationCityName">北京</span><br />从你抵达开始，就有人陪你</h1>
+            <h2 id="worldHeroTitle"><span id="worldLocationCityName">北京</span><br />从你抵达开始，就有人陪你</h2>
             <p id="worldLocationSummary">从机场高铁衔接到商务会面，由客服根据区域、时间和服务边界人工确认。</p>
             <div class="world-actions">
               <button class="btn gold" id="worldConfirmLocation" type="button">按朝阳区提交预约</button>
@@ -244,44 +312,54 @@
           <div class="section-heading heading-row">
             <div>
               <p class="eyebrow">服务类型</p>
-              <h2>首批开放的正规陪同服务</h2>
-              <p>首页只展示面向用户的服务内容、预约入口和合规说明，不公开用户记录、服务者工作区或管理数据。</p>
+              <h2>四组城市服务，覆盖十类真实需求</h2>
+              <p>从城市体验、兴趣同行到商务与生活协助。涉及许可的导游、运输或专业服务，只由具备相应资质的合作方承接。</p>
             </div>
             <div class="heading-actions">
               <a class="link-arrow" href="#booking">提交需求<span>→</span></a>
-              <a class="link-arrow" href="./providers.html">查看服务者<span>→</span></a>
+              <a class="link-arrow" href="./providers.html">查看达人<span>→</span></a>
             </div>
           </div>
           <div class="category-strip" aria-label="服务分类入口">
+            <button class="category-card" data-service="城市漫游">
+              <svg><use href="#i-building"></use></svg>
+              <span>城市漫游</span>
+              <small>公开街区 · 本地路线</small>
+            </button>
+            <button class="category-card" data-service="旅游打卡">
+              <svg><use href="#i-route"></use></svg>
+              <span>旅游打卡</span>
+              <small>打卡路线 · 时间规划</small>
+            </button>
+            <button class="category-card" data-service="美食探店">
+              <svg><use href="#i-search"></use></svg>
+              <span>美食探店</span>
+              <small>口味筛选 · 餐饮动线</small>
+            </button>
+            <button class="category-card" data-service="摄影跟拍">
+              <svg><use href="#i-screen"></use></svg>
+              <span>摄影跟拍</span>
+              <small>公开拍摄 · 交付约定</small>
+            </button>
             <button class="category-card" data-service="商务接待">
               <svg><use href="#i-briefcase"></use></svg>
               <span>商务接待</span>
-              <small>客户到访 · 会面陪同</small>
+              <small>客户到访 · 会面动线</small>
             </button>
-            <button class="category-card" data-service="城市陪同">
-              <svg><use href="#i-building"></use></svg>
-              <span>城市陪同</span>
-              <small>本地路线 · 商圈熟悉</small>
-            </button>
-            <button class="category-card" data-service="旅游向导">
-              <svg><use href="#i-route"></use></svg>
-              <span>旅游向导</span>
-              <small>路线规划 · 景点讲解</small>
-            </button>
-            <button class="category-card" data-service="办事协助">
-              <svg><use href="#i-file"></use></svg>
-              <span>办事协助</span>
-              <small>资料提醒 · 现场指引</small>
-            </button>
-            <button class="category-card" data-service="展会陪同">
+            <button class="category-card" data-service="展会协助">
               <svg><use href="#i-screen"></use></svg>
-              <span>展会陪同</span>
-              <small>会展支持 · 客户引导</small>
+              <span>展会协助</span>
+              <small>会展动线 · 客户引导</small>
             </button>
-            <button class="category-card" data-service="机场接送">
+            <button class="category-card" data-service="交通接站">
               <svg><use href="#i-plane"></use></svg>
-              <span>机场接送</span>
-              <small>接机送机 · 准时衔接</small>
+              <span>交通接站</span>
+              <small>集合引导 · 合规运力</small>
+            </button>
+            <button class="category-card" data-service="办事陪同">
+              <svg><use href="#i-file"></use></svg>
+              <span>办事陪同</span>
+              <small>资料提醒 · 现场指引</small>
             </button>
           </div>
         </div>
@@ -314,12 +392,9 @@
               服务类型
               <select id="filterService">
                 <option value="">全部类型</option>
-                <option>商务接待</option>
-                <option>城市陪同</option>
-                <option>旅游向导</option>
-                <option>办事协助</option>
-                <option>展会陪同</option>
-                <option>机场接送</option>
+                <option>城市漫游</option><option>旅游打卡</option><option>美食探店</option><option>摄影跟拍</option>
+                <option>户外轻运动</option><option>桌游同行</option><option>商务接待</option><option>展会协助</option>
+                <option>交通接站</option><option>办事陪同</option>
               </select>
             </label>
             <label>
@@ -425,13 +500,13 @@
           </article>
           <article class="review-card">
             <div class="review-score">示例</div>
-            <p>旅游向导重点回访路线节奏、公开文化讲解、交通安排和服务范围说明。</p>
-            <span>旅游向导 · 反馈维度示例</span>
+            <p>旅游打卡重点回访路线节奏、公开文化信息、交通安排和费用范围说明。</p>
+            <span>旅游打卡 · 反馈维度示例</span>
           </article>
           <article class="review-card">
             <div class="review-score">示例</div>
-            <p>办事协助重点回访资料提醒、现场路线、流程说明，以及是否避免代办敏感事项。</p>
-            <span>办事协助 · 反馈维度示例</span>
+            <p>办事陪同重点回访资料提醒、现场路线、流程说明，以及是否避免代办敏感事项。</p>
+            <span>办事陪同 · 反馈维度示例</span>
           </article>
         </div>
       </section>
@@ -483,12 +558,9 @@
               服务类型
               <select name="service" required>
                 <option value="">请选择服务类型</option>
-                <option>商务接待</option>
-                <option>城市陪同</option>
-                <option>旅游向导</option>
-                <option>办事协助</option>
-                <option>展会陪同</option>
-                <option>机场接送</option>
+                <option>城市漫游</option><option>旅游打卡</option><option>美食探店</option><option>摄影跟拍</option>
+                <option>户外轻运动</option><option>桌游同行</option><option>商务接待</option><option>展会协助</option>
+                <option>交通接站</option><option>办事陪同</option>
               </select>
             </label>
             <label>
@@ -515,10 +587,10 @@
             <p class="eyebrow">入驻合作</p>
             <h2>服务者入驻流程</h2>
             <ol class="steps">
-              <li><span>01</span>填写姓名、手机、微信、服务城市和服务类型</li>
+              <li><span>01</span>填写联系方式、服务城市、类目与报价</li>
               <li><span>02</span>说明起步价格、服务范围和可预约时间</li>
-              <li><span>03</span>平台人工审核资料真实性和服务边界</li>
-              <li><span>04</span>审核通过后再安排展示和接单流程</li>
+              <li><span>03</span>补充头像/作品链接并确认公开展示授权</li>
+              <li><span>04</span>人工审核通过后生成达人卡片并进入接单池</li>
             </ol>
             <a class="btn ghost" href="./provider-rule.html">查看入驻规则</a>
           </div>
@@ -526,7 +598,7 @@
             <div class="section-heading compact">
               <p class="eyebrow">入驻申请</p>
               <h2>提交服务者资料</h2>
-              <p>请勿提交虚假资料或违规服务内容。平台会根据服务城市和服务类型进行人工审核。</p>
+              <p>首批达人可直接从这里提交；资料进入飞书待审核队列，不会未经授权自动公开。</p>
             </div>
             <form class="console-form" id="providerForm" data-lead-form data-lead-type="服务者入驻申请表" data-source="/#join" novalidate>
               <input class="hp-field" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
@@ -541,25 +613,6 @@
               <label>
                 微信号
                 <input name="wechat" maxlength="40" placeholder="请输入微信号" required />
-              </label>
-              <label>
-                性别
-                <select name="gender">
-                  <option value="">可选</option>
-                  <option>男</option>
-                  <option>女</option>
-                  <option>不便透露</option>
-                </select>
-              </label>
-              <label>
-                年龄段
-                <select name="ageRange">
-                  <option value="">可选</option>
-                  <option>18-24</option>
-                  <option>25-30</option>
-                  <option>31-40</option>
-                  <option>41以上</option>
-                </select>
               </label>
               <label>
                 服务城市
@@ -587,12 +640,9 @@
                 服务类型
                 <select name="serviceType" required>
                   <option value="">请选择类型</option>
-                  <option>商务接待</option>
-                  <option>城市陪同</option>
-                  <option>旅游向导</option>
-                  <option>办事协助</option>
-                  <option>展会陪同</option>
-                  <option>机场接送</option>
+                  <option>城市漫游</option><option>旅游打卡</option><option>美食探店</option><option>摄影跟拍</option>
+                  <option>户外轻运动</option><option>桌游同行</option><option>商务接待</option><option>展会协助</option>
+                  <option>交通接站</option><option>办事陪同</option>
                 </select>
               </label>
               <label>
@@ -624,6 +674,18 @@
               <label class="full">
                 语言能力
                 <input name="languages" maxlength="120" placeholder="如：普通话、英语、日语、韩语" />
+              </label>
+              <label class="full">
+                头像/形象照链接
+                <input type="url" name="photoUrl" maxlength="300" placeholder="粘贴飞书、网盘或图床中已获授权的公开链接" required />
+              </label>
+              <label class="full">
+                作品或资料链接
+                <input type="url" name="portfolioUrl" maxlength="300" placeholder="可填写作品集、公开主页或补充资料链接（选填）" />
+              </label>
+              <label class="consent-line full">
+                <input type="checkbox" name="displayAuth" value="已授权" required />
+                <span>我确认所提交图片与文案拥有合法使用权，并授权平台在审核通过后用于达人卡片展示</span>
               </label>
               <label class="consent-line full">
                 <input type="checkbox" name="consent" value="已同意" required />
@@ -686,15 +748,15 @@
             <svg class="brand-mark"><use href="#i-logo"></use></svg>
             <span>
               <strong>地陪客户</strong>
-              <small>专业陪同服务平台</small>
+              <small>城市兴趣服务平台</small>
             </span>
           </a>
-          <p>面向城市陪同、商务接待、旅游向导、办事协助和机场接送的正规服务预约平台。</p>
+          <p>面向城市体验、兴趣同行、商务服务和生活协助的审核式预约平台。</p>
           <p class="record-text">© 2026 地陪客户。保留所有权利。</p>
         </div>
         <div class="footer-links">
           <a href="./about.html">关于我们</a>
-          <a href="./providers.html">精选服务者</a>
+          <a href="./providers.html">精选达人</a>
           <a href="./services.html">服务分类</a>
           <a href="./cities.html">开放城市</a>
           <a href="./booking-rule.html">预约规则</a>
@@ -725,6 +787,7 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="./seo-schema.js"></script>
     <script src="./app.js"></script>
+    <script src="./providers.js"></script>
     <script src="./assets/vendor/maplibre/maplibre-gl.js"></script>
     <script type="module" src="./location-experience.js?v=20260712-real-map"></script>
   </body>

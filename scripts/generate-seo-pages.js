@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 
 const root = path.resolve(__dirname, "..");
-const cities = ["北京", "上海", "广州", "深圳", "成都", "西安", "杭州", "重庆"];
-const services = ["商务接待", "城市陪同", "旅游向导", "办事协助", "展会陪同", "机场接送"];
+const cities = ["北京", "上海", "广州", "深圳", "成都", "西安", "杭州", "重庆", "武汉", "苏州", "南京", "长沙"];
+const services = ["城市漫游", "旅游打卡", "美食探店", "摄影跟拍", "户外轻运动", "桌游同行", "商务接待", "展会协助", "交通接站", "办事陪同"];
 
 const pages = [
   {
@@ -260,6 +260,30 @@ const pages = [
   }
 ];
 
+const wordingRules = [
+  ["机场高铁接送", "交通接站"],
+  ["机场接送", "交通接站"],
+  ["城市陪同", "城市漫游"],
+  ["旅游向导", "旅游打卡"],
+  ["办事协助", "办事陪同"],
+  ["展会陪同", "展会协助"],
+  ["本地陪同", "城市本地服务"],
+  ["陪同服务", "城市服务"]
+];
+
+function modernizeWording(value) {
+  if (typeof value === "string") {
+    return wordingRules.reduce((text, [from, to]) => text.replaceAll(from, to), value);
+  }
+  if (Array.isArray(value)) return value.map(modernizeWording);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, modernizeWording(item)]));
+  }
+  return value;
+}
+
+for (let index = 0; index < pages.length; index += 1) pages[index] = modernizeWording(pages[index]);
+
 function options(values, selected = "") {
   return values.map((value) => `<option${value === selected ? " selected" : ""}>${value}</option>`).join("\n                  ");
 }
@@ -316,25 +340,25 @@ function pageHtml(page) {
     <meta name="twitter:title" content="${page.title}" />
     <meta name="twitter:description" content="${page.description}" />
     <meta name="twitter:image" content="https://www.dipeikehu.com/assets/hero-city.jpg" />
-    <meta name="theme-color" content="#08111f" />
+    <meta name="theme-color" content="#fff8f6" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260716-market" />
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="./index.html" aria-label="地陪客户首页">
           <img class="brand-mark" src="./favicon.svg" alt="" />
-          <span><strong>地陪客户</strong><small>专业陪同服务平台</small></span>
+          <span><strong>地陪客户</strong><small>城市兴趣服务平台</small></span>
         </a>
         <nav class="main-nav" id="mainNav" aria-label="主导航">
           <a href="./index.html">首页</a>
-          <a href="./providers.html">精选服务者</a>
+          <a href="./providers.html">精选达人</a>
           <a${page.kind === "service" ? ' class="active"' : ""} href="./services.html">服务分类</a>
           <a${page.kind === "city" ? ' class="active"' : ""} href="./cities.html">开放城市</a>
           <a href="./booking-rule.html">预约规则</a>
-          <a href="./index.html#join">入驻合作</a>
+          <a href="./index.html#join">达人入驻</a>
         </nav>
         <div class="header-actions">
           <a class="btn ghost small" href="./contact.html">联系客服</a>
@@ -453,13 +477,13 @@ function pageHtml(page) {
     <footer class="site-footer">
       <div class="container footer-inner">
         <div>
-          <a class="brand footer-brand" href="./index.html"><span><strong>地陪客户</strong><small>专业陪同服务平台</small></span></a>
-          <p>正规本地陪同服务，先审核需求，再确认匹配。</p>
+          <a class="brand footer-brand" href="./index.html"><span><strong>地陪客户</strong><small>城市兴趣服务平台</small></span></a>
+          <p>城市兴趣服务先审核需求，再确认匹配。</p>
         </div>
         <div class="footer-links">
           <a href="./services.html">服务分类</a>
           <a href="./cities.html">开放城市</a>
-          <a href="./providers.html">精选服务者</a>
+          <a href="./providers.html">精选达人</a>
           <a href="./order.html">订单进度</a>
           <a href="./contact.html">联系客服</a>
           <a href="./report.html">投诉举报</a>

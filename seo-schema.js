@@ -1,5 +1,5 @@
 (() => {
-  const pageData = {
+  const pageData = modernize({
     "/beijing.html": ["北京本地陪同、商务接待与机场高铁接送", "北京", "本地陪同服务", 500, "开放城市", "/cities.html"],
     "/shanghai.html": ["上海商务接待、城市陪同与交通枢纽衔接", "上海", "本地陪同服务", 400, "开放城市", "/cities.html"],
     "/guangzhou.html": ["广州办事协助、商务接待与琶洲展会陪同", "广州", "本地陪同服务", 350, "开放城市", "/cities.html"],
@@ -14,7 +14,7 @@
     "/city-companion.html": ["城市陪同与本地路线协助", "中国开放城市", "城市陪同", 350, "服务分类", "/services.html"],
     "/errands.html": ["正规办事协助与现场流程陪同", "中国开放城市", "办事协助", 350, "服务分类", "/services.html"],
     "/expo.html": ["展会陪同、客户引导与现场协助", "中国开放城市", "展会陪同", 500, "服务分类", "/services.html"]
-  };
+  });
 
   const pathname = window.location.pathname.replace(/\/$/, "") || "/";
   const origin = "https://www.dipeikehu.com";
@@ -28,7 +28,7 @@
           name: "地陪客户",
           url: `${origin}/`,
           logo: `${origin}/favicon.svg`,
-          description: "正规本地陪同、商务接待、旅游向导、办事协助和机场高铁接送服务预约平台。"
+          description: "城市体验、兴趣同行、商务服务和生活协助预约平台。"
         },
         {
           "@type": "WebSite",
@@ -89,5 +89,13 @@
     node.type = "application/ld+json";
     node.textContent = JSON.stringify(value);
     document.head.append(node);
+  }
+
+  function modernize(value) {
+    const rules = [["机场高铁接送", "交通接站"], ["机场接送", "交通接站"], ["城市陪同", "城市漫游"], ["旅游向导", "旅游打卡"], ["办事协助", "办事陪同"], ["展会陪同", "展会协助"], ["本地陪同", "城市本地服务"]];
+    if (typeof value === "string") return rules.reduce((text, [from, to]) => text.replaceAll(from, to), value);
+    if (Array.isArray(value)) return value.map(modernize);
+    if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, modernize(item)]));
+    return value;
   }
 })();

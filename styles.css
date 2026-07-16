@@ -3412,35 +3412,6 @@ body.arrival-active {
   color: var(--world-accent);
 }
 
-.world-core-label {
-  position: absolute;
-  left: 64%;
-  top: 49%;
-  display: grid;
-  justify-items: center;
-  color: rgba(255, 255, 255, 0.68);
-  transform: translate(-50%, -50%);
-  text-align: center;
-  pointer-events: none;
-}
-
-.world-core-label span {
-  color: var(--world-accent);
-  font-size: 9px;
-}
-
-.world-core-label i {
-  width: 1px;
-  height: 58px;
-  margin: 8px 0;
-  background: linear-gradient(180deg, var(--world-accent), transparent);
-}
-
-.world-core-label strong {
-  font-size: 12px;
-  font-weight: 500;
-}
-
 .world-landmarks {
   position: absolute;
   left: 64%;
@@ -3721,11 +3692,6 @@ body.arrival-active {
     font-size: clamp(48px, 8vw, 70px);
   }
 
-  .world-core-label {
-    left: 62%;
-    top: 56%;
-  }
-
   .world-map-lock,
   .world-landmarks {
     left: 62%;
@@ -3804,11 +3770,6 @@ body.arrival-active {
     font-size: 11px;
   }
 
-  .world-core-label {
-    left: 50%;
-    top: 55%;
-  }
-
   .world-map-lock {
     left: 50%;
     top: 76px;
@@ -3824,10 +3785,6 @@ body.arrival-active {
   .world-landmarks span {
     padding: 5px 6px;
     font-size: 9px;
-  }
-
-  .world-core-label i {
-    height: 40px;
   }
 
   .world-city-axis {
@@ -4386,70 +4343,9 @@ textarea:focus { border-color: #ff8996; box-shadow: 0 0 0 4px rgba(255,111,126,.
   color: #e95569;
 }
 
-.warm-map-hero .world-core-label {
-  left: 66%;
-  top: 47%;
-  grid-template-columns: 84px minmax(0, 1fr);
-  align-items: center;
-  justify-items: stretch;
-  gap: 12px;
-  width: 250px;
-  padding: 14px;
-  color: #61565a;
-  border: 1px solid rgba(236, 211, 207, 0.82);
-  border-radius: 18px;
-  background: rgba(255, 252, 250, 0.76);
-  box-shadow: 0 14px 32px rgba(99, 58, 64, 0.08);
-  backdrop-filter: blur(10px);
-  text-align: left;
-}
-
-.warm-map-hero .world-core-visual {
-  display: grid;
-  place-items: center;
-  width: 84px;
-  height: 84px;
-  border: 1px solid rgba(239, 96, 114, 0.18);
-  border-radius: 16px;
-  color: #e85267;
-  background: linear-gradient(145deg, rgba(255, 233, 230, 0.92), rgba(255, 250, 246, 0.76));
-}
-
-.warm-map-hero .world-core-visual svg {
-  width: 74px;
-  height: 58px;
-  overflow: visible;
-  filter: drop-shadow(0 8px 10px rgba(210, 83, 100, 0.12));
-}
-
-.warm-map-hero .world-core-copy {
-  display: grid;
-  min-width: 0;
-  justify-items: start;
-}
-
-.warm-map-hero .world-core-label span {
-  color: #e85267;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-
-.warm-map-hero .world-core-label i {
-  width: 32px;
-  height: 1px;
-  margin: 8px 0;
-  background: linear-gradient(90deg, #ef6072, rgba(239, 96, 114, 0.05));
-}
-
-.warm-map-hero .world-core-label strong {
-  color: #564b4f;
-  font-weight: 750;
-  line-height: 1.45;
-}
-
 .warm-map-hero .world-landmarks {
   left: 66%;
-  top: 68%;
+  top: 55%;
   gap: 8px;
 }
 
@@ -4618,7 +4514,6 @@ textarea:focus { border-color: #ff8996; box-shadow: 0 0 0 4px rgba(255,111,126,.
     transform: none;
   }
 
-  .warm-map-hero .world-core-label,
   .warm-map-hero .world-landmarks {
     left: 68%;
   }
@@ -4700,46 +4595,9 @@ textarea:focus { border-color: #ff8996; box-shadow: 0 0 0 4px rgba(255,111,126,.
     font-size: 11px;
   }
 
-  .warm-map-hero .world-core-label {
-    left: 14px;
-    top: 55%;
-    grid-template-columns: 52px minmax(0, 1fr);
-    gap: 8px;
-    width: 196px;
-    padding: 9px 11px;
-    border-radius: 16px;
-    transform: none;
-  }
-
-  .warm-map-hero .world-core-visual {
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-  }
-
-  .warm-map-hero .world-core-visual svg {
-    width: 46px;
-    height: 38px;
-  }
-
-  .warm-map-hero .world-core-label span {
-    font-size: 8px;
-  }
-
-  .warm-map-hero .world-core-label i {
-    width: 24px;
-    height: 1px;
-    margin: 4px 0;
-  }
-
-  .warm-map-hero .world-core-label strong {
-    font-size: 10px;
-    line-height: 1.35;
-  }
-
   .warm-map-hero .world-landmarks {
     left: 14px;
-    top: 69%;
+    top: 57%;
     width: calc(100% - 126px);
     justify-content: flex-start;
     gap: 5px;

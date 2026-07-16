@@ -84,7 +84,7 @@
 
     <header class="site-header">
       <div class="container header-inner">
-        <a class="brand" href="#home" aria-label="地陪客户首页">
+        <a class="brand" href="#city-map" aria-label="地陪客户首页">
           <svg class="brand-mark"><use href="#i-logo"></use></svg>
           <span>
             <strong>地陪客户</strong>
@@ -92,7 +92,7 @@
           </span>
         </a>
         <nav class="main-nav" id="mainNav" aria-label="主导航">
-          <a class="active" href="#home">首页</a>
+          <a class="active" href="#city-map">首页</a>
           <a href="./providers.html">精选达人</a>
           <a href="./services.html">服务分类</a>
           <a href="./cities.html">开放城市</a>
@@ -182,7 +182,7 @@
         </div>
       </section>
 
-      <section class="world-hero is-ready" id="city-map" tabindex="0" aria-labelledby="worldHeroTitle">
+      <section class="world-hero warm-map-hero is-ready" id="city-map" tabindex="0" aria-labelledby="worldHeroTitle">
         <canvas class="world-canvas" id="cityWorldCanvas" aria-hidden="true"></canvas>
         <div class="city-real-map-stage" id="cityRealMapStage" aria-hidden="true">
           <div class="city-real-map" id="cityRealMap"></div>
@@ -204,7 +204,7 @@
         </div>
         <div class="world-interface">
           <div class="world-topline">
-            <span>DIPEI / CITY SERVICE NETWORK</span>
+            <span>地陪客户 · 城市服务地图</span>
             <span><i></i>当前城市已锁定 · 人工客服确认</span>
           </div>
           <div class="world-map-lock"><svg><use href="#i-pin"></use></svg><span id="worldMapLock">北京定位已锁定</span></div>
@@ -214,11 +214,11 @@
             <p id="worldLocationSummary">从机场高铁衔接到商务会面，由客服根据区域、时间和服务边界人工确认。</p>
             <div class="world-actions">
               <button class="btn gold" id="worldConfirmLocation" type="button">按朝阳区提交预约</button>
-              <a class="world-text-link" href="#process">查看正规服务流程 →</a>
+              <a class="world-text-link" href="#process">了解服务流程 →</a>
             </div>
           </div>
           <div class="world-core-label" aria-hidden="true">
-            <span id="worldCoreType">DISTRICT LANDMARK</span><i></i><strong id="worldCoreLabel">朝阳区 · 中国尊</strong>
+            <span id="worldCoreType">区域地标</span><i></i><strong id="worldCoreLabel">朝阳区 · 中国尊</strong>
           </div>
           <div class="world-landmarks" id="worldLandmarkList" aria-label="当前城市热门地点"></div>
           <div class="world-city-axis" aria-label="横向切换城市">

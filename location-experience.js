@@ -220,7 +220,7 @@ function renderInterface() {
   previousCityLabel.textContent = previous.name;
   nextCityLabel.textContent = next.name;
   const cityOnly = !district;
-  coreType.textContent = cityOnly ? "CITY LANDMARK" : "DISTRICT LANDMARK";
+  coreType.textContent = cityOnly ? "城市地标" : "区域地标";
   coreLabel.textContent = cityOnly ? city.landmark : `${district.name} · ${district.landmark}`;
   mapLock.textContent = cityOnly ? `${city.name}已锁定 · 区县由客服确认` : `${city.name} · ${district.name}已锁定`;
   confirmLocation.textContent = cityOnly ? `按${city.name}提交预约` : `按${district.name}提交预约`;

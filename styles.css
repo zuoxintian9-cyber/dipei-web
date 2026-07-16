@@ -4668,12 +4668,31 @@ textarea:focus { border-color: #ff8996; box-shadow: 0 0 0 4px rgba(255,111,126,.
   }
 
   .warm-map-hero .world-core-label {
-    display: none;
+    left: 14px;
+    top: 55%;
+    width: 170px;
+    padding: 9px 11px;
+    border-radius: 16px;
+    transform: none;
+  }
+
+  .warm-map-hero .world-core-label span {
+    font-size: 8px;
+  }
+
+  .warm-map-hero .world-core-label i {
+    height: 24px;
+    margin: 4px 0;
+  }
+
+  .warm-map-hero .world-core-label strong {
+    font-size: 10px;
+    line-height: 1.35;
   }
 
   .warm-map-hero .world-landmarks {
     left: 14px;
-    top: 57%;
+    top: 69%;
     width: calc(100% - 126px);
     justify-content: flex-start;
     gap: 5px;

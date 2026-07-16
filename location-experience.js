@@ -7,6 +7,8 @@ const cities = [
     color: 0xd7aa5d,
     map: { center: [116.4074, 39.9042], boundary: "./assets/maps/beijing-districts.geojson", origin: [116.6031, 40.0799], originName: "首都机场" },
     summary: "从首都机场、高铁站到 CBD 商务会面，由客服根据区域、时间和服务边界人工确认。",
+    landmark: "故宫与中轴线城市路线",
+    hotspots: ["故宫", "天安门", "国贸 CBD"],
     districts: [
       { name: "朝阳区", center: [39.9185, 116.4551], landmark: "中国尊", type: "skyscraper", hotspots: ["中国尊", "国贸 CBD", "三里屯"] },
       { name: "海淀区", center: [39.9999, 116.2755], landmark: "佛香阁", type: "pagoda", hotspots: ["佛香阁", "中关村", "颐和园"] },
@@ -21,6 +23,8 @@ const cities = [
     color: 0x70c0b0,
     map: { center: [121.4737, 31.2304], boundary: "./assets/maps/shanghai-districts.geojson", origin: [121.8052, 31.1443], originName: "浦东机场" },
     summary: "覆盖浦东商务区、核心商圈、酒店会面与交通衔接，按行程节奏匹配本地服务。",
+    landmark: "外滩与陆家嘴城市路线",
+    hotspots: ["外滩", "陆家嘴", "上海中心"],
     districts: [
       { name: "浦东新区", center: [31.2397, 121.4998], landmark: "东方明珠", type: "pearl", hotspots: ["东方明珠", "陆家嘴", "上海中心"] },
       { name: "黄浦区", center: [31.2352, 121.4903], landmark: "外滩钟楼", type: "clocktower", hotspots: ["外滩", "南京东路", "人民广场"] },
@@ -35,6 +39,8 @@ const cities = [
     color: 0xe0b46b,
     map: { center: [113.2644, 23.1291], boundary: "./assets/maps/guangzhou-districts.geojson", origin: [113.2988, 23.3924], originName: "白云机场" },
     summary: "面向商务到访、展会协助和正规办事陪同，可备注普通话、粤语及路线需求。",
+    landmark: "广州塔与珠江新城路线",
+    hotspots: ["广州塔", "珠江新城", "北京路"],
     districts: [
       { name: "天河区", center: [23.1203, 113.3248], landmark: "周大福金融中心", type: "skyscraper", hotspots: ["珠江新城", "天河路", "广州东站"] },
       { name: "越秀区", center: [23.1376, 113.2645], landmark: "镇海楼", type: "pavilion", hotspots: ["镇海楼", "北京路", "中山纪念堂"] },
@@ -49,6 +55,8 @@ const cities = [
     color: 0x68b7a1,
     map: { center: [114.0579, 22.5431], boundary: "./assets/maps/shenzhen-districts.geojson", origin: [113.8107, 22.6393], originName: "宝安机场" },
     summary: "适合会展接待、企业到访、口岸与机场衔接，客服提前核对集合地点和时间。",
+    landmark: "平安金融中心与湾区路线",
+    hotspots: ["平安金融中心", "深圳湾", "会展中心"],
     districts: [
       { name: "福田区", center: [22.5366, 114.0547], landmark: "平安金融中心", type: "skyscraper", hotspots: ["平安中心", "市民中心", "会展中心"] },
       { name: "南山区", center: [22.5172, 113.9410], landmark: "春茧体育馆", type: "stadium", hotspots: ["深圳湾", "人才公园", "科技园"] },
@@ -63,6 +71,8 @@ const cities = [
     color: 0xc79a5d,
     map: { center: [104.0665, 30.5728], boundary: "./assets/maps/chengdu-districts.geojson", origin: [103.9471, 30.5785], originName: "双流机场" },
     summary: "覆盖核心商圈、会展商务、文化街区和机场高铁衔接，适合商务到访与城市路线陪同。",
+    landmark: "太古里与宽窄巷子路线",
+    hotspots: ["成都 IFS", "太古里", "宽窄巷子"],
     districts: [
       { name: "锦江区", center: [30.6543, 104.0818], landmark: "成都 IFS", type: "skyscraper", hotspots: ["成都 IFS", "太古里", "春熙路"] },
       { name: "武侯区", center: [30.6455, 104.0492], landmark: "锦里牌坊", type: "arch", hotspots: ["锦里", "武侯祠", "金融城"] },
@@ -77,6 +87,8 @@ const cities = [
     color: 0x69b49d,
     map: { center: [120.1551, 30.2741], boundary: "./assets/maps/hangzhou-districts.geojson", origin: [120.4344, 30.2295], originName: "萧山机场" },
     summary: "覆盖西湖文化路线、钱江新城商务区、滨江科技企业与高铁机场衔接场景。",
+    landmark: "西湖与钱江新城路线",
+    hotspots: ["西湖", "雷峰塔", "钱江新城"],
     districts: [
       { name: "西湖区", center: [30.2315, 120.1452], landmark: "雷峰塔", type: "pagoda", hotspots: ["雷峰塔", "西湖", "灵隐寺"] },
       { name: "上城区", center: [30.2462, 120.2108], landmark: "杭州大剧院", type: "theatre", hotspots: ["钱江新城", "杭州大剧院", "湖滨"] },
@@ -91,6 +103,8 @@ const cities = [
     color: 0xd2a663,
     map: { center: [108.9398, 34.3416], boundary: "./assets/maps/xian-districts.geojson", origin: [108.7516, 34.4471], originName: "咸阳机场" },
     summary: "覆盖历史文化路线、高新区商务到访、会展接待以及机场和高铁站交通衔接。",
+    landmark: "城墙与钟鼓楼城市路线",
+    hotspots: ["西安城墙", "钟楼", "大雁塔"],
     districts: [
       { name: "碑林区", center: [34.2610, 108.9470], landmark: "西安钟楼", type: "clocktower", hotspots: ["西安钟楼", "城墙", "碑林博物馆"] },
       { name: "雁塔区", center: [34.2193, 108.9642], landmark: "大雁塔", type: "pagoda", hotspots: ["大雁塔", "大唐不夜城", "高新区"] },
@@ -106,6 +120,8 @@ const cities = [
     asset: "./City/重庆.webp",
     map: { center: [106.5516, 29.563], boundary: "./assets/maps/chongqing-districts.geojson", origin: [106.6417, 29.7192], originName: "江北机场" },
     summary: "适合山地城市路线、商务会面、会展接待、景点向导和机场高铁站衔接服务。",
+    landmark: "解放碑与两江城市路线",
+    hotspots: ["解放碑", "洪崖洞", "重庆来福士"],
     districts: [
       { name: "渝中区", center: [29.5647, 106.5790], landmark: "重庆来福士", type: "sail", hotspots: ["重庆来福士", "解放碑", "洪崖洞"] },
       { name: "江北区", center: [29.5788, 106.5777], landmark: "重庆大剧院", type: "theatre", hotspots: ["重庆大剧院", "江北嘴", "观音桥"] },
@@ -220,8 +236,8 @@ function renderInterface() {
   previousCityLabel.textContent = previous.name;
   nextCityLabel.textContent = next.name;
   const cityOnly = !district;
-  coreType.textContent = cityOnly ? "城市地标" : "区域地标";
-  coreLabel.textContent = cityOnly ? city.landmark : `${district.name} · ${district.landmark}`;
+  coreType.textContent = "城市地标";
+  coreLabel.textContent = city.landmark || `${city.name}城市路线`;
   mapLock.textContent = cityOnly ? `${city.name}已锁定 · 区县由客服确认` : `${city.name} · ${district.name}已锁定`;
   confirmLocation.textContent = cityOnly ? `按${city.name}提交预约` : `按${district.name}提交预约`;
   districtAxis.classList.toggle("is-city-only", cityOnly);

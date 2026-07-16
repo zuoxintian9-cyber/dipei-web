@@ -4,6 +4,7 @@ const cities = [
   {
     name: "北京",
     code: "BJS",
+    icon: "i-landmark-beijing",
     color: 0xd7aa5d,
     map: { center: [116.4074, 39.9042], boundary: "./assets/maps/beijing-districts.geojson", origin: [116.6031, 40.0799], originName: "首都机场" },
     summary: "从首都机场、高铁站到 CBD 商务会面，由客服根据区域、时间和服务边界人工确认。",
@@ -20,6 +21,7 @@ const cities = [
   {
     name: "上海",
     code: "SHA",
+    icon: "i-landmark-shanghai",
     color: 0x70c0b0,
     map: { center: [121.4737, 31.2304], boundary: "./assets/maps/shanghai-districts.geojson", origin: [121.8052, 31.1443], originName: "浦东机场" },
     summary: "覆盖浦东商务区、核心商圈、酒店会面与交通衔接，按行程节奏匹配本地服务。",
@@ -36,6 +38,7 @@ const cities = [
   {
     name: "广州",
     code: "CAN",
+    icon: "i-landmark-guangzhou",
     color: 0xe0b46b,
     map: { center: [113.2644, 23.1291], boundary: "./assets/maps/guangzhou-districts.geojson", origin: [113.2988, 23.3924], originName: "白云机场" },
     summary: "面向商务到访、展会协助和正规办事陪同，可备注普通话、粤语及路线需求。",
@@ -52,6 +55,7 @@ const cities = [
   {
     name: "深圳",
     code: "SZX",
+    icon: "i-landmark-shenzhen",
     color: 0x68b7a1,
     map: { center: [114.0579, 22.5431], boundary: "./assets/maps/shenzhen-districts.geojson", origin: [113.8107, 22.6393], originName: "宝安机场" },
     summary: "适合会展接待、企业到访、口岸与机场衔接，客服提前核对集合地点和时间。",
@@ -68,6 +72,7 @@ const cities = [
   {
     name: "成都",
     code: "CTU",
+    icon: "i-landmark-chengdu",
     color: 0xc79a5d,
     map: { center: [104.0665, 30.5728], boundary: "./assets/maps/chengdu-districts.geojson", origin: [103.9471, 30.5785], originName: "双流机场" },
     summary: "覆盖核心商圈、会展商务、文化街区和机场高铁衔接，适合商务到访与城市路线陪同。",
@@ -84,6 +89,7 @@ const cities = [
   {
     name: "杭州",
     code: "HGH",
+    icon: "i-landmark-hangzhou",
     color: 0x69b49d,
     map: { center: [120.1551, 30.2741], boundary: "./assets/maps/hangzhou-districts.geojson", origin: [120.4344, 30.2295], originName: "萧山机场" },
     summary: "覆盖西湖文化路线、钱江新城商务区、滨江科技企业与高铁机场衔接场景。",
@@ -100,6 +106,7 @@ const cities = [
   {
     name: "西安",
     code: "XIY",
+    icon: "i-landmark-xian",
     color: 0xd2a663,
     map: { center: [108.9398, 34.3416], boundary: "./assets/maps/xian-districts.geojson", origin: [108.7516, 34.4471], originName: "咸阳机场" },
     summary: "覆盖历史文化路线、高新区商务到访、会展接待以及机场和高铁站交通衔接。",
@@ -116,6 +123,7 @@ const cities = [
   {
     name: "重庆",
     code: "CKG",
+    icon: "i-landmark-chongqing",
     color: 0xc97862,
     asset: "./City/重庆.webp",
     map: { center: [106.5516, 29.563], boundary: "./assets/maps/chongqing-districts.geojson", origin: [106.6417, 29.7192], originName: "江北机场" },
@@ -133,6 +141,7 @@ const cities = [
   {
     name: "武汉",
     code: "WUH",
+    icon: "i-landmark-wuhan",
     color: 0xd9a55e,
     asset: "./City/武汉.webp",
     map: { center: [114.3055, 30.5928], boundary: "./assets/maps/wuhan-city.geojson", origin: [114.2081, 30.7766], originName: "天河机场", cityOnly: true },
@@ -144,6 +153,7 @@ const cities = [
   {
     name: "苏州",
     code: "SZV",
+    icon: "i-landmark-suzhou",
     color: 0x78b9a8,
     asset: "./City/苏州.webp",
     map: { center: [120.5853, 31.2989], boundary: "./assets/maps/suzhou-city.geojson", origin: [120.642, 31.421], originName: "苏州北站", cityOnly: true },
@@ -155,6 +165,7 @@ const cities = [
   {
     name: "南京",
     code: "NKG",
+    icon: "i-landmark-nanjing",
     color: 0xd5aa65,
     asset: "./City/南京.webp",
     map: { center: [118.7969, 32.0603], boundary: "./assets/maps/nanjing-city.geojson", origin: [118.862, 31.742], originName: "禄口机场", cityOnly: true },
@@ -166,6 +177,7 @@ const cities = [
   {
     name: "长沙",
     code: "CSX",
+    icon: "i-landmark-changsha",
     color: 0xd58f62,
     asset: "./City/长沙.webp",
     map: { center: [112.9388, 28.2282], boundary: "./assets/maps/changsha-city.geojson", origin: [113.22, 28.19], originName: "黄花机场", cityOnly: true },
@@ -194,6 +206,7 @@ const districtList = document.querySelector("#worldDistrictList");
 const districtAxis = document.querySelector(".world-district-axis");
 const coreType = document.querySelector("#worldCoreType");
 const coreLabel = document.querySelector("#worldCoreLabel");
+const coreIcon = document.querySelector("#worldCoreIcon");
 const mapLock = document.querySelector("#worldMapLock");
 const landmarkList = document.querySelector("#worldLandmarkList");
 const confirmLocation = document.querySelector("#worldConfirmLocation");
@@ -238,6 +251,7 @@ function renderInterface() {
   const cityOnly = !district;
   coreType.textContent = "城市地标";
   coreLabel.textContent = city.landmark || `${city.name}城市路线`;
+  coreIcon.setAttribute("href", `#${city.icon}`);
   mapLock.textContent = cityOnly ? `${city.name}已锁定 · 区县由客服确认` : `${city.name} · ${district.name}已锁定`;
   confirmLocation.textContent = cityOnly ? `按${city.name}提交预约` : `按${district.name}提交预约`;
   districtAxis.classList.toggle("is-city-only", cityOnly);
